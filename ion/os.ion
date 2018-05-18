@@ -1,3 +1,7 @@
+func add_flag_bool(name: char const*, ptr: bool*, help: char const*) {
+    // buf_push(flag_defs, (FlagDef){.kind = FLAG_BOOL, .name = name, .help = help, .ptr.b = ptr});
+}
+
 func add_flag_str(name: char const*, ptr: char**, arg_name: char const*, help: char const*) {
     // buf_push(flag_defs, (FlagDef){.kind = FLAG_STR, .name = name, .help = help, .arg_name = arg_name, .ptr.s = ptr});
 }

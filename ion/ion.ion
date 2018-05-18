@@ -2,12 +2,17 @@ func parse_env_vars() {
     //
 }
 
-func main(argc: int, argv: char**): int {
+func ion_main(argc: int, argv: char const**): int {
     parse_env_vars();
     output_name: char*;
     flag_check := false;
     add_flag_str("o", &output_name, "file", "Output file (default: out_<main-package>.c)");
     add_flag_enum("os", &target_os, "Target operating system", os_names, NUM_OSES);
     add_flag_enum("arch", &target_arch, "Target machine architecture", arch_names, NUM_ARCHES);
+    add_flag_bool("check", &flag_check, "Semantic checking with no code generation");
+    add_flag_bool("lazy", &flag_lazy, "Only compile what's reachable from the main package");
+    add_flag_bool("notypeinfo", &flag_notypeinfo, "Don't generate any typeinfo tables");
+    add_flag_bool("fullgen", &flag_fullgen, "Force full code generation even for non-reachable symbols");
+    add_flag_bool("verbose", &flag_verbose, "Extra diagnostic information");
     return 0;
 }

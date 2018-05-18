@@ -1,0 +1,8 @@
+var flag_verbose: bool;
+var flag_lazy: bool;
+var flag_notypeinfo: bool;
+var flag_fullgen: bool;
+
+func main(argc: int, argv: char const**): int {
+    return ion_main(argc, argv);
+}
