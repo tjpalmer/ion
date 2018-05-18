@@ -1,0 +1,7 @@
+func add_flag_str(name: char const*, ptr: char**, arg_name: char const*, help: char const*) {
+    // buf_push(flag_defs, (FlagDef){.kind = FLAG_STR, .name = name, .help = help, .arg_name = arg_name, .ptr.s = ptr});
+}
+
+func add_flag_enum(name: char const*, ptr: int*, help: char const*, options: char const**, num_options: int) {
+    // buf_push(flag_defs, (FlagDef){.kind = FLAG_ENUM, .name = name, .help = help, .ptr.i = ptr, .options = options, .num_options = num_options});
+}

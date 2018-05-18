@@ -1,0 +1,26 @@
+enum Os {
+    OS_WIN32,
+    OS_LINUX,
+    OS_OSX,
+    NUM_OSES,
+}
+
+var os_names: char const*[NUM_OSES] = {
+    [OS_WIN32] = "win32",
+    [OS_LINUX] = "linux",
+    [OS_OSX] = "osx",
+};
+
+enum Arch {
+    ARCH_X64,
+    ARCH_X86,
+    NUM_ARCHES,
+}
+
+var arch_names: char const*[NUM_ARCHES] = {
+    [ARCH_X64] = "x64",
+    [ARCH_X86] = "x86",
+};
+
+var target_os: int;
+var target_arch: int;
