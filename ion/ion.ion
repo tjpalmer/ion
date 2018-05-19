@@ -1,3 +1,11 @@
+func init_compiler() {
+    // init_target();
+    // init_package_search_paths();
+    // init_keywords();
+    // init_builtin_types();
+    // map_put(&decl_note_names, declare_note_name, (void *)1);
+}
+
 func parse_env_vars() {
     //
 }
@@ -19,6 +27,65 @@ func ion_main(argc: int, argv: char const**): int {
         printf("Usage: %s [flags] <main-package>\n", program_name);
         print_flags_usage();
         return 1;
+    }
+    package_name := argv[0];
+    if (flag_verbose) {
+        printf("Target operating system: %s\n", os_names[target_os]);
+        printf("Target architecture: %s\n", arch_names[target_arch]);
+    }
+    init_compiler();
+    builtin_package = import_package("builtin");
+    if (!builtin_package) {
+        printf("error: Failed to compile package 'builtin'.\n");
+        return 1;
+    }
+    builtin_package.external_name = str_intern("");
+    main_package := import_package(package_name);
+    if (!main_package) {
+        printf("error: Failed to compile package '%s'\n", package_name);
+        return 1;
+    }
+    main_name := str_intern("main");
+    main_sym := get_package_sym(main_package, main_name);
+    if (!main_sym) {
+        printf("error: No 'main' entry point defined in package '%s'\n", package_name);
+        return 1;
+    }
+    main_sym.external_name = main_name;
+    reachable_phase = REACHABLE_NATURAL;
+    resolve_sym(main_sym);
+    for (i: usize = 0; i < buf_len(package_list); i++) {
+        if (package_list[i].always_reachable) {
+            resolve_package_syms(package_list[i]);
+        }
+    }
+    finalize_reachable_syms();
+    if (flag_verbose) {
+        printf("Reached %d symbols in %d packages from %s/main\n", (:int)buf_len(reachable_syms), (:int)buf_len(package_list), package_name);
+    }
+    if (!flag_lazy) {
+        reachable_phase = REACHABLE_FORCED;
+        for (i: usize = 0; i < buf_len(package_list); i++) {
+            resolve_package_syms(package_list[i]);
+        }
+        finalize_reachable_syms();
+    }
+    printf("Processed %d symbols in %d packages\n", (:int)buf_len(reachable_syms), (:int)buf_len(package_list));
+    if (!flag_check) {
+        c_path: char[MAX_PATH];
+        if (output_name) {
+            path_copy(c_path, output_name);
+        } else {
+            snprintf(c_path, sizeof(c_path), "out_%s.c", package_name);
+        }
+        gen_all();
+        c_code := gen_buf;
+        gen_buf = NULL;
+        if (!write_file(c_path, c_code, buf_len(c_code))) {
+            printf("error: Failed to write file: %s\n", c_path);
+            return 1;
+        }
+        printf("Generated %s\n", c_path);
     }
     return 0;
 }

@@ -1,3 +1,21 @@
+// TODO: How to do this?
+// #ifndef MAX_PATH
+// #if defined _MAX_PATH
+// #define MAX_PATH _MAX_PATH
+// #elif defined PATH_MAX
+// #define MAX_PATH PATH_MAX
+// #else
+// #error "No suitable MAX_PATH surrogate"
+// #endif
+// #endif
+const MAX_PATH = 256;
+
+func path_copy(path: char[MAX_PATH], src: char const*) {
+    // strncpy(path, src, MAX_PATH);
+    // path[MAX_PATH - 1] = 0;
+    // path_normalize(path);
+}
+
 // func path_file(path: char[MAX_PATH]): char* {
 func path_file(path: char*): char* {
     // path_normalize(path);

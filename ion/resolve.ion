@@ -1,0 +1,97 @@
+struct Sym {
+    name: char const*;
+    // struct Package *package;
+    // SymKind kind;
+    // SymState state;
+    // uint8_t reachable;
+    // Decl *decl;
+    // Type *type;
+    // Val val;
+    external_name: char const*;
+}
+
+struct Package {
+    path: char const*;
+    // char full_path[MAX_PATH];
+    // Decl **decls;
+    // size_t num_decls;
+    // Map syms_map;
+    // Sym **syms;
+    external_name: char const*;
+    always_reachable: bool;
+}
+
+var builtin_package: Package*;
+var package_list: Package**;
+
+enum = uint8 {
+    REACHABLE_NONE,
+    REACHABLE_NATURAL,
+    REACHABLE_FORCED,
+}
+
+var reachable_phase: uint8 = REACHABLE_NATURAL;
+
+func get_package_sym(package: Package*, name: char const*): Sym* {
+    // return map_get(&package->syms_map, name);
+    return NULL;
+}
+
+var reachable_syms: Sym**;
+
+func resolve_sym(sym: Sym*) {
+    //
+}
+
+func import_package(package_path: char const*): Package* {
+    // package_path = str_intern(package_path);
+    // Package *package = map_get(&package_map, package_path);
+    // if (!package) {
+    //     package = xcalloc(1, sizeof(Package));
+    //     package->path = package_path;
+    //     if (flag_verbose) {
+    //         printf("Importing %s\n", package_path);
+    //     }
+    //     char full_path[MAX_PATH];
+    //     if (!copy_package_full_path(full_path, package_path)) {
+    //         return NULL;
+    //     }
+    //     strcpy(package->full_path, full_path);
+    //     add_package(package);
+    //     compile_package(package);
+    // }
+    // return package;
+    return NULL;
+}
+
+func resolve_package_syms(package: Package*) {
+    // Package *old_package = enter_package(package);
+    // for (size_t i = 0; i < buf_len(package->syms); i++) {
+    //     if (package->syms[i]->package == package) {
+    //         resolve_sym(package->syms[i]);
+    //     }
+    // }
+    // leave_package(old_package);
+}
+
+func finalize_reachable_syms() {
+    // if (flag_verbose) {
+    //     printf("Finalizing reachable symbols\n");
+    // }
+    // size_t prev_num_reachable = 0;
+    // size_t num_reachable = buf_len(reachable_syms);
+    // for (size_t i = 0; i < num_reachable; i++) {
+    //     finalize_sym(reachable_syms[i]);
+    //     if (i == num_reachable - 1) {
+    //         if (flag_verbose) {
+    //             printf("New reachable symbols:");
+    //             for (size_t k = prev_num_reachable; k < num_reachable; k++) {
+    //                 printf(" %s/%s", reachable_syms[k]->package->path, reachable_syms[k]->name);
+    //             }
+    //             printf("\n");
+    //         }
+    //         prev_num_reachable = num_reachable;
+    //         num_reachable = buf_len(reachable_syms);
+    //     }
+    // }
+}

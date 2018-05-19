@@ -1,0 +1,19 @@
+func write_file(path: char const*, buf: char const*, len: usize): bool {
+    // FILE *file = fopen(path, "w");
+    // if (!file) {
+    //     return false;
+    // }
+    // size_t n = fwrite(buf, len, 1, file);
+    // fclose(file);
+    // return n == 1;
+    return false;
+}
+
+func buf_len(b: void*): usize {
+    return 0;
+}
+
+func str_intern(str: char const*): char const* {
+    // return str_intern_range(str, str + strlen(str));
+    return str;
+}

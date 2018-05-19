@@ -1,0 +1,23 @@
+var gen_buf: char*;
+
+func gen_all() {
+    // preprocess_packages();
+    // gen_buf = NULL;
+    // gen_preamble();
+    // gen_foreign_headers();
+    // genln();
+    // genlnf("// Forward declarations");
+    // gen_forward_decls();
+    // genln();
+    // genlnf("// Sorted declarations");
+    // gen_sorted_decls();
+    // genlnf("// Typeinfo");
+    // gen_typeinfos();
+    // genln();
+    // genlnf("// Definitions");
+    // gen_defs();
+    // genlnf("// Foreign source files");
+    // gen_foreign_sources();
+    // genln();
+    // gen_postamble();
+}
