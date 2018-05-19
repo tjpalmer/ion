@@ -13,6 +13,12 @@ func buf_len(b: void*): usize {
     return 0;
 }
 
+// TODO: We need templates or macros to make this better generic.
+// #define buf_push(b, ...) (buf_fit((b), 1 + buf_len(b)), (b)[buf__hdr(b)->len++] = (__VA_ARGS__))
+func buf_push(b: void*, item: void*, size: usize) {
+    //
+}
+
 func str_intern(str: char const*): char const* {
     // return str_intern_range(str, str + strlen(str));
     return str;

@@ -27,16 +27,43 @@ func path_file(path: char*): char* {
     return path;
 }
 
+enum FlagKind {
+    FLAG_BOOL,
+    FLAG_STR,
+    FLAG_ENUM,
+}
+
+struct FlagDef {
+    kind: FlagKind;
+    name: char const*;
+    help: char const*;
+    options: char const**;
+    arg_name: char const*;
+    num_options: int;
+    ptr: FlagDefPtr;
+}
+
+struct FlagDefPtr {
+    i: int*;
+    b: bool*;
+    s: char const**;
+}
+
+var flag_defs: FlagDef*;
+
 func add_flag_bool(name: char const*, ptr: bool*, help: char const*) {
-    // buf_push(flag_defs, (FlagDef){.kind = FLAG_BOOL, .name = name, .help = help, .ptr.b = ptr});
+    def: FlagDef = {kind = FLAG_BOOL, name = name, help = help, ptr = {b = ptr}};
+    buf_push(flag_defs, &def, sizeof(def));
 }
 
 func add_flag_str(name: char const*, ptr: char const**, arg_name: char const*, help: char const*) {
-    // buf_push(flag_defs, (FlagDef){.kind = FLAG_STR, .name = name, .help = help, .arg_name = arg_name, .ptr.s = ptr});
+    def: FlagDef = {kind = FLAG_STR, name = name, help = help, arg_name = arg_name, ptr = {s = ptr}};
+    buf_push(flag_defs, &def, sizeof(def));
 }
 
 func add_flag_enum(name: char const*, ptr: int*, help: char const*, options: char const**, num_options: int) {
-    // buf_push(flag_defs, (FlagDef){.kind = FLAG_ENUM, .name = name, .help = help, .ptr.i = ptr, .options = options, .num_options = num_options});
+    def: FlagDef = {kind = FLAG_ENUM, name = name, help = help, ptr = {i = ptr}, options = options, num_options = num_options};
+    buf_push(flag_defs, &def, sizeof(def));
 }
 
 func print_flags_usage() {

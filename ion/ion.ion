@@ -7,7 +7,24 @@ func init_compiler() {
 }
 
 func parse_env_vars() {
-    //
+    ionos_var := getenv("IONOS");
+    if (ionos_var) {
+        os := get_os(ionos_var);
+        if (os == -1) {
+            printf("Unknown target operating system in IONOS environment variable: %s\n", ionos_var);
+        } else {
+            target_os = os;
+        }
+    }
+    ionarch_var := getenv("IONARCH");
+    if (ionarch_var) {
+        arch := get_arch(ionarch_var);
+        if (arch == -1) {
+            printf("Unknown target architecture in IONARCH environment variable: %s\n", ionarch_var);
+        } else {
+            target_arch = arch;
+        }
+    }
 }
 
 func ion_main(argc: int, argv: char const**): int {

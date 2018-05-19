@@ -24,3 +24,21 @@ var arch_names: char const*[NUM_ARCHES] = {
 
 var target_os: int;
 var target_arch: int;
+
+func get_os(name: char const*): int {
+    for (i := 0; i < NUM_OSES; i++) {
+        if (strcmp(os_names[i], name) == 0) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+func get_arch(name: char const*): int {
+    for (i := 0; i < NUM_ARCHES; i++) {
+        if (strcmp(arch_names[i], name) == 0) {
+            return i;
+        }
+    }
+    return -1;
+}
