@@ -1,11 +1,34 @@
+// func path_file(path: char[MAX_PATH]): char* {
+func path_file(path: char*): char* {
+    // path_normalize(path);
+    // for (char *ptr = path + strlen(path); ptr != path; ptr--) {
+    //     if (ptr[-1] == '/') {
+    //         return ptr;
+    //     }
+    // }
+    return path;
+}
+
 func add_flag_bool(name: char const*, ptr: bool*, help: char const*) {
     // buf_push(flag_defs, (FlagDef){.kind = FLAG_BOOL, .name = name, .help = help, .ptr.b = ptr});
 }
 
-func add_flag_str(name: char const*, ptr: char**, arg_name: char const*, help: char const*) {
+func add_flag_str(name: char const*, ptr: char const**, arg_name: char const*, help: char const*) {
     // buf_push(flag_defs, (FlagDef){.kind = FLAG_STR, .name = name, .help = help, .arg_name = arg_name, .ptr.s = ptr});
 }
 
 func add_flag_enum(name: char const*, ptr: int*, help: char const*, options: char const**, num_options: int) {
     // buf_push(flag_defs, (FlagDef){.kind = FLAG_ENUM, .name = name, .help = help, .ptr.i = ptr, .options = options, .num_options = num_options});
+}
+
+func print_flags_usage() {
+    printf("Flags:\n");
+}
+
+func parse_flags(argc_ptr: int*, argv_ptr: char const***): char const* {
+    argc := *argc_ptr;
+    argv := *argv_ptr;
+    // ...
+    // return path_file(strdup(argv[0]));
+    return argv[0];
 }
