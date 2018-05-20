@@ -1,0 +1,45 @@
+var declare_note_name: char const*;
+
+func init_keywords() {
+    // static bool inited;
+    // if (inited) {
+    //     return;
+    // }
+    // KEYWORD(typedef);
+    // char *arena_end = intern_arena.end;
+    // KEYWORD(enum);
+    // KEYWORD(struct);
+    // KEYWORD(union);
+    // KEYWORD(const);
+    // KEYWORD(var);
+    // KEYWORD(func);
+    // KEYWORD(import);
+    // KEYWORD(goto);
+    // KEYWORD(sizeof);
+    // KEYWORD(alignof);
+    // KEYWORD(typeof);
+    // KEYWORD(offsetof);
+    // KEYWORD(break);
+    // KEYWORD(continue);
+    // KEYWORD(return);
+    // KEYWORD(if);
+    // KEYWORD(else);
+    // KEYWORD(while);
+    // KEYWORD(do);
+    // KEYWORD(for);
+    // KEYWORD(switch);
+    // KEYWORD(case);
+    // KEYWORD(default);
+    // assert(intern_arena.end == arena_end);
+    // first_keyword = typedef_keyword;
+    // last_keyword = default_keyword;
+
+    // always_name = str_intern("always");
+    // foreign_name = str_intern("foreign");
+    // complete_name = str_intern("complete");
+    // assert_name = str_intern("assert");
+    // declare_note_name = str_intern("declare_note");
+    // static_assert_name = str_intern("static_assert");
+
+    // inited = true;
+}

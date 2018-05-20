@@ -43,6 +43,8 @@ func resolve_sym(sym: Sym*) {
     //
 }
 
+var decl_note_names: Map;
+
 func import_package(package_path: char const*): Package* {
     // package_path = str_intern(package_path);
     // Package *package = map_get(&package_map, package_path);

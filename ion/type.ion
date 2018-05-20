@@ -1,0 +1,17 @@
+func init_builtin_types() {
+    // init_builtin_type(type_void);
+    // init_builtin_type(type_bool);
+    // init_builtin_type(type_char);
+    // init_builtin_type(type_uchar);
+    // init_builtin_type(type_schar);
+    // init_builtin_type(type_short);
+    // init_builtin_type(type_ushort);
+    // init_builtin_type(type_int);
+    // init_builtin_type(type_uint);
+    // init_builtin_type(type_long);
+    // init_builtin_type(type_ulong);
+    // init_builtin_type(type_llong);
+    // init_builtin_type(type_ullong);
+    // init_builtin_type(type_float);
+    // init_builtin_type(type_double);
+}

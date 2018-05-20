@@ -19,6 +19,17 @@ func buf_push(b: void*, item: void*, size: usize) {
     //
 }
 
+struct Map {
+    keys: uint64*;
+    vals: uint64*;
+    len: usize;
+    cap: usize;
+}
+
+func map_put(map: Map*, key: void const*, val: void*) {
+    // map_put_uint64_from_uint64(map, (uint64_t)(uintptr_t)key, (uint64_t)(uintptr_t)val);
+}
+
 func str_intern(str: char const*): char const* {
     // return str_intern_range(str, str + strlen(str));
     return str;

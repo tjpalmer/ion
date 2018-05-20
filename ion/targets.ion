@@ -42,3 +42,58 @@ func get_arch(name: char const*): int {
     }
     return -1;
 }
+
+func init_target() {
+    // type_metrics = NULL;
+    // switch (target_os) {
+    // case OS_WIN32:
+    //     switch (target_arch) {
+    //     case ARCH_X86:
+    //         type_metrics = win32_x86_metrics;
+    //         break;
+    //     case ARCH_X64:
+    //         type_metrics = win32_x64_metrics;
+    //         break;
+    //     default:
+    //         break;
+    //     }
+    //     break;
+    // case OS_LINUX:
+    //     switch (target_arch) {
+    //     case ARCH_X86:
+    //         type_metrics = ilp32_metrics;
+    //         break;
+    //     case ARCH_X64:
+    //         type_metrics = lp64_metrics;
+    //         break;
+    //     default:
+    //         break;
+    //     }
+    //     break;
+    // case OS_OSX:
+    //     switch (target_arch) {
+    //     case ARCH_X64:
+    //         type_metrics = lp64_metrics;
+    //         break;
+    //     default:
+    //         break;
+    //     }
+    //     break;
+    // default:
+    //     break;
+    // }
+    // if (!type_metrics) {
+    //     printf("Unsupported os/arch combination: %s/%s\n", os_names[target_os], arch_names[target_arch]);
+    //     exit(1);
+    // }
+    // if (type_metrics[TYPE_PTR].size == 4) {
+    //     type_uintptr = type_uint;
+    //     type_usize = type_uint;
+    //     type_ssize = type_int;
+    // } else {
+    //     #assert(type_metrics[TYPE_PTR].size == 8);
+    //     type_uintptr = type_ullong;
+    //     type_usize = type_ullong;
+    //     type_ssize = type_llong;
+    // }
+}
