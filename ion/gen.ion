@@ -220,7 +220,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //             return type_to_cdecl(type->base, cdecl_paren(strf("%s[%zu]", str, type->num_elems), *str));
 //         }
 //     case TYPE_FUNC: {
-//         char *result = NULL;
+//         result: char* = NULL;
 //         buf_printf(result, "(*%s)(", str);
 //         if (type->func.num_params == 0) {
 //             buf_printf(result, "void");
@@ -243,7 +243,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 // void gen_expr(Expr *expr);
 
 // const char *gen_expr_str(Expr *expr) {
-//     char *temp = gen_buf;
+//     temp: char* = gen_buf;
 //     gen_buf = NULL;
 //     gen_expr(expr);
 //     result: char const* = gen_buf;
@@ -264,7 +264,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //                 external_name: char const* = sym->package->external_name;
 //                 char buf[256];
 //                 if (sym->kind == SYM_CONST) {
-//                     char *ptr = buf;
+//                     ptr: char* = buf;
 //                     for (str: char const* = external_name; *str && ptr < buf + sizeof(buf) - 1; str++, ptr++) {
 //                         *ptr = toupper(*str);
 //                     }
@@ -308,7 +308,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //             return typespec_to_cdecl(typespec->base, cdecl_paren(strf("%s[%s]", str, gen_expr_str(typespec->num_elems)), *str));
 //         }
 //     case TYPESPEC_FUNC: {
-//         char *result = NULL;
+//         result: char* = NULL;
 //         buf_printf(result, "(*%s)(", str);
 //         if (typespec->func.num_args == 0) {
 //             buf_printf(result, "void");
@@ -331,7 +331,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 
 // void gen_func_decl(Decl *decl) {
 //     assert(decl->kind == DECL_FUNC);
-//     char *result = NULL;
+//     result: char* = NULL;
 //     buf_printf(result, "%s(", get_gen_name(decl));
 //     if (decl->func.num_params == 0) {
 //         buf_printf(result, "void");
@@ -990,12 +990,12 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     }
 // }
 
-// char *gen_preamble_buf;
-// char *gen_postamble_buf;
+// gen_preamble_buf: char*;
+// gen_postamble_buf: char*;
 
 // static void preprocess_package(Package *package) {
 //     if (!package->external_name) {
-//         char *external_name = NULL;
+//         external_name: char* = NULL;
 //         for (ptr: char const* = package->path; *ptr; ptr++) {
 //             buf_printf(external_name, "%c", *ptr == '/' ? '_' : *ptr);
 //         }

@@ -1,83 +1,89 @@
-// typedef_keyword: char const*;
-// enum_keyword: char const*;
-// struct_keyword: char const*;
-// union_keyword: char const*;
-// var_keyword: char const*;
-// const_keyword: char const*;
-// func_keyword: char const*;
-// sizeof_keyword: char const*;
-// alignof_keyword: char const*;
-// typeof_keyword: char const*;
-// offsetof_keyword: char const*;
-// break_keyword: char const*;
-// continue_keyword: char const*;
-// return_keyword: char const*;
-// if_keyword: char const*;
-// else_keyword: char const*;
-// while_keyword: char const*;
-// do_keyword: char const*;
-// for_keyword: char const*;
-// switch_keyword: char const*;
-// case_keyword: char const*;
-// default_keyword: char const*;
-// import_keyword: char const*;
-// goto_keyword: char const*;
+var typedef_keyword: char const*;
+var enum_keyword: char const*;
+var struct_keyword: char const*;
+var union_keyword: char const*;
+var var_keyword: char const*;
+var const_keyword: char const*;
+var func_keyword: char const*;
+var sizeof_keyword: char const*;
+var alignof_keyword: char const*;
+var typeof_keyword: char const*;
+var offsetof_keyword: char const*;
+var break_keyword: char const*;
+var continue_keyword: char const*;
+var return_keyword: char const*;
+var if_keyword: char const*;
+var else_keyword: char const*;
+var while_keyword: char const*;
+var do_keyword: char const*;
+var for_keyword: char const*;
+var switch_keyword: char const*;
+var case_keyword: char const*;
+var default_keyword: char const*;
+var import_keyword: char const*;
+var goto_keyword: char const*;
 
-// first_keyword: char const*;
-// last_keyword: char const*;
-// keywords: char const**;
+var first_keyword: char const*;
+var last_keyword: char const*;
+var keywords: char const**;
 
-// always_name: char const*;
-// foreign_name: char const*;
-// complete_name: char const*;
-// assert_name: char const*;
+var always_name: char const*;
+var foreign_name: char const*;
+var complete_name: char const*;
+var assert_name: char const*;
 var declare_note_name: char const*;
-// static_assert_name: char const*;
+var static_assert_name: char const*;
 
 // #define KEYWORD(name) name##_keyword = str_intern(#name); buf_push(keywords, name##_keyword)
+func init_keyword(keyword: char const*): char const* {
+    keyword = str_intern(keyword);
+    buf_push(keywords, &keyword, sizeof(keyword));
+    return keyword;
+}
+
+var keywords_inited = false;
 
 func init_keywords() {
-    // static bool inited;
-    // if (inited) {
-    //     return;
-    // }
-    // KEYWORD(typedef);
-    // char *arena_end = intern_arena.end;
-    // KEYWORD(enum);
-    // KEYWORD(struct);
-    // KEYWORD(union);
-    // KEYWORD(const);
-    // KEYWORD(var);
-    // KEYWORD(func);
-    // KEYWORD(import);
-    // KEYWORD(goto);
-    // KEYWORD(sizeof);
-    // KEYWORD(alignof);
-    // KEYWORD(typeof);
-    // KEYWORD(offsetof);
-    // KEYWORD(break);
-    // KEYWORD(continue);
-    // KEYWORD(return);
-    // KEYWORD(if);
-    // KEYWORD(else);
-    // KEYWORD(while);
-    // KEYWORD(do);
-    // KEYWORD(for);
-    // KEYWORD(switch);
-    // KEYWORD(case);
-    // KEYWORD(default);
-    // assert(intern_arena.end == arena_end);
-    // first_keyword = typedef_keyword;
-    // last_keyword = default_keyword;
+    if (keywords_inited) {
+        return;
+    }
+    typedef_keyword = init_keyword("typedef");
+    arena_end: char* = intern_arena.end;
+    enum_keyword = init_keyword("enum");
+    struct_keyword = init_keyword("struct");
+    union_keyword = init_keyword("union");
+    const_keyword = init_keyword("const");
+    var_keyword = init_keyword("var");
+    func_keyword = init_keyword("func");
+    import_keyword = init_keyword("import");
+    goto_keyword = init_keyword("goto");
+    sizeof_keyword = init_keyword("sizeof");
+    alignof_keyword = init_keyword("alignof");
+    typeof_keyword = init_keyword("typeof");
+    offsetof_keyword = init_keyword("offsetof");
+    break_keyword = init_keyword("break");
+    continue_keyword = init_keyword("continue");
+    return_keyword = init_keyword("return");
+    if_keyword = init_keyword("if");
+    else_keyword = init_keyword("else");
+    while_keyword = init_keyword("while");
+    do_keyword = init_keyword("do");
+    for_keyword = init_keyword("for");
+    switch_keyword = init_keyword("switch");
+    case_keyword = init_keyword("case");
+    default_keyword = init_keyword("default");
+    #assert(intern_arena.end == arena_end);
+    first_keyword = typedef_keyword;
+    last_keyword = default_keyword;
 
-    // always_name = str_intern("always");
-    // foreign_name = str_intern("foreign");
-    // complete_name = str_intern("complete");
-    // assert_name = str_intern("assert");
-    // declare_note_name = str_intern("declare_note");
-    // static_assert_name = str_intern("static_assert");
+    always_name = str_intern("always");
+    foreign_name = str_intern("foreign");
+    complete_name = str_intern("complete");
+    assert_name = str_intern("assert");
+    declare_note_name = str_intern("declare_note");
+    static_assert_name = str_intern("static_assert");
 
-    // inited = true;
+    keywords_inited = true;
 }
 
 // #undef KEYWORD
@@ -523,7 +529,7 @@ func init_keywords() {
 // void scan_str(void) {
 //     assert(*stream == '"');
 //     stream++;
-//     char *str = NULL;
+//     str: char* = NULL;
 //     if (stream[0] == '"' && stream[1] == '"') {
 //         stream += 2;
 //         while (*stream) {

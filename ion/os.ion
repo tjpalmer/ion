@@ -50,7 +50,7 @@ func path_file(path: char[MAX_PATH]): char* {
 }
 
 // char *path_ext(char path[MAX_PATH]) {
-//     for (char *ptr = path + strlen(path); ptr != path; ptr--) {
+//     for (ptr: char* = path + strlen(path); ptr != path; ptr--) {
 //         if (ptr[-1] == '.') {
 //             return ptr;
 //         }

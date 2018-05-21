@@ -68,7 +68,7 @@ func clamp_max(x: int, max: int): int {
 //     va_start(args, fmt);
 //     size_t n = 1 + vsnprintf(NULL, 0, fmt, args);
 //     va_end(args);
-//     char *str = xmalloc(n);
+//     str: char* = xmalloc(n);
 //     va_start(args, fmt);
 //     vsnprintf(str, n, fmt, args);
 //     va_end(args);
@@ -83,7 +83,7 @@ func clamp_max(x: int, max: int): int {
 //     fseek(file, 0, SEEK_END);
 //     long len = ftell(file);
 //     fseek(file, 0, SEEK_SET);
-//     char *buf = xmalloc(len + 1);
+//     buf: char* = xmalloc(len + 1);
 //     if (len && fread(buf, len, 1, file) != 1) {
 //         fclose(file);
 //         free(buf);
@@ -172,7 +172,7 @@ func buf_push(b: void*, item: void*, size: usize) {
 // }
 
 // void buf_test(void) {
-//     int *buf = NULL;
+//     buf: int* = NULL;
 //     assert(buf_len(buf) == 0);
 //     int n = 1024;
 //     for (int i = 0; i < n; i++) {
@@ -185,20 +185,20 @@ func buf_push(b: void*, item: void*, size: usize) {
 //     buf_free(buf);
 //     assert(buf == NULL);
 //     assert(buf_len(buf) == 0);
-//     char *str = NULL;
+//     str: char* = NULL;
 //     buf_printf(str, "One: %d\n", 1);
 //     assert(strcmp(str, "One: 1\n") == 0);
 //     buf_printf(str, "Hex: 0x%x\n", 0x12345678);
 //     assert(strcmp(str, "One: 1\nHex: 0x12345678\n") == 0);
 // }
 
-// Arena allocator
+var allocator: Arena;
 
-// typedef struct Arena {
-//     char *ptr;
-//     char *end;
-//     char **blocks;
-// } Arena;
+struct Arena {
+    ptr: char*;
+    end: char*;
+    blocks: char**;
+}
 
 // #define ARENA_ALIGNMENT 8
 // #define ARENA_BLOCK_SIZE (1024 * 1024)
@@ -225,7 +225,7 @@ func buf_push(b: void*, item: void*, size: usize) {
 // }
 
 // void arena_free(Arena *arena) {
-//     for (char **it = arena->blocks; it != buf_end(arena->blocks); it++) {
+//     for (it: char** = arena->blocks; it != buf_end(arena->blocks); it++) {
 //         free(*it);
 //     }
 //     buf_free(arena->blocks);
@@ -376,8 +376,8 @@ func map_put(map: Map*, key: void const*, val: void*) {
 //     char str[];
 // } Intern;
 
-// Arena intern_arena;
-// Map interns;
+var intern_arena: Arena;
+var interns: Map;
 
 // const char *str_intern_range(const char *start, const char *end) {
 //     size_t len = end - start;

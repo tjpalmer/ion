@@ -288,7 +288,7 @@ var reachable_syms: Sym**;
 // }
 
 // char *get_type_name(Type *type) {
-//     char *buf = NULL;
+//     buf: char* = NULL;
 //     put_type_name(&buf, type);
 //     return buf;
 // }
@@ -2228,7 +2228,7 @@ func import_package(package_path: char const*): Package* {
 //                 package->always_reachable = true;
 //             }
 //         } else if (decl->kind == DECL_IMPORT) {
-//             char *path_buf = NULL;
+//             path_buf: char* = NULL;
 //             if (decl->import.is_relative) {
 //                 buf_printf(path_buf, "%s/", package->path);
 //             }
@@ -2260,7 +2260,7 @@ func import_package(package_path: char const*): Package* {
 //         }
 //         char name[MAX_PATH];
 //         path_copy(name, iter.name);
-//         char *ext = path_ext(name);
+//         ext: char* = path_ext(name);
 //         if (ext == name || strcmp(ext, "ion") != 0) {
 //             continue;
 //         }
