@@ -1,6 +1,18 @@
 // #define MIN(x, y) ((x) <= (y) ? (x) : (y))
+func min(x: int, y: int): int {
+    return x <= y ? x : y;
+}
+
 // #define MAX(x, y) ((x) >= (y) ? (x) : (y))
+func max(x: int, y: int): int {
+    return x >= y ? x : y;
+}
+
 // #define CLAMP_MAX(x, max) MIN(x, max)
+func clamp_max(x: int, max: int): int {
+    return min(x, max);
+}
+
 // #define CLAMP_MIN(x, min) MAX(x, min)
 // #define IS_POW2(x) (((x) != 0) && ((x) & ((x)-1)) == 0)
 // #define ALIGN_DOWN(n, a) ((n) & ~((a) - 1))
@@ -240,7 +252,7 @@ func buf_push(b: void*, item: void*, size: usize) {
 
 // uint64_t hash_bytes(const void *ptr, size_t len) {
 //     uint64_t x = 0xcbf29ce484222325;
-//     const char *buf = (const char *)ptr;
+//     buf: char const* = (const char *)ptr;
 //     for (size_t i = 0; i < len; i++) {
 //         x ^= buf[i];
 //         x *= 0x100000001b3;

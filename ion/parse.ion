@@ -49,7 +49,7 @@
 // Typespec *parse_type_base(void) {
 //     if (is_token(TOKEN_NAME)) {
 //         SrcPos pos = token.pos;
-//         const char *name = token.name;
+//         name: char const* = token.name;
 //         next_token();
 //         return new_typespec_name(pos, name);
 //     } else if (match_keyword(func_keyword)) {
@@ -136,12 +136,12 @@
 //         next_token();
 //         return new_expr_float(pos, val, suffix);
 //     } else if (is_token(TOKEN_STR)) {
-//         const char *val = token.str_val;
+//         val: char const* = token.str_val;
 //         TokenMod mod = token.mod;
 //         next_token();
 //         return new_expr_str(pos, val, mod);
 //     } else if (is_token(TOKEN_NAME)) {
-//         const char *name = token.name;
+//         name: char const* = token.name;
 //         next_token();
 //         if (is_token(TOKEN_LBRACE)) {
 //             return parse_expr_compound(new_typespec_name(pos, name));
@@ -185,7 +185,7 @@
 //         expect_token(TOKEN_LPAREN);
 //         Typespec *type = parse_type();
 //         expect_token(TOKEN_COMMA);
-//         const char *name = parse_name();
+//         name: char const* = parse_name();
 //         expect_token(TOKEN_RPAREN);
 //         return new_expr_offsetof(pos, type, name);
 //     } else if (is_token(TOKEN_LBRACE)) {
@@ -230,7 +230,7 @@
 //             expr = new_expr_index(pos, expr, index);
 //         } else if (is_token(TOKEN_DOT)) {
 //             next_token();
-//             const char *field = token.name;
+//             field: char const* = token.name;
 //             expect_token(TOKEN_NAME);
 //             expr = new_expr_field(pos, expr, field);
 //         } else {
@@ -428,7 +428,7 @@
 //             fatal_error_here(": must be preceded by a name");
 //             return NULL;
 //         }
-//         const char *name = left->name;
+//         name: char const* = left->name;
 //         Typespec *type = parse_type();
 //         Expr *expr = NULL;
 //         if (match_token(TOKEN_ASSIGN)) {
@@ -581,14 +581,14 @@
 // }
 
 // const char *parse_name(void) {
-//     const char *name = token.name;
+//     name: char const* = token.name;
 //     expect_token(TOKEN_NAME);
 //     return name;
 // }
 
 // EnumItem parse_decl_enum_item(void) {
 //     SrcPos pos = token.pos;
-//     const char *name = parse_name();
+//     name: char const* = parse_name();
 //     Expr *init = NULL;
 //     if (match_token(TOKEN_ASSIGN)) {
 //         init = parse_expr();
@@ -597,7 +597,7 @@
 // }
 
 // Decl *parse_decl_enum(SrcPos pos) {
-//     const char *name = NULL;
+//     name: char const* = NULL;
 //     if (is_token(TOKEN_NAME)) {
 //         name = parse_name();
 //     }
@@ -619,7 +619,7 @@
 
 // AggregateItem parse_decl_aggregate_item(void) {
 //     SrcPos pos = token.pos;
-//     const char **names = NULL;
+//     names: char const** = NULL;
 //     buf_push(names, parse_name());
 //     while (match_token(TOKEN_COMMA)) {
 //         buf_push(names, parse_name());
@@ -632,7 +632,7 @@
 
 // Decl *parse_decl_aggregate(SrcPos pos, DeclKind kind) {
 //     assert(kind == DECL_STRUCT || kind == DECL_UNION);
-//     const char *name = parse_name();
+//     name: char const* = parse_name();
 //     if (match_token(TOKEN_SEMICOLON)) {
 //         Decl *decl = new_decl_aggregate(pos, kind, name, NULL, 0);
 //         decl->is_incomplete = true;
@@ -649,7 +649,7 @@
 // }
 
 // Decl *parse_decl_var(SrcPos pos) {
-//     const char *name = parse_name();
+//     name: char const* = parse_name();
 //     if (match_token(TOKEN_ASSIGN)) {
 //         Expr *expr = parse_expr();
 //         expect_token(TOKEN_SEMICOLON);
@@ -669,7 +669,7 @@
 // }
 
 // Decl *parse_decl_const(SrcPos pos) {
-//     const char *name = parse_name();
+//     name: char const* = parse_name();
 //     Typespec *type = NULL;
 //     if (match_token(TOKEN_COLON)) {
 //         type = parse_type();
@@ -681,7 +681,7 @@
 // }
 
 // Decl *parse_decl_typedef(SrcPos pos) {
-//     const char *name = parse_name();
+//     name: char const* = parse_name();
 //     expect_token(TOKEN_ASSIGN);
 //     Typespec *type = parse_type();
 //     expect_token(TOKEN_SEMICOLON);
@@ -690,14 +690,14 @@
 
 // FuncParam parse_decl_func_param(void) {
 //     SrcPos pos = token.pos;
-//     const char *name = parse_name();
+//     name: char const* = parse_name();
 //     expect_token(TOKEN_COLON);
 //     Typespec *type = parse_type();
 //     return (FuncParam){pos, name, type};
 // }
 
 // Decl *parse_decl_func(SrcPos pos) {
-//     const char *name = parse_name();
+//     name: char const* = parse_name();
 //     expect_token(TOKEN_LPAREN);
 //     FuncParam *params = NULL;
 //     bool has_varargs = false;
@@ -738,7 +738,7 @@
 // NoteArg parse_note_arg(void) {
 //     SrcPos pos = token.pos;
 //     Expr *expr = parse_expr();
-//     const char *name = NULL;
+//     name: char const* = NULL;
 //     if (match_token(TOKEN_ASSIGN)) {
 //         if (expr->kind != EXPR_NAME) {
 //             fatal_error_here("Left operand of = in note argument must be a name");
@@ -751,7 +751,7 @@
 
 // Note parse_note(void) {
 //     SrcPos pos = token.pos;
-//     const char *name = parse_name();
+//     name: char const* = parse_name();
 //     NoteArg *args = NULL;
 //     if (match_token(TOKEN_LPAREN)) {
 //         buf_push(args, parse_note_arg());
@@ -780,7 +780,7 @@
 //     if (match_token(TOKEN_DOT)) {
 //         is_relative = true;
 //     }
-//     const char **names = NULL;
+//     names: char const** = NULL;
 //     buf_push(names, token.name);
 //     expect_token(TOKEN_NAME);
 //     while (match_token(TOKEN_DOT)) {
@@ -794,7 +794,7 @@
 //             if (match_token(TOKEN_ELLIPSIS)) {
 //                 import_all = true;
 //             } else {
-//                 const char *name = parse_name();
+//                 name: char const* = parse_name();
 //                 if (match_token(TOKEN_ASSIGN)) {
 //                     buf_push(items, (ImportItem){.name = parse_name(), .rename = name});
 //                 } else {

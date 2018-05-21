@@ -7,13 +7,13 @@
 
 // typedef struct NoteArg {
 //     SrcPos pos;
-//     const char *name;
+//     name: char const*;
 //     Expr *expr;
 // } NoteArg;
 
 // typedef struct Note {
 //     SrcPos pos;
-//     const char *name;
+//     name: char const*;
 //     NoteArg *args;
 //     size_t num_args;
 // } Note;
@@ -43,7 +43,7 @@
 //     SrcPos pos;
 //     Typespec *base;
 //     union {
-//         const char *name;
+//         name: char const*;
 //         struct {
 //             Typespec **args;
 //             size_t num_args;
@@ -56,26 +56,26 @@
 
 // typedef struct FuncParam {
 //     SrcPos pos;
-//     const char *name;
+//     name: char const*;
 //     Typespec *type;
 // } FuncParam;
 
 // typedef struct AggregateItem {
 //     SrcPos pos;
-//     const char **names;
+//     names: char const**;
 //     size_t num_names;
 //     Typespec *type;
 // } AggregateItem;
 
 // typedef struct EnumItem {
 //     SrcPos pos;
-//     const char *name;
+//     name: char const*;
 //     Expr *init;
 // } EnumItem;
 
 // typedef struct ImportItem {
-//     const char *name;
-//     const char *rename;
+//     name: char const*;
+//     rename: char const*;
 // } ImportItem;
 
 // typedef enum DeclKind {
@@ -94,7 +94,7 @@
 // struct Decl {
 //     DeclKind kind;
 //     SrcPos pos;
-//     const char *name;
+//     name: char const*;
 //     Notes notes;
 //     bool is_incomplete;
 //     union {
@@ -128,7 +128,7 @@
 //         } const_decl;
 //         struct {
 //             bool is_relative;
-//             const char **names;
+//             names: char const**;
 //             size_t num_names;
 //             bool import_all;
 //             ImportItem *items;
@@ -178,7 +178,7 @@
 //     SrcPos pos;
 //     Expr *init;
 //     union {
-//         const char *name;
+//         name: char const*;
 //         Expr *index;
 //     };
 // } CompoundField;
@@ -200,10 +200,10 @@
 //             TokenSuffix suffix;
 //         } float_lit;
 //         struct {
-//             const char *val;
+//             val: char const*;
 //             TokenMod mod;
 //         } str_lit;
-//         const char *name;
+//         name: char const*;
 //         Expr *sizeof_expr;
 //         Typespec *sizeof_type;
 //         Expr *typeof_expr;
@@ -212,7 +212,7 @@
 //         Typespec *alignof_type;
 //         struct {
 //             Typespec *type;
-//             const char *name;
+//             name: char const*;
 //         } offsetof_field;
 //         struct {
 //             Typespec *type;
@@ -253,7 +253,7 @@
 //         } index;
 //         struct {
 //             Expr *expr;
-//             const char *name;
+//             name: char const*;
 //         } field;
 //     };
 // };
@@ -333,10 +333,10 @@
 //             Expr *right;
 //         } assign;
 //         struct {
-//             const char *name;
+//             name: char const*;
 //             Typespec *type;
 //             Expr *expr;
 //         } init;
-//         const char *label;
+//         label: char const*;
 //     };
 // };

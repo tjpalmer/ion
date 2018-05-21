@@ -31,7 +31,7 @@
 // typedef struct Sym Sym;
 
 // typedef struct TypeField {
-//     const char *name;
+//     name: char const*;
 //     Type *type;
 //     size_t offset;
 // } TypeField;
@@ -172,7 +172,7 @@
 //     }
 // }
 
-// const char *type_names[NUM_TYPE_KINDS] = {
+// type_names: char const*[NUM_TYPE_KINDS] = {
 //     [TYPE_VOID] = "void",
 //     [TYPE_BOOL] = "bool",
 //     [TYPE_CHAR] = "char",

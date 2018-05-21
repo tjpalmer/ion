@@ -101,7 +101,7 @@ var reachable_syms: Sym**;
 //         if (foreign_note->num_args > 1) {
 //             fatal_error(decl->pos, "@foreign takes 0 or 1 argument");
 //         }
-//         const char *external_name;
+//         external_name: char const*;
 //         if (foreign_note->num_args == 0) {
 //             external_name = sym->name;
 //         } else {
@@ -218,7 +218,7 @@ var reachable_syms: Sym**;
 //     }
 //     if (decl->kind == DECL_ENUM) {
 //         Typespec *enum_typespec = enum_typespec = new_typespec_name(decl->pos, sym ? sym->name : str_intern("int"));
-//         const char *prev_item_name = NULL;
+//         prev_item_name: char const* = NULL;
 //         for (size_t i = 0; i < decl->enum_decl.num_items; i++) {
 //             EnumItem item = decl->enum_decl.items[i];
 //             Expr *init;
@@ -239,7 +239,7 @@ var reachable_syms: Sym**;
 // }
 
 // void put_type_name(char **buf, Type *type) {
-//     const char *type_name = type_names[type->kind];
+//     type_name: char const* = type_names[type->kind];
 //     if (type_name) {
 //         buf_printf(*buf, "%s", type_name);
 //     } else {
@@ -825,7 +825,7 @@ var reachable_syms: Sym**;
 // } StmtCtx;
 
 // typedef struct Label {
-//     const char *name;
+//     name: char const*;
 //     SrcPos pos;
 //     bool referenced;
 //     bool defined;
@@ -915,7 +915,7 @@ var reachable_syms: Sym**;
 //     if (left.type->nonmodifiable) {
 //         fatal_error(stmt->pos, "Left-hand side of assignment has non-modifiable type");
 //     }
-//     const char *assign_op_name = token_kind_name(stmt->assign.op);
+//     assign_op_name: char const* = token_kind_name(stmt->assign.op);
 //     TokenKind binary_op = assign_token_to_binary_token[stmt->assign.op];
 //     Operand right = resolve_expected_expr_rvalue(stmt->assign.right, left.type);
 //     Operand result;
@@ -1626,7 +1626,7 @@ func resolve_sym(sym: Sym*) {
 //     Operand left = resolve_expr_rvalue(expr->binary.left);
 //     Operand right = resolve_expr_rvalue(expr->binary.right);
 //     TokenKind op = expr->binary.op;
-//     const char *op_name = token_kind_name(op);
+//     op_name: char const* = token_kind_name(op);
 //     return resolve_expr_binary_op(op, op_name, expr->pos, left, right);
 // }
 
@@ -2149,7 +2149,7 @@ var decl_note_names: Map;
 
 // bool compile_package(Package *package);
 
-// extern const char **package_search_paths;
+// extern package_search_paths: char const**;
 // extern int num_package_search_paths;
 
 // bool is_package_dir(const char *search_path, const char *package_path) {
@@ -2158,7 +2158,7 @@ var decl_note_names: Map;
 //     path_join(path, package_path);
 //     DirListIter iter;
 //     for (dir_list(&iter, path); iter.valid; dir_list_next(&iter)) {
-//         const char *ext = path_ext(iter.name);
+//         ext: char const* = path_ext(iter.name);
 //         if (ext != iter.name && strcmp(ext, "ion") == 0) {
 //             dir_list_free(&iter);
 //             return true;
@@ -2201,7 +2201,7 @@ func import_package(package_path: char const*): Package* {
 
 // void import_all_package_symbols(Package *package) {
 //     // TODO: should have a more general mechanism
-//     const char *main_name = str_intern("main");
+//     main_name: char const* = str_intern("main");
 //     for (size_t i = 0; i < buf_len(package->syms); i++) {
 //         if (package->syms[i]->package == package && package->syms[i]->name != main_name) {
 //             sym_global_put(package->syms[i]->name, package->syms[i]);
@@ -2272,7 +2272,7 @@ func import_package(package_path: char const*): Package* {
 //         path_copy(path, iter.base);
 //         path_join(path, iter.name);
 //         path_absolute(path);
-//         const char *code = read_file(path);
+//         code: char const* = read_file(path);
 //         if (!code) {
 //             fatal_error((SrcPos){.name = path}, "Failed to read source file");
 //         }

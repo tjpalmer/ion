@@ -10,42 +10,42 @@
 // #endif
 const MAX_PATH = 256;
 
-// void path_normalize(char *path) {
-//     char *ptr;
-//     for (ptr = path; *ptr; ptr++) {
-//         if (*ptr == '\\') {
-//             *ptr = '/';
-//         }
-//     }
-//     if (ptr != path && ptr[-1] == '/') {
-//         ptr[-1] = 0;
-//     }
-// }
-
-func path_copy(path: char[MAX_PATH], src: char const*) {
-    // strncpy(path, src, MAX_PATH);
-    // path[MAX_PATH - 1] = 0;
-    // path_normalize(path);
+func path_normalize(path: char*) {
+    ptr: char*;
+    for (ptr = path; *ptr; ptr++) {
+        if (*ptr == '\\') {
+            *ptr = '/';
+        }
+    }
+    if (ptr != path && ptr[-1] == '/') {
+        ptr[-1] = 0;
+    }
 }
 
-// void path_join(char path[MAX_PATH], const char *src) {
-//     char *ptr = path + strlen(path);
-//     if (ptr != path && ptr[-1] == '/') {
-//         ptr--;
-//     }
-//     if (*src == '/') {
-//         src++;
-//     }
-//     snprintf(ptr, path + MAX_PATH - ptr, "/%s", src);
-// }
+func path_copy(path: char[MAX_PATH], src: char const*) {
+    strncpy(path, src, MAX_PATH);
+    path[MAX_PATH - 1] = 0;
+    path_normalize(path);
+}
+
+func path_join(path: char[MAX_PATH], src: char const*) {
+    ptr := path + strlen(path);
+    if (ptr != path && ptr[-1] == '/') {
+        ptr--;
+    }
+    if (*src == '/') {
+        src++;
+    }
+    snprintf(ptr, path + MAX_PATH - ptr, "/%s", src);
+}
 
 func path_file(path: char[MAX_PATH]): char* {
-    // path_normalize(path);
-    // for (char *ptr = path + strlen(path); ptr != path; ptr--) {
-    //     if (ptr[-1] == '/') {
-    //         return ptr;
-    //     }
-    // }
+    path_normalize(path);
+    for (ptr := path + strlen(path); ptr != path; ptr--) {
+        if (ptr[-1] == '/') {
+            return ptr;
+        }
+    }
     return path;
 }
 
@@ -97,10 +97,10 @@ func strdup(str: char const*): char* {
 // }
 
 // const char **dir_list_buf(const char *filespec) {
-//     const char **buf = NULL;
+//     buf: char const** = NULL;
 //     DirListIter iter;
 //     for (dir_list(&iter, filespec); iter.valid; dir_list_next(&iter)) {
-//         const char *name = strdup(iter.name);
+//         name: char const* = strdup(iter.name);
 //         buf_push(buf, name);
 //     }
 //     return buf;

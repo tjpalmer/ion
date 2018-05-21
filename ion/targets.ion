@@ -141,9 +141,9 @@ func init_target() {
 }
 
 // bool is_excluded_target_filename(const char *name) {
-//     const char *end = name + strlen(name);
+//     end: char const* = name + strlen(name);
 
-//     const char *ptr1 = end;
+//     ptr1: char const* = end;
 //     while (ptr1 != name && ptr1[-1] != '_') {
 //         ptr1--;
 //     }
@@ -156,7 +156,7 @@ func init_target() {
 //         ptr1--;
 //     }
 
-//     const char *ptr2 = ptr1;
+//     ptr2: char const* = ptr1;
 //     while (ptr2 != name && ptr2[-1] != '_') {
 //         ptr2--;
 //     }

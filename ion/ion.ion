@@ -1,22 +1,22 @@
 enum { MAX_SEARCH_PATHS = 256 }
-// const char *static_package_search_paths[MAX_SEARCH_PATHS];
-// const char **package_search_paths = static_package_search_paths;
-// int num_package_search_paths;
+var static_package_search_paths: char const*[MAX_SEARCH_PATHS];
+var package_search_paths: char const** = static_package_search_paths;
+var num_package_search_paths: int;
 
-// void add_package_search_path(const char *path) {
-//     if (flag_verbose) {
-//         printf("Adding package search path %s\n", path);
-//     }
-//     package_search_paths[num_package_search_paths++] = str_intern(path);
-// }
+func add_package_search_path(path: char const*) {
+    if (flag_verbose) {
+        printf("Adding package search path %s\n", path);
+    }
+    package_search_paths[num_package_search_paths++] = str_intern(path);
+}
 
-// void add_package_search_path_range(const char *start, const char *end) {
-//     char path[MAX_PATH];
-//     size_t len = CLAMP_MAX(end - start, MAX_PATH - 1);
-//     memcpy(path, start, len);
-//     path[len] = 0;
-//     add_package_search_path(path);
-// }
+func add_package_search_path_range(start: char const*, end: char const*) {
+    path: char[MAX_PATH];
+    len: usize = clamp_max(end - start, MAX_PATH - 1);
+    memcpy(path, start, len);
+    path[len] = 0;
+    add_package_search_path(path);
+}
 
 func init_package_search_paths() {
     ionhome_var := getenv("IONHOME");
@@ -25,23 +25,23 @@ func init_package_search_paths() {
         exit(1);
     }
     path: char[MAX_PATH];
-    // path_copy(path, ionhome_var);
-    // path_join(path, "system_packages");
-    // add_package_search_path(path);
-    // add_package_search_path(".");
-    // const char *ionpath_var = getenv("IONPATH");
-    // if (ionpath_var) {
-    //     const char *start = ionpath_var;
-    //     for (const char *ptr = ionpath_var; *ptr; ptr++) {
-    //         if (*ptr == ';') {
-    //             add_package_search_path_range(start, ptr);
-    //             start = ptr + 1;
-    //         }
-    //     }
-    //     if (*start) {
-    //         add_package_search_path(start);
-    //     }
-    // }
+    path_copy(path, ionhome_var);
+    path_join(path, "system_packages");
+    add_package_search_path(path);
+    add_package_search_path(".");
+    ionpath_var := getenv("IONPATH");
+    if (ionpath_var) {
+        start := ionpath_var;
+        for (ptr := ionpath_var; *ptr; ptr++) {
+            if (*ptr == ';') {
+                add_package_search_path_range(start, ptr);
+                start = ptr + 1;
+            }
+        }
+        if (*start) {
+            add_package_search_path(start);
+        }
+    }
 }
 
 func init_compiler() {

@@ -6,9 +6,9 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 // int gen_indent;
 // SrcPos gen_pos;
 
-// const char **gen_headers_buf;
+// gen_headers_buf: char const**;
 
-// const char *gen_preamble_str =
+// gen_preamble_str: char const* =
 //     "// Preamble\n"
 //     "#ifndef _CRT_SECURE_NO_WARNINGS\n"
 //     "#define _CRT_SECURE_NO_WARNINGS\n"
@@ -53,7 +53,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     "static void va_arg_ptr(va_list *args, struct Any any);\n"
 //     ;
 
-// const char *gen_postamble_str =
+// gen_postamble_str: char const* =
 //     "\n"
 //     "static void va_arg_ptr(va_list *args, Any any) {\n"
 //     "    switch (typeid_kind(any.type)) {\n"
@@ -155,7 +155,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     }
 //     genf("\"");
 //     while (*str) {
-//         const char *start = str;
+//         start: char const* = str;
 //         while (*str && isprint(*str) && !char_to_escape[(unsigned char)*str]) {
 //             str++;
 //         }
@@ -198,7 +198,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 // }
 
 // const char *cdecl_name(Type *type) {
-//     const char *type_name = type_names[type->kind];
+//     type_name: char const* = type_names[type->kind];
 //     if (type_name) {
 //         return type_name;
 //     } else {
@@ -246,7 +246,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     char *temp = gen_buf;
 //     gen_buf = NULL;
 //     gen_expr(expr);
-//     const char *result = gen_buf;
+//     result: char const* = gen_buf;
 //     gen_buf = temp;
 //     return result;
 // }
@@ -254,18 +254,18 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 // Map gen_name_map;
 
 // const char *get_gen_name_or_default(const void *ptr, const char *default_name) {
-//     const char *name = map_get(&gen_name_map, ptr);
+//     name: char const* = map_get(&gen_name_map, ptr);
 //     if (!name) {
 //         Sym *sym = get_resolved_sym(ptr);
 //         if (sym) {
 //             if (sym->external_name) {
 //                 name = sym->external_name;
 //             } else if (sym->package->external_name) {
-//                 const char *external_name = sym->package->external_name;
+//                 external_name: char const* = sym->package->external_name;
 //                 char buf[256];
 //                 if (sym->kind == SYM_CONST) {
 //                     char *ptr = buf;
-//                     for (const char *str = external_name; *str && ptr < buf + sizeof(buf) - 1; str++, ptr++) {
+//                     for (str: char const* = external_name; *str && ptr < buf + sizeof(buf) - 1; str++, ptr++) {
 //                         *ptr = toupper(*str);
 //                     }
 //                     *ptr = 0;
@@ -373,7 +373,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //         switch (decl->kind) {
 //         case DECL_STRUCT:
 //         case DECL_UNION: {
-//             const char *name = get_gen_name(sym);
+//             name: char const* = get_gen_name(sym);
 //             genlnf("typedef %s %s %s;", decl->kind == DECL_STRUCT ? "struct" : "union", name, name);
 //             break;
 //         }
@@ -439,7 +439,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     genf("}");
 // }
 
-// const char *typeid_kind_names[NUM_TYPE_KINDS] = {
+// typeid_kind_names: char const*[NUM_TYPE_KINDS] = {
 //     [TYPE_NONE] = "TYPE_NONE",
 //     [TYPE_VOID] = "TYPE_VOID",
 //     [TYPE_BOOL] = "TYPE_BOOL",
@@ -466,7 +466,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 
 // const char *typeid_kind_name(Type *type) {
 //     if (type->kind < NUM_TYPE_KINDS) {
-//         const char *name = typeid_kind_names[type->kind];
+//         name: char const* = typeid_kind_names[type->kind];
 //         if (name) {
 //             return name;
 //         }
@@ -497,7 +497,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //         genf(")");
 //         break;
 //     case EXPR_INT: {
-//         const char *suffix_name = token_suffix_names[expr->int_lit.suffix];
+//         suffix_name: char const* = token_suffix_names[expr->int_lit.suffix];
 //         switch (expr->int_lit.mod) {
 //         case MOD_BIN:
 //         case MOD_HEX:
@@ -938,7 +938,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 // }
 
 // Map gen_foreign_headers_map;
-// const char **gen_foreign_headers_buf;
+// gen_foreign_headers_buf: char const**;
 
 // static void add_foreign_header(const char *name) {
 //     name = str_intern(name);
@@ -948,7 +948,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     }
 // }
 
-// const char **gen_foreign_sources_buf;
+// gen_foreign_sources_buf: char const**;
 
 // static void add_foreign_source(const char *name) {
 //     buf_push(gen_foreign_sources_buf, str_intern(name));
@@ -978,7 +978,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     }
 // }
 
-// const char **gen_sources_buf;
+// gen_sources_buf: char const**;
 
 // static void put_include_path(char path[MAX_PATH], Package *package, const char *filename) {
 //     if (*filename == '<') {
@@ -996,16 +996,16 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 // static void preprocess_package(Package *package) {
 //     if (!package->external_name) {
 //         char *external_name = NULL;
-//         for (const char *ptr = package->path; *ptr; ptr++) {
+//         for (ptr: char const* = package->path; *ptr; ptr++) {
 //             buf_printf(external_name, "%c", *ptr == '/' ? '_' : *ptr);
 //         }
 //         buf_printf(external_name, "_");
 //         package->external_name = str_intern(external_name);
 //     }
-//     const char *header_name = str_intern("header");
-//     const char *source_name = str_intern("source");
-//     const char *preamble_name = str_intern("preamble");
-//     const char *postamble_name = str_intern("postamble");
+//     header_name: char const* = str_intern("header");
+//     source_name: char const* = str_intern("source");
+//     preamble_name: char const* = str_intern("preamble");
+//     postamble_name: char const* = str_intern("postamble");
 //     for (size_t i = 0; i < package->num_decls; i++) {
 //         Decl *decl = package->decls[i];
 //         if (decl->kind != DECL_NOTE) {
@@ -1019,7 +1019,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //                 if (expr->kind != EXPR_STR) {
 //                     fatal_error(decl->pos, "#foreign argument must be a string");
 //                 }
-//                 const char *str = expr->str_lit.val;
+//                 str: char const* = expr->str_lit.val;
 //                 if (arg.name == header_name) {
 //                     char path[MAX_PATH];
 //                     put_include_path(path, package, str);
@@ -1050,7 +1050,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     if (type_sizeof(type) == 0) {
 //         genf("&(TypeInfo){%s, .size = 0, .align = 0", kind);
 //     } else {
-//         const char *ctype = type_to_cdecl(type, "");
+//         ctype: char const* = type_to_cdecl(type, "");
 //         genf("&(TypeInfo){%s, .size = sizeof(%s), .align = alignof(%s)", kind, ctype, ctype);
 //     }
 // }

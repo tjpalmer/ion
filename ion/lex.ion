@@ -1,38 +1,38 @@
-// const char *typedef_keyword;
-// const char *enum_keyword;
-// const char *struct_keyword;
-// const char *union_keyword;
-// const char *var_keyword;
-// const char *const_keyword;
-// const char *func_keyword;
-// const char *sizeof_keyword;
-// const char *alignof_keyword;
-// const char *typeof_keyword;
-// const char *offsetof_keyword;
-// const char *break_keyword;
-// const char *continue_keyword;
-// const char *return_keyword;
-// const char *if_keyword;
-// const char *else_keyword;
-// const char *while_keyword;
-// const char *do_keyword;
-// const char *for_keyword;
-// const char *switch_keyword;
-// const char *case_keyword;
-// const char *default_keyword;
-// const char *import_keyword;
-// const char *goto_keyword;
+// typedef_keyword: char const*;
+// enum_keyword: char const*;
+// struct_keyword: char const*;
+// union_keyword: char const*;
+// var_keyword: char const*;
+// const_keyword: char const*;
+// func_keyword: char const*;
+// sizeof_keyword: char const*;
+// alignof_keyword: char const*;
+// typeof_keyword: char const*;
+// offsetof_keyword: char const*;
+// break_keyword: char const*;
+// continue_keyword: char const*;
+// return_keyword: char const*;
+// if_keyword: char const*;
+// else_keyword: char const*;
+// while_keyword: char const*;
+// do_keyword: char const*;
+// for_keyword: char const*;
+// switch_keyword: char const*;
+// case_keyword: char const*;
+// default_keyword: char const*;
+// import_keyword: char const*;
+// goto_keyword: char const*;
 
-// const char *first_keyword;
-// const char *last_keyword;
-// const char **keywords;
+// first_keyword: char const*;
+// last_keyword: char const*;
+// keywords: char const**;
 
-// const char *always_name;
-// const char *foreign_name;
-// const char *complete_name;
-// const char *assert_name;
+// always_name: char const*;
+// foreign_name: char const*;
+// complete_name: char const*;
+// assert_name: char const*;
 var declare_note_name: char const*;
-// const char *static_assert_name;
+// static_assert_name: char const*;
 
 // #define KEYWORD(name) name##_keyword = str_intern(#name); buf_push(keywords, name##_keyword)
 
@@ -175,7 +175,7 @@ func init_keywords() {
 //     SUFFIX_ULL,
 // } TokenSuffix;
 
-// const char *token_suffix_names[] = {
+// token_suffix_names: char const*[] = {
 //     [SUFFIX_NONE] = "",
 //     [SUFFIX_D] = "d",
 //     [SUFFIX_U] = "u",
@@ -185,7 +185,7 @@ func init_keywords() {
 //     [SUFFIX_ULL] = "ull",
 // };
 
-// const char *token_kind_names[] = {
+// token_kind_names: char const*[] = {
 //     [TOKEN_EOF] = "EOF",
 //     [TOKEN_COLON] = ":",
 //     [TOKEN_LPAREN] = "(",
@@ -264,7 +264,7 @@ func init_keywords() {
 // };
 
 // typedef struct SrcPos {
-//     const char *name;
+//     name: char const*;
 //     int line;
 // } SrcPos;
 
@@ -275,19 +275,19 @@ func init_keywords() {
 //     TokenMod mod;
 //     TokenSuffix suffix;
 //     SrcPos pos;
-//     const char *start;
-//     const char *end;
+//     start: char const*;
+//     end: char const*;
 //     union {
 //         unsigned long long int_val;
 //         double float_val;
-//         const char *str_val;
-//         const char *name;
+//         str_val: char const*;
+//         name: char const*;
 //     };
 // } Token;
 
 // Token token;
-// const char *stream;
-// const char *line_start;
+// stream: char const*;
+// line_start: char const*;
 
 // void warning(SrcPos pos, const char *fmt, ...) {
 //     if (pos.name == NULL) {
@@ -347,7 +347,7 @@ func init_keywords() {
 
 // void scan_int(void) {
 //     int base = 10;
-//     const char *start_digits = stream;
+//     start_digits: char const* = stream;
 //     if (*stream == '0') {
 //         stream++;
 //         if (tolower(*stream) == 'x') {
@@ -418,7 +418,7 @@ func init_keywords() {
 // }
 
 // void scan_float(void) {
-//     const char *start = stream;
+//     start: char const* = stream;
 //     while (isdigit(*stream)) {
 //         stream++;
 //     }
