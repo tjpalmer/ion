@@ -379,7 +379,7 @@ func map_put(map: Map*, key: void const*, val: void*) {
 var intern_arena: Arena;
 var interns: Map;
 
-// func str_intern_range(start: char const*, end: char const*): char const* {
+func str_intern_range(start: char const*, end: char const*): char const* {
 //     size_t len = end - start;
 //     uint64_t hash = hash_bytes(start, len);
 //     uint64_t key = hash ? hash : 1;
@@ -396,11 +396,11 @@ var interns: Map;
 //     new_intern->str[len] = 0;
 //     map_put_from_uint64(&interns, key, new_intern);
 //     return new_intern->str;
-// }
+    return start;
+}
 
 func str_intern(str: char const*): char const* {
-    // return str_intern_range(str, str + strlen(str));
-    return str;
+    return str_intern_range(str, str + strlen(str));
 }
 
 // func str_islower(str: char const*): bool {
