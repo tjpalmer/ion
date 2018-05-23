@@ -334,9 +334,9 @@ func fatal_error(pos: SrcPos, fmt: char const*, ...) {
 }
 
 // #define fatal_error(...) (error(__VA_ARGS__), exit(1))
-// #define error_here(...) (error(token.pos, __VA_ARGS__))
+// #define error(token.pos, ...) (error(token.pos, __VA_ARGS__))
 // #define warning_here(...) (error(token.pos, __VA_ARGS__))
-// #define fatal_error_here(...) (error_here(__VA_ARGS__), exit(1))
+// #define fatal_error(token.pos, ...) (error(token.pos, __VA_ARGS__), exit(1))
 
 func token_info(): char const* {
     if (token.kind == TOKEN_NAME || token.kind == TOKEN_KEYWORD) {
@@ -346,256 +346,260 @@ func token_info(): char const* {
     }
 }
 
-// uint8_t char_to_digit[256] = {
-//     ['0'] = 0,
-//     ['1'] = 1,
-//     ['2'] = 2,
-//     ['3'] = 3,
-//     ['4'] = 4,
-//     ['5'] = 5,
-//     ['6'] = 6,
-//     ['7'] = 7,
-//     ['8'] = 8,
-//     ['9'] = 9,
-//     ['a'] = 10, ['A'] = 10,
-//     ['b'] = 11, ['B'] = 11,
-//     ['c'] = 12, ['C'] = 12,
-//     ['d'] = 13, ['D'] = 13,
-//     ['e'] = 14, ['E'] = 14,
-//     ['f'] = 15, ['F'] = 15,
-// };
+var char_to_digit: uint8[256] = {
+    ['0'] = 0,
+    ['1'] = 1,
+    ['2'] = 2,
+    ['3'] = 3,
+    ['4'] = 4,
+    ['5'] = 5,
+    ['6'] = 6,
+    ['7'] = 7,
+    ['8'] = 8,
+    ['9'] = 9,
+    ['a'] = 10, ['A'] = 10,
+    ['b'] = 11, ['B'] = 11,
+    ['c'] = 12, ['C'] = 12,
+    ['d'] = 13, ['D'] = 13,
+    ['e'] = 14, ['E'] = 14,
+    ['f'] = 15, ['F'] = 15,
+};
 
-// func scan_int() {
-//     int base = 10;
-//     start_digits: char const* = stream;
-//     if (*stream == '0') {
-//         stream++;
-//         if (tolower(*stream) == 'x') {
-//             stream++;
-//             token.mod = MOD_HEX;
-//             base = 16;
-//             start_digits = stream;
-//         } else if (tolower(*stream) == 'b') {
-//             stream++;
-//             token.mod = MOD_BIN;
-//             base = 2;
-//             start_digits = stream;
-//         } else if (isdigit(*stream)) {
-//             token.mod = MOD_OCT;
-//             base = 8;
-//             start_digits = stream;
-//         }
-//     }
-//     unsigned long long val = 0;
-//     for (;;) {
-//         if (*stream == '_') {
-//             stream++;
-//             continue;
-//         }
-//         int digit = char_to_digit[(unsigned char)*stream];
-//         if (digit == 0 && *stream != '0') {
-//             break;
-//         }
-//         if (digit >= base) {
-//             error_here("Digit '%c' out of range for base %d", *stream, base);
-//             digit = 0;
-//         }
-//         if (val > (ULLONG_MAX - digit)/base) {
-//             error_here("Integer literal overflow");
-//             while (isdigit(*stream)) {
-//                 stream++;
-//             }
-//             val = 0;
-//             break;
-//         }
-//         val = val*base + digit;
-//         stream++;
-//     }
-//     if (stream == start_digits) {
-//         error_here("Expected base %d digit, got '%c'", base, *stream);
-//     }
-//     token.kind = TOKEN_INT;
-//     token.int_val = val;
-//     if (tolower(*stream) == 'u') {
-//         token.suffix = SUFFIX_U;
-//         stream++;
-//         if (tolower(*stream) == 'l') {
-//             token.suffix = SUFFIX_UL;
-//             stream++;
-//             if (tolower(*stream) == 'l') {
-//                 token.suffix = SUFFIX_ULL;
-//                 stream++;
-//             }
-//         }
-//     } else if (tolower(*stream) == 'l') {
-//         token.suffix = SUFFIX_L;
-//         stream++;
-//         if (tolower(*stream) == 'l') {
-//             token.suffix = SUFFIX_LL;
-//             stream++;
-//         }
-//     }
-// }
+func scan_int() {
+    base := 10;
+    start_digits := stream;
+    if (*stream == '0') {
+        stream++;
+        if (tolower(*stream) == 'x') {
+            stream++;
+            token.mod = MOD_HEX;
+            base = 16;
+            start_digits = stream;
+        } else if (tolower(*stream) == 'b') {
+            stream++;
+            token.mod = MOD_BIN;
+            base = 2;
+            start_digits = stream;
+        } else if (isdigit(*stream)) {
+            token.mod = MOD_OCT;
+            base = 8;
+            start_digits = stream;
+        }
+    }
+    val: ullong = 0;
+    for (;;) {
+        if (*stream == '_') {
+            stream++;
+            continue;
+        }
+        digit := char_to_digit[(:uchar)*stream];
+        if (digit == 0 && *stream != '0') {
+            break;
+        }
+        if (digit >= base) {
+            error(token.pos, "Digit '%c' out of range for base %d", *stream, base);
+            digit = 0;
+        }
+        if (val > (ULLONG_MAX - digit)/base) {
+            error(token.pos, "Integer literal overflow");
+            while (isdigit(*stream)) {
+                stream++;
+            }
+            val = 0;
+            break;
+        }
+        val = val*base + digit;
+        stream++;
+    }
+    if (stream == start_digits) {
+        error(token.pos, "Expected base %d digit, got '%c'", base, *stream);
+    }
+    token.kind = TOKEN_INT;
+    token.val.int_val = val;
+    if (tolower(*stream) == 'u') {
+        token.suffix = SUFFIX_U;
+        stream++;
+        if (tolower(*stream) == 'l') {
+            token.suffix = SUFFIX_UL;
+            stream++;
+            if (tolower(*stream) == 'l') {
+                token.suffix = SUFFIX_ULL;
+                stream++;
+            }
+        }
+    } else if (tolower(*stream) == 'l') {
+        token.suffix = SUFFIX_L;
+        stream++;
+        if (tolower(*stream) == 'l') {
+            token.suffix = SUFFIX_LL;
+            stream++;
+        }
+    }
+}
 
-// func scan_float() {
-//     start: char const* = stream;
-//     while (isdigit(*stream)) {
-//         stream++;
-//     }
-//     if (*stream == '.') {
-//         stream++;
-//     }
-//     while (isdigit(*stream)) {
-//         stream++;
-//     }
-//     if (tolower(*stream) == 'e') {
-//         stream++;
-//         if (*stream == '+' || *stream == '-') {
-//             stream++;
-//         }
-//         if (!isdigit(*stream)) {
-//             error_here("Expected digit after float literal exponent, found '%c'.", *stream);
-//         }
-//         while (isdigit(*stream)) {
-//             stream++;
-//         }
-//     }
-//     double val = strtod(start, NULL);
-//     if (val == HUGE_VAL) {
-//         error_here("Float literal overflow");
-//     }
-//     token.kind = TOKEN_FLOAT;
-//     token.float_val = val;
-//     if (tolower(*stream) == 'd') {
-//         token.suffix = SUFFIX_D;
-//         stream++;
-//     }
-// }
+// TODO Why do I have to give a value, and is it used??? I hope not.
+@foreign const HUGE_VAL = 0.0;
 
-// char escape_to_char[256] = {
-//     ['0'] = '\0',
-//     ['\''] = '\'',
-//     ['"'] = '"',
-//     ['\\'] = '\\',
-//     ['n'] = '\n',
-//     ['r'] = '\r',
-//     ['t'] = '\t',
-//     ['v'] = '\v',
-//     ['b'] = '\b',
-//     ['a'] = '\a',
-// };
+func scan_float() {
+    start := stream;
+    while (isdigit(*stream)) {
+        stream++;
+    }
+    if (*stream == '.') {
+        stream++;
+    }
+    while (isdigit(*stream)) {
+        stream++;
+    }
+    if (tolower(*stream) == 'e') {
+        stream++;
+        if (*stream == '+' || *stream == '-') {
+            stream++;
+        }
+        if (!isdigit(*stream)) {
+            error(token.pos, "Expected digit after float literal exponent, found '%c'.", *stream);
+        }
+        while (isdigit(*stream)) {
+            stream++;
+        }
+    }
+    val := strtod(start, NULL);
+    if (val == HUGE_VAL) {
+        error(token.pos, "Float literal overflow");
+    }
+    token.kind = TOKEN_FLOAT;
+    token.val.float_val = val;
+    if (tolower(*stream) == 'd') {
+        token.suffix = SUFFIX_D;
+        stream++;
+    }
+}
 
-// int scan_hex_escape() {
-//     assert(*stream == 'x');
-//     stream++;
-//     int val = char_to_digit[(unsigned char)*stream];
-//     if (!val && *stream != '0') {
-//         error_here("\\x needs at least 1 hex digit");
-//     }
-//     stream++;
-//     int digit = char_to_digit[(unsigned char)*stream];
-//     if (digit || *stream == '0') {
-//         val *= 16;
-//         val += digit;
-//         if (val > 0xFF) {
-//             error_here("\\x argument out of range");
-//             val = 0xFF;
-//         }
-//         stream++;
-//     }
-//     return val;
-// }
+var escape_to_char: char[256] = {
+    ['0'] = '\0',
+    ['\''] = '\'',
+    ['"'] = '"',
+    ['\\'] = '\\',
+    ['n'] = '\n',
+    ['r'] = '\r',
+    ['t'] = '\t',
+    ['v'] = '\v',
+    ['b'] = '\b',
+    ['a'] = '\a',
+};
 
-// func scan_char() {
-//     assert(*stream == '\'');
-//     stream++;
-//     int val = 0;
-//     if (*stream == '\'') {
-//         error_here("Char literal cannot be empty");
-//         stream++;
-//     } else if (*stream == '\n') {
-//         error_here("Char literal cannot contain newline");
-//     } else if (*stream == '\\') {
-//         stream++;
-//         if (*stream == 'x') {
-//             val = scan_hex_escape();
-//         } else {
-//             val = escape_to_char[(unsigned char)*stream];
-//             if (val == 0 && *stream != '0') {
-//                 error_here("Invalid char literal escape '\\%c'", *stream);
-//             }
-//             stream++;
-//         }
-//     } else {
-//         val = *stream;
-//         stream++;
-//     }
-//     if (*stream != '\'') {
-//         error_here("Expected closing char quote, got '%c'", *stream);
-//     } else {
-//         stream++;
-//     }
-//     token.kind = TOKEN_INT;
-//     token.int_val = val;
-//     token.mod = MOD_CHAR;
-// }
+func scan_hex_escape(): int {
+    #assert(*stream == 'x');
+    stream++;
+    val := char_to_digit[(:uchar)*stream];
+    if (!val && *stream != '0') {
+        error(token.pos, "\\x needs at least 1 hex digit");
+    }
+    stream++;
+    digit := char_to_digit[(:uchar)*stream];
+    if (digit || *stream == '0') {
+        val *= 16;
+        val += digit;
+        if (val > 0xFF) {
+            error(token.pos, "\\x argument out of range");
+            val = 0xFF;
+        }
+        stream++;
+    }
+    return val;
+}
 
-// func scan_str() {
-//     assert(*stream == '"');
-//     stream++;
-//     str: char* = NULL;
-//     if (stream[0] == '"' && stream[1] == '"') {
-//         stream += 2;
-//         while (*stream) {
-//             if (stream[0] == '"' && stream[1] == '"' && stream[2] == '"') {
-//                 stream += 3;
-//                 break;
-//             }
-//             if (*stream != '\r') {
-//                 // TODO: Should probably just read files in text mode instead.
-//                 buf_push(str, *stream);
-//             }
-//             if (*stream == '\n') {
-//                 token.pos.line++;
-//             }
-//             stream++;
-//         }
-//         if (!*stream) {
-//             error_here("Unexpected end of file within multi-line string literal");
-//         }
-//         token.mod = MOD_MULTILINE;
-//     } else {
-//         while (*stream && *stream != '"') {
-//             char val = *stream;
-//             if (val == '\n') {
-//                 error_here("String literal cannot contain newline");
-//                 break;
-//             } else if (val == '\\') {
-//                 stream++;
-//                 if (*stream == 'x') {
-//                     val = scan_hex_escape();
-//                 } else {
-//                     val = escape_to_char[(unsigned char)*stream];
-//                     if (val == 0 && *stream != '0') {
-//                         error_here("Invalid string literal escape '\\%c'", *stream);
-//                     }
-//                     stream++;
-//                 }
-//             } else {
-//                 stream++;
-//             }
-//             buf_push(str, val);
-//         }
-//         if (*stream) {
-//             stream++;
-//         } else {
-//             error_here("Unexpected end of file within string literal");
-//         }
-//     }
-//     buf_push(str, 0);
-//     token.kind = TOKEN_STR;
-//     token.str_val = str;
-// }
+func scan_char() {
+    #assert(*stream == '\'');
+    stream++;
+    val := 0;
+    if (*stream == '\'') {
+        error(token.pos, "Char literal cannot be empty");
+        stream++;
+    } else if (*stream == '\n') {
+        error(token.pos, "Char literal cannot contain newline");
+    } else if (*stream == '\\') {
+        stream++;
+        if (*stream == 'x') {
+            val = scan_hex_escape();
+        } else {
+            val = escape_to_char[(:uchar)*stream];
+            if (val == 0 && *stream != '0') {
+                error(token.pos, "Invalid char literal escape '\\%c'", *stream);
+            }
+            stream++;
+        }
+    } else {
+        val = *stream;
+        stream++;
+    }
+    if (*stream != '\'') {
+        error(token.pos, "Expected closing char quote, got '%c'", *stream);
+    } else {
+        stream++;
+    }
+    token.kind = TOKEN_INT;
+    token.val.int_val = val;
+    token.mod = MOD_CHAR;
+}
+
+func scan_str() {
+    #assert(*stream == '"');
+    stream++;
+    str: char* = NULL;
+    if (stream[0] == '"' && stream[1] == '"') {
+        stream += 2;
+        while (*stream) {
+            if (stream[0] == '"' && stream[1] == '"' && stream[2] == '"') {
+                stream += 3;
+                break;
+            }
+            if (*stream != '\r') {
+                // TODO: Should probably just read files in text mode instead.
+                buf_push(str, (:void*)stream, 1);
+            }
+            if (*stream == '\n') {
+                token.pos.line++;
+            }
+            stream++;
+        }
+        if (!*stream) {
+            error(token.pos, "Unexpected end of file within multi-line string literal");
+        }
+        token.mod = MOD_MULTILINE;
+    } else {
+        while (*stream && *stream != '"') {
+            val := *stream;
+            if (val == '\n') {
+                error(token.pos, "String literal cannot contain newline");
+                break;
+            } else if (val == '\\') {
+                stream++;
+                if (*stream == 'x') {
+                    val = scan_hex_escape();
+                } else {
+                    val = escape_to_char[(:uchar)*stream];
+                    if (val == 0 && *stream != '0') {
+                        error(token.pos, "Invalid string literal escape '\\%c'", *stream);
+                    }
+                    stream++;
+                }
+            } else {
+                stream++;
+            }
+            buf_push(str, &val, 1);
+        }
+        if (*stream) {
+            stream++;
+        } else {
+            error(token.pos, "Unexpected end of file within string literal");
+        }
+    }
+    nul := "";
+    buf_push(str, &nul, 1);
+    token.kind = TOKEN_STR;
+    token.val.str_val = str;
+}
 
 // #define CASE1(c1, k1) \
 //     case c1: \
@@ -626,7 +630,7 @@ func token_info(): char const* {
 //         } \
 //         break;
 
-// func next_token() {
+func next_token() {
 // repeat:
 //     token.start = stream;
 //     token.mod = 0;
@@ -769,65 +773,65 @@ func token_info(): char const* {
 //     CASE3('&', TOKEN_AND, '=', TOKEN_AND_ASSIGN, '&', TOKEN_AND_AND)
 //     CASE3('|', TOKEN_OR, '=', TOKEN_OR_ASSIGN, '|', TOKEN_OR_OR)
 //     default:
-//         error_here("Invalid '%c' token, skipping", *stream);
+//         error(token.pos, "Invalid '%c' token, skipping", *stream);
 //         stream++;
 //         goto repeat;
 //     }
 //     token.end = stream;
-// }
+}
 
 // #undef CASE1
 // #undef CASE2
 // #undef CASE3
 
-// func init_stream(name: char const*, buf: char const*) {
-//     stream = buf;
-//     line_start = stream;
-//     token.pos.name = name ? name : "<string>";
-//     token.pos.line = 1;
-//     next_token();
-// }
+func init_stream(name: char const*, buf: char const*) {
+    stream = buf;
+    line_start = stream;
+    token.pos.name = name ? name : (:char const*)"<string>";
+    token.pos.line = 1;
+    next_token();
+}
 
-// bool is_token(TokenKind kind) {
-//     return token.kind == kind;
-// }
+func is_token(kind: TokenKind): bool {
+    return token.kind == kind;
+}
 
-// bool is_token_eof() {
-//     return token.kind == TOKEN_EOF;
-// }
+func is_token_eof(): bool {
+    return token.kind == TOKEN_EOF;
+}
 
-// bool is_token_name(name: char const*) {
-//     return token.kind == TOKEN_NAME && token.name == name;
-// }
+func is_token_name(name: char const*): bool {
+    return token.kind == TOKEN_NAME && token.val.name == name;
+}
 
-// bool is_keyword(name: char const*) {
-//     return is_token(TOKEN_KEYWORD) && token.name == name;
-// }
+func is_keyword(name: char const*): bool {
+    return is_token(TOKEN_KEYWORD) && token.val.name == name;
+}
 
-// bool match_keyword(name: char const*) {
-//     if (is_keyword(name)) {
-//         next_token();
-//         return true;
-//     } else {
-//         return false;
-//     }
-// }
+func match_keyword(name: char const*): bool {
+    if (is_keyword(name)) {
+        next_token();
+        return true;
+    } else {
+        return false;
+    }
+}
 
-// bool match_token(TokenKind kind) {
-//     if (is_token(kind)) {
-//         next_token();
-//         return true;
-//     } else {
-//         return false;
-//     }
-// }
+func match_token(kind: TokenKind): bool {
+    if (is_token(kind)) {
+        next_token();
+        return true;
+    } else {
+        return false;
+    }
+}
 
-// bool expect_token(TokenKind kind) {
-//     if (is_token(kind)) {
-//         next_token();
-//         return true;
-//     } else {
-//         fatal_error_here("Expected token %s, got %s", token_kind_name(kind), token_info());
-//         return false;
-//     }
-// }
+func expect_token(kind: TokenKind): bool {
+    if (is_token(kind)) {
+        next_token();
+        return true;
+    } else {
+        fatal_error(token.pos, "Expected token %s, got %s", token_kind_name(kind), token_info());
+        return false;
+    }
+}

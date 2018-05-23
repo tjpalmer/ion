@@ -81,7 +81,7 @@ var reachable_syms: Sym**;
 // Sym local_syms[MAX_LOCAL_SYMS];
 // Sym *local_syms_end = local_syms;
 
-// bool is_local_sym(Sym *sym) {
+// func is_local_sym(Sym *sym): bool {
 //     return local_syms <= sym && sym < local_syms_end;
 // }
 
@@ -158,7 +158,7 @@ var reachable_syms: Sym**;
 //     return sym ? sym : get_package_sym(current_package, name);
 // }
 
-// bool sym_push_var(name: char const*, Type *type) {
+// func sym_push_var(name: char const*, Type *type): bool {
 //     if (sym_get_local(name)) {
 //         return false;
 //     }
@@ -337,7 +337,7 @@ var reachable_syms: Sym**;
 //     return operand;
 // }
 
-// bool is_null_ptr(Operand operand);
+// func is_null_ptr(Operand operand): bool;
 
 // #define CASE(k, t) \
 //     case k: \
@@ -377,7 +377,7 @@ var reachable_syms: Sym**;
 //             operand->val.ll = (long long)operand->val.t; \
 //             break; \
 //         case TYPE_ULLONG: \
-//             operand->val.ull = (unsigned long long)operand->val.t; \
+//             operand->val.ull = (ullong)operand->val.t; \
 //             break; \
 //         case TYPE_PTR: \
 //             operand->val.p = (uintptr_t)operand->val.t; \
@@ -391,7 +391,7 @@ var reachable_syms: Sym**;
 //         } \
 //         break;
 
-// bool is_convertible(Operand *operand, Type *dest) {
+// func is_convertible(Operand *operand, Type *dest): bool {
 //     dest = unqualify_type(dest);
 //     Type *src = unqualify_type(operand->type);
 //     if (dest == src) {
@@ -418,7 +418,7 @@ var reachable_syms: Sym**;
 //     }
 // }
 
-// bool is_castable(Operand *operand, Type *dest) {
+// func is_castable(Operand *operand, Type *dest): bool {
 //     Type *src = operand->type;
 //     if (is_convertible(operand, dest)) {
 //         return true;
@@ -433,7 +433,7 @@ var reachable_syms: Sym**;
 //     }
 // }
 
-// bool cast_operand(Operand *operand, Type *type) {
+// func cast_operand(Operand *operand, Type *type): bool {
 //     Type *qual_type = type;
 //     type = unqualify_type(type);
 //     operand->type = unqualify_type(operand->type);
@@ -477,7 +477,7 @@ var reachable_syms: Sym**;
 //     return true;
 // }
 
-// bool convert_operand(Operand *operand, Type *type) {
+// func convert_operand(Operand *operand, Type *type): bool {
 //     if (is_convertible(operand, type)) {
 //         cast_operand(operand, type);
 //         operand->type = unqualify_type(operand->type);
@@ -489,7 +489,7 @@ var reachable_syms: Sym**;
 
 // #undef CASE
 
-// bool is_null_ptr(Operand operand) {
+// func is_null_ptr(Operand operand): bool {
 //     if (operand.is_const && (is_ptr_type(operand.type) || is_integer_type(operand.type))) {
 //         cast_operand(&operand, type_ullong);
 //         return operand.val.ull == 0;
@@ -876,9 +876,9 @@ var reachable_syms: Sym**;
 //     labels_end = labels;
 // }
 
-// bool resolve_stmt(Stmt *stmt, Type *ret_type, StmtCtx ctx);
+// func resolve_stmt(Stmt *stmt, Type *ret_type, StmtCtx ctx): bool;
 
-// bool is_cond_operand(Operand operand) {
+// func is_cond_operand(Operand operand): bool {
 //     operand = operand_decay(operand);
 //     return is_scalar_type(operand.type);
 // }
@@ -890,7 +890,7 @@ var reachable_syms: Sym**;
 //     }
 // }
 
-// bool resolve_stmt_block(StmtList block, Type *ret_type, StmtCtx ctx) {
+// func resolve_stmt_block(StmtList block, Type *ret_type, StmtCtx ctx): bool {
 //     Sym *scope = sym_enter();
 //     bool returns = false;
 //     for (size_t i = 0; i < block.num_stmts; i++) {
@@ -955,7 +955,7 @@ var reachable_syms: Sym**;
 //     }
 // }
 
-// bool resolve_stmt(Stmt *stmt, Type *ret_type, StmtCtx ctx) {
+// func resolve_stmt(Stmt *stmt, Type *ret_type, StmtCtx ctx): bool {
 //     switch (stmt->kind) {
 //     case STMT_RETURN:
 //         if (stmt->expr) {
@@ -1256,7 +1256,7 @@ func resolve_sym(sym: Sym*) {
 //     return 0;
 // }
 
-// unsigned long long eval_unary_op_ull(TokenKind op, unsigned long long val) {
+// ullong eval_unary_op_ull(TokenKind op, ullong val) {
 //     switch (op) {
 //     case TOKEN_ADD:
 //         return +val;
@@ -1314,7 +1314,7 @@ func resolve_sym(sym: Sym*) {
 //     return 0;
 // }
 
-// unsigned long long eval_binary_op_ull(TokenKind op, unsigned long long left, unsigned long long right) {
+// ullong eval_binary_op_ull(TokenKind op, ullong left, ullong right) {
 //     switch (op) {
 //     case TOKEN_MUL:
 //         return left * right;
@@ -1806,12 +1806,12 @@ func resolve_sym(sym: Sym*) {
 
 // Operand resolve_expr_int(Expr *expr) {
 //     assert(expr->kind == EXPR_INT);
-//     unsigned long long int_max = type_metrics[TYPE_INT].max;
-//     unsigned long long uint_max = type_metrics[TYPE_UINT].max;
-//     unsigned long long long_max = type_metrics[TYPE_LONG].max;
-//     unsigned long long ulong_max = type_metrics[TYPE_ULONG].max;
-//     unsigned long long llong_max = type_metrics[TYPE_LLONG].max;
-//     unsigned long long val = expr->int_lit.val;
+//     ullong int_max = type_metrics[TYPE_INT].max;
+//     ullong uint_max = type_metrics[TYPE_UINT].max;
+//     ullong long_max = type_metrics[TYPE_LONG].max;
+//     ullong ulong_max = type_metrics[TYPE_ULONG].max;
+//     ullong llong_max = type_metrics[TYPE_LLONG].max;
+//     ullong val = expr->int_lit.val;
 //     Operand operand = operand_const(type_ullong, (Val){.ull = val});
 //     Type *type = type_ullong;
 //     if (expr->int_lit.mod == MOD_NONE) {
@@ -2147,12 +2147,12 @@ var decl_note_names: Map;
 //     }
 // }
 
-// bool compile_package(Package *package);
+// func compile_package(Package *package): bool;
 
 // extern package_search_paths: char const**;
 // extern int num_package_search_paths;
 
-// bool is_package_dir(search_path: char const*, package_path: char const*) {
+// func is_package_dir(search_path: char const*, package_path: char const*): bool {
 //     char path[MAX_PATH];
 //     path_copy(path, search_path);
 //     path_join(path, package_path);
@@ -2167,7 +2167,7 @@ var decl_note_names: Map;
 //     return false;
 // }
 
-// bool copy_package_full_path(char dest[MAX_PATH], package_path: char const*) {
+// func copy_package_full_path(char dest[MAX_PATH], package_path: char const*): bool {
 //     for (int i = 0; i < num_package_search_paths; i++) {
 //         if (is_package_dir(package_search_paths[i], package_path)) {
 //             path_copy(dest, package_search_paths[i]);
@@ -2251,7 +2251,7 @@ func import_package(package_path: char const*): Package* {
 //     }
 // }
 
-// bool parse_package(Package *package) {
+// func parse_package(Package *package): bool {
 //     Decl **decls = NULL;
 //     DirListIter iter;
 //     for (dir_list(&iter, package->full_path); iter.valid; dir_list_next(&iter)) {
@@ -2287,7 +2287,7 @@ func import_package(package_path: char const*): Package* {
 //     return package;
 // }
 
-// bool compile_package(Package *package) {
+// func compile_package(Package *package): bool {
 //     if (!parse_package(package)) {
 //         return false;
 //     }

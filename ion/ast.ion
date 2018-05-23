@@ -97,7 +97,7 @@
 //     return NULL;
 // }
 
-// bool is_decl_foreign(Decl *decl) {
+// func is_decl_foreign(Decl *decl): bool {
 //     return get_decl_note(decl, foreign_name) != NULL;
 // }
 
@@ -235,7 +235,7 @@
 //     return e;
 // }
 
-// Expr *new_expr_int(SrcPos pos, unsigned long long val, TokenMod mod, TokenSuffix suffix) {
+// Expr *new_expr_int(SrcPos pos, ullong val, TokenMod mod, TokenSuffix suffix) {
 //     Expr *e = new_expr(EXPR_INT, pos);
 //     e->int_lit.val = val;
 //     e->int_lit.mod = mod;

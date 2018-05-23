@@ -403,7 +403,7 @@ func str_intern(str: char const*): char const* {
     return str;
 }
 
-// bool str_islower(str: char const*) {
+// func str_islower(str: char const*): bool {
 //     while (*str) {
 //         if (isalpha(*str) && !islower(*str)) {
 //             return false;
@@ -427,6 +427,6 @@ func str_intern(str: char const*): char const* {
 //     long l;
 //     unsigned long ul;
 //     long long ll;
-//     unsigned long long ull;
+//     ullong ull;
 //     uintptr_t p;
 // } Val;

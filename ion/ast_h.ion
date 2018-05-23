@@ -186,7 +186,7 @@
 //             Expr *expr;
 //         } paren;
 //         struct {
-//             unsigned long long val;
+//             ullong val;
 //             TokenMod mod;
 //             TokenSuffix suffix;
 //         } int_lit;

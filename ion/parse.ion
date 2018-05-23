@@ -10,7 +10,7 @@
 //     Typespec *type = parse_type();
 //     if (match_token(TOKEN_COLON)) {
 //         if (type->kind != TYPESPEC_NAME) {
-//             error_here("Colons in parameters of func types must be preceded by names.");
+//             error(token.pos, "Colons in parameters of func types must be preceded by names.");
 //         }
 //         type = parse_type();
 //     }
@@ -27,12 +27,12 @@
 //         while (match_token(TOKEN_COMMA)) {
 //             if (match_token(TOKEN_ELLIPSIS)) {
 //                 if (has_varargs) {
-//                     error_here("Multiple ellipsis instances in function type");
+//                     error(token.pos, "Multiple ellipsis instances in function type");
 //                 }
 //                 has_varargs = true;
 //             } else {
 //                 if (has_varargs) {
-//                     error_here("Ellipsis must be last parameter in function type");
+//                     error(token.pos, "Ellipsis must be last parameter in function type");
 //                 }
 //                 buf_push(args, parse_type_func_param());
 //             }
@@ -59,7 +59,7 @@
 //         expect_token(TOKEN_RPAREN);
 //         return type;
 //     } else {
-//         fatal_error_here("Unexpected token %s in type", token_info());
+//         fatal_error(token.pos, "Unexpected token %s in type", token_info());
 //         return NULL;
 //     }
 // }
@@ -97,7 +97,7 @@
 //         Expr *expr = parse_expr();
 //         if (match_token(TOKEN_ASSIGN)) {
 //             if (expr->kind != EXPR_NAME) {
-//                 fatal_error_here("Named initializer in compound literal must be preceded by field name");
+//                 fatal_error(token.pos, "Named initializer in compound literal must be preceded by field name");
 //             }
 //             return (CompoundField){FIELD_NAME, pos, parse_expr(), .name = expr->name};
 //         } else {
@@ -125,7 +125,7 @@
 // Expr *parse_expr_operand() {
 //     SrcPos pos = token.pos;
 //     if (is_token(TOKEN_INT)) {
-//         unsigned long long val = token.int_val;
+//         ullong val = token.int_val;
 //         TokenMod mod = token.mod;
 //         TokenSuffix suffix = token.suffix;
 //         next_token();
@@ -205,7 +205,7 @@
 //             return new_expr_paren(pos, expr);
 //         }
 //     } else {
-//         fatal_error_here("Unexpected token %s in expression", token_info());
+//         fatal_error(token.pos, "Unexpected token %s in expression", token_info());
 //         return NULL;
 //     }
 // }
@@ -243,7 +243,7 @@
 //     return expr;
 // }
 
-// bool is_unary_op() {
+// func is_unary_op(): bool {
 //     return
 //         is_token(TOKEN_ADD) ||
 //         is_token(TOKEN_SUB) ||
@@ -270,7 +270,7 @@
 //     }
 // }
 
-// bool is_mul_op() {
+// func is_mul_op(): bool {
 //     return TOKEN_FIRST_MUL <= token.kind && token.kind <= TOKEN_LAST_MUL;
 // }
 
@@ -285,7 +285,7 @@
 //     return expr;
 // }
 
-// bool is_add_op() {
+// func is_add_op(): bool {
 //     return TOKEN_FIRST_ADD <= token.kind && token.kind <= TOKEN_LAST_ADD;
 // }
 
@@ -300,7 +300,7 @@
 //     return expr;
 // }
 
-// bool is_cmp_op() {
+// func is_cmp_op(): bool {
 //     return TOKEN_FIRST_CMP <= token.kind && token.kind <= TOKEN_LAST_CMP;
 // }
 
@@ -404,7 +404,7 @@
 // Stmt *parse_stmt_do_while(SrcPos pos) {
 //     StmtList block = parse_stmt_block();
 //     if (!match_keyword(while_keyword)) {
-//         fatal_error_here("Expected 'while' after 'do' block");
+//         fatal_error(token.pos, "Expected 'while' after 'do' block");
 //         return NULL;
 //     }
 //     Stmt *stmt = new_stmt_do_while(pos, parse_paren_expr(), block);
@@ -412,20 +412,20 @@
 //     return stmt;
 // }
 
-// bool is_assign_op() {
+// func is_assign_op(): bool {
 //     return TOKEN_FIRST_ASSIGN <= token.kind && token.kind <= TOKEN_LAST_ASSIGN;
 // }
 
 // Stmt *parse_init_stmt(Expr *left) {
 //     if (match_token(TOKEN_COLON_ASSIGN)) {
 //         if (left->kind != EXPR_NAME) {
-//             fatal_error_here(":= must be preceded by a name");
+//             fatal_error(token.pos, ":= must be preceded by a name");
 //             return NULL;
 //         }
 //         return new_stmt_init(left->pos, left->name, NULL, parse_expr());
 //     } else if (match_token(TOKEN_COLON)) {
 //         if (left->kind != EXPR_NAME) {
-//             fatal_error_here(": must be preceded by a name");
+//             fatal_error(token.pos, ": must be preceded by a name");
 //             return NULL;
 //         }
 //         name: char const* = left->name;
@@ -472,7 +472,7 @@
 //         if (!is_token(TOKEN_RPAREN)) {
 //             next = parse_simple_stmt();
 //             if (next->kind == STMT_INIT) {
-//                 error_here("Init statements not allowed in for-statement's next clause");
+//                 error(token.pos, "Init statements not allowed in for-statement's next clause");
 //             }
 //         }
 //     }
@@ -507,7 +507,7 @@
 //             assert(is_keyword(default_keyword));
 //             next_token();
 //             if (is_default) {
-//                 error_here("Duplicate default labels in same switch clause");
+//                 error(token.pos, "Duplicate default labels in same switch clause");
 //             }
 //             is_default = true;
 //         }
@@ -663,7 +663,7 @@
 //         expect_token(TOKEN_SEMICOLON);
 //         return new_decl_var(pos, name, type, expr);
 //     } else {
-//         fatal_error_here("Expected : or = after var, got %s", token_info());
+//         fatal_error(token.pos, "Expected : or = after var, got %s", token_info());
 //         return NULL;
 //     }
 // }
@@ -706,12 +706,12 @@
 //         while (match_token(TOKEN_COMMA)) {
 //             if (match_token(TOKEN_ELLIPSIS)) {
 //                 if (has_varargs) {
-//                     error_here("Multiple ellipsis in function declaration");
+//                     error(token.pos, "Multiple ellipsis in function declaration");
 //                 }
 //                 has_varargs = true;
 //             } else {
 //                 if (has_varargs) {
-//                     error_here("Ellipsis must be last parameter in function declaration");
+//                     error(token.pos, "Ellipsis must be last parameter in function declaration");
 //                 }
 //                 buf_push(params, parse_decl_func_param());
 //             }
@@ -741,7 +741,7 @@
 //     name: char const* = NULL;
 //     if (match_token(TOKEN_ASSIGN)) {
 //         if (expr->kind != EXPR_NAME) {
-//             fatal_error_here("Left operand of = in note argument must be a name");
+//             fatal_error(token.pos, "Left operand of = in note argument must be a name");
 //         }
 //         name = expr->name;
 //         expr = parse_expr();
@@ -839,7 +839,7 @@
 //     Notes notes = parse_notes();
 //     Decl *decl = parse_decl_opt();
 //     if (!decl) {
-//         fatal_error_here("Expected declaration keyword, got %s", token_info());
+//         fatal_error(token.pos, "Expected declaration keyword, got %s", token_info());
 //     }
 //     decl->notes = notes;
 //     return decl;

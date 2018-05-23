@@ -70,7 +70,7 @@ func path_file(path: char[MAX_PATH]): char* {
 //     void *handle;
 // } DirListIter;
 
-// bool dir_excluded(DirListIter *iter) {
+// func dir_excluded(DirListIter *iter): bool {
 //     return iter->valid && (strcmp(iter->name, ".") == 0 || strcmp(iter->name, "..") == 0);
 // }
 
@@ -84,7 +84,7 @@ func strdup(str: char const*): char* {
     return NULL;
 }
 
-// bool dir_list_subdir(DirListIter *iter) {
+// func dir_list_subdir(DirListIter *iter): bool {
 //     if (!iter->valid || !iter->is_dir) {
 //         return false;
 //     }

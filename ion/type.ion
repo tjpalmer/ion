@@ -63,7 +63,7 @@
 //     size_t size;
 //     size_t align;
 //     bool sign;
-//     unsigned long long max;
+//     ullong max;
 // } TypeMetrics;
 
 // TypeMetrics *type_metrics;
@@ -113,51 +113,51 @@
 //     return type;
 // }
 
-// bool is_ptr_type(Type *type) {
+// func is_ptr_type(Type *type): bool {
 //     return type->kind == TYPE_PTR;
 // }
 
-// bool is_func_type(Type *type) {
+// func is_func_type(Type *type): bool {
 //     return type->kind == TYPE_FUNC;
 // }
 
-// bool is_ptr_like_type(Type *type) {
+// func is_ptr_like_type(Type *type): bool {
 //     return type->kind == TYPE_PTR || type->kind == TYPE_FUNC;
 // }
 
-// bool is_const_type(Type *type) {
+// func is_const_type(Type *type): bool {
 //     return type->kind == TYPE_CONST;
 // }
 
-// bool is_array_type(Type *type) {
+// func is_array_type(Type *type): bool {
 //     return type->kind == TYPE_ARRAY;
 // }
 
-// bool is_incomplete_array_type(Type *type) {
+// func is_incomplete_array_type(Type *type): bool {
 //     return is_array_type(type) && type->num_elems == 0;
 // }
 
-// bool is_integer_type(Type *type) {
+// func is_integer_type(Type *type): bool {
 //     return TYPE_BOOL <= type->kind && type->kind <= TYPE_ENUM;
 // }
 
-// bool is_floating_type(Type *type) {
+// func is_floating_type(Type *type): bool {
 //     return TYPE_FLOAT <= type->kind && type->kind <= TYPE_DOUBLE;
 // }
 
-// bool is_arithmetic_type(Type *type) {
+// func is_arithmetic_type(Type *type): bool {
 //     return TYPE_BOOL <= type->kind && type->kind <= TYPE_DOUBLE;
 // }
 
-// bool is_scalar_type(Type *type) {
+// func is_scalar_type(Type *type): bool {
 //     return TYPE_BOOL <= type->kind && type->kind <= TYPE_FUNC;
 // }
 
-// bool is_aggregate_type(Type *type) {
+// func is_aggregate_type(Type *type): bool {
 //     return type->kind == TYPE_STRUCT || type->kind == TYPE_UNION;
 // }
 
-// bool is_signed_type(Type *type) {
+// func is_signed_type(Type *type): bool {
 //     switch (type->kind) {
 //     case TYPE_CHAR:
 //         return type_metrics[TYPE_CHAR].sign;
@@ -353,7 +353,7 @@
 //     return type;
 // }
 
-// bool has_duplicate_fields(TypeField *fields, size_t num_fields) {
+// func has_duplicate_fields(TypeField *fields, size_t num_fields): bool {
 //     for (size_t i = 0; i < num_fields; i++) {
 //         for (size_t j = i+1; j < num_fields; j++) {
 //             if (fields[i].name == fields[j].name) {

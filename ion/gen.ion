@@ -119,7 +119,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     gen_pos.line++;
 // }
 
-// bool is_incomplete_array_typespec(Typespec *typespec) {
+// func is_incomplete_array_typespec(Typespec *typespec): bool {
 //     return typespec->kind == TYPESPEC_ARRAY && !typespec->num_elems;
 // }
 
@@ -356,7 +356,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     }
 // }
 
-// bool gen_reachable(Sym *sym) {
+// func gen_reachable(Sym *sym): bool {
 //     return flag_fullgen || sym->reachable == REACHABLE_NATURAL;
 // }
 
@@ -474,7 +474,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     return "TYPE_NONE";
 // }
 
-// bool is_excluded_typeinfo(Type *type) {
+// func is_excluded_typeinfo(Type *type): bool {
 //     while (type->kind == TYPE_ARRAY || type->kind == TYPE_CONST || type->kind == TYPE_PTR) {
 //         type = type->base;
 //     }
@@ -668,7 +668,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     }
 // }
 
-// static bool is_char_lit(Expr *expr) {
+// static func is_char_lit(Expr *expr): bool {
 //     return expr->kind == EXPR_INT && expr->int_lit.mod == MOD_CHAR;
 // }
 
