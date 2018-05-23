@@ -37,7 +37,8 @@ var static_assert_name: char const*;
 // #define KEYWORD(name) name##_keyword = str_intern(#name); buf_push(keywords, name##_keyword)
 func init_keyword(keyword: char const*): char const* {
     keyword = str_intern(keyword);
-    buf_push(keywords, &keyword, sizeof(keyword));
+    // TODO If ion doesn't give warnings, the underlying compiler also shouldn't.
+    buf_push((:void*)keywords, (:void*)&keyword, sizeof(keyword));
     return keyword;
 }
 
@@ -88,249 +89,262 @@ func init_keywords() {
 
 // #undef KEYWORD
 
-// bool is_keyword_name(const char *name) {
-//     return first_keyword <= name && name <= last_keyword;
-// }
+func is_keyword_name(name: char const*): bool {
+    return first_keyword <= name && name <= last_keyword;
+}
 
-// typedef enum TokenKind {
-//     TOKEN_EOF,
-//     TOKEN_COLON,
-//     TOKEN_LPAREN,
-//     TOKEN_RPAREN,
-//     TOKEN_LBRACE,
-//     TOKEN_RBRACE,
-//     TOKEN_LBRACKET,
-//     TOKEN_RBRACKET,
-//     TOKEN_COMMA,
-//     TOKEN_DOT,
-//     TOKEN_AT,
-//     TOKEN_POUND,
-//     TOKEN_ELLIPSIS,
-//     TOKEN_QUESTION,
-//     TOKEN_SEMICOLON,
-//     TOKEN_KEYWORD,
-//     TOKEN_INT,
-//     TOKEN_FLOAT,
-//     TOKEN_STR,
-//     TOKEN_NAME,
-//     TOKEN_NEG,
-//     TOKEN_NOT,
-//     // Multiplicative precedence
-//     TOKEN_FIRST_MUL,
-//     TOKEN_MUL = TOKEN_FIRST_MUL,
-//     TOKEN_DIV,
-//     TOKEN_MOD,
-//     TOKEN_AND,
-//     TOKEN_LSHIFT,
-//     TOKEN_RSHIFT,
-//     TOKEN_LAST_MUL = TOKEN_RSHIFT,
-//     // Additive precedence
-//     TOKEN_FIRST_ADD,
-//     TOKEN_ADD = TOKEN_FIRST_ADD,
-//     TOKEN_SUB,
-//     TOKEN_XOR,
-//     TOKEN_OR,
-//     TOKEN_LAST_ADD = TOKEN_OR,
-//     // Comparative precedence
-//     TOKEN_FIRST_CMP,
-//     TOKEN_EQ = TOKEN_FIRST_CMP,
-//     TOKEN_NOTEQ,
-//     TOKEN_LT,
-//     TOKEN_GT,
-//     TOKEN_LTEQ,
-//     TOKEN_GTEQ,
-//     TOKEN_LAST_CMP = TOKEN_GTEQ,
-//     TOKEN_AND_AND,
-//     TOKEN_OR_OR,
-//     // Assignment operators
-//     TOKEN_FIRST_ASSIGN,
-//     TOKEN_ASSIGN = TOKEN_FIRST_ASSIGN,
-//     TOKEN_ADD_ASSIGN,
-//     TOKEN_SUB_ASSIGN,
-//     TOKEN_OR_ASSIGN,
-//     TOKEN_AND_ASSIGN,
-//     TOKEN_XOR_ASSIGN,
-//     TOKEN_LSHIFT_ASSIGN,
-//     TOKEN_RSHIFT_ASSIGN,
-//     TOKEN_MUL_ASSIGN,
-//     TOKEN_DIV_ASSIGN,
-//     TOKEN_MOD_ASSIGN,
-//     TOKEN_LAST_ASSIGN = TOKEN_MOD_ASSIGN,
-//     TOKEN_INC,
-//     TOKEN_DEC,
-//     TOKEN_COLON_ASSIGN,
-//     NUM_TOKEN_KINDS,
-// } TokenKind;
+enum TokenKind {
+    TOKEN_EOF,
+    TOKEN_COLON,
+    TOKEN_LPAREN,
+    TOKEN_RPAREN,
+    TOKEN_LBRACE,
+    TOKEN_RBRACE,
+    TOKEN_LBRACKET,
+    TOKEN_RBRACKET,
+    TOKEN_COMMA,
+    TOKEN_DOT,
+    TOKEN_AT,
+    TOKEN_POUND,
+    TOKEN_ELLIPSIS,
+    TOKEN_QUESTION,
+    TOKEN_SEMICOLON,
+    TOKEN_KEYWORD,
+    TOKEN_INT,
+    TOKEN_FLOAT,
+    TOKEN_STR,
+    TOKEN_NAME,
+    TOKEN_NEG,
+    TOKEN_NOT,
+    // Multiplicative precedence
+    TOKEN_FIRST_MUL,
+    TOKEN_MUL = TOKEN_FIRST_MUL,
+    TOKEN_DIV,
+    TOKEN_MOD,
+    TOKEN_AND,
+    TOKEN_LSHIFT,
+    TOKEN_RSHIFT,
+    TOKEN_LAST_MUL = TOKEN_RSHIFT,
+    // Additive precedence
+    TOKEN_FIRST_ADD,
+    TOKEN_ADD = TOKEN_FIRST_ADD,
+    TOKEN_SUB,
+    TOKEN_XOR,
+    TOKEN_OR,
+    TOKEN_LAST_ADD = TOKEN_OR,
+    // Comparative precedence
+    TOKEN_FIRST_CMP,
+    TOKEN_EQ = TOKEN_FIRST_CMP,
+    TOKEN_NOTEQ,
+    TOKEN_LT,
+    TOKEN_GT,
+    TOKEN_LTEQ,
+    TOKEN_GTEQ,
+    TOKEN_LAST_CMP = TOKEN_GTEQ,
+    TOKEN_AND_AND,
+    TOKEN_OR_OR,
+    // Assignment operators
+    TOKEN_FIRST_ASSIGN,
+    TOKEN_ASSIGN = TOKEN_FIRST_ASSIGN,
+    TOKEN_ADD_ASSIGN,
+    TOKEN_SUB_ASSIGN,
+    TOKEN_OR_ASSIGN,
+    TOKEN_AND_ASSIGN,
+    TOKEN_XOR_ASSIGN,
+    TOKEN_LSHIFT_ASSIGN,
+    TOKEN_RSHIFT_ASSIGN,
+    TOKEN_MUL_ASSIGN,
+    TOKEN_DIV_ASSIGN,
+    TOKEN_MOD_ASSIGN,
+    TOKEN_LAST_ASSIGN = TOKEN_MOD_ASSIGN,
+    TOKEN_INC,
+    TOKEN_DEC,
+    TOKEN_COLON_ASSIGN,
+    NUM_TOKEN_KINDS,
+}
 
-// typedef enum TokenMod {
-//     MOD_NONE,
-//     MOD_HEX,
-//     MOD_BIN,
-//     MOD_OCT,
-//     MOD_CHAR,
-//     MOD_MULTILINE,
-// } TokenMod;
+enum TokenMod {
+    MOD_NONE,
+    MOD_HEX,
+    MOD_BIN,
+    MOD_OCT,
+    MOD_CHAR,
+    MOD_MULTILINE,
+}
 
-// typedef enum TokenSuffix {
-//     SUFFIX_NONE,
-//     SUFFIX_D,
-//     SUFFIX_U,
-//     SUFFIX_L,
-//     SUFFIX_UL,
-//     SUFFIX_LL,
-//     SUFFIX_ULL,
-// } TokenSuffix;
+enum TokenSuffix {
+    SUFFIX_NONE,
+    SUFFIX_D,
+    SUFFIX_U,
+    SUFFIX_L,
+    SUFFIX_UL,
+    SUFFIX_LL,
+    SUFFIX_ULL,
+}
 
-// token_suffix_names: char const*[] = {
-//     [SUFFIX_NONE] = "",
-//     [SUFFIX_D] = "d",
-//     [SUFFIX_U] = "u",
-//     [SUFFIX_L] = "l",
-//     [SUFFIX_UL] = "ul",
-//     [SUFFIX_LL] = "ll",
-//     [SUFFIX_ULL] = "ull",
-// };
+var token_suffix_names: char const*[] = {
+    [SUFFIX_NONE] = "",
+    [SUFFIX_D] = "d",
+    [SUFFIX_U] = "u",
+    [SUFFIX_L] = "l",
+    [SUFFIX_UL] = "ul",
+    [SUFFIX_LL] = "ll",
+    [SUFFIX_ULL] = "ull",
+};
 
-// token_kind_names: char const*[] = {
-//     [TOKEN_EOF] = "EOF",
-//     [TOKEN_COLON] = ":",
-//     [TOKEN_LPAREN] = "(",
-//     [TOKEN_RPAREN] = ")",
-//     [TOKEN_LBRACE] = "{",
-//     [TOKEN_RBRACE] = "}",
-//     [TOKEN_LBRACKET] = "[",
-//     [TOKEN_RBRACKET] = "]",
-//     [TOKEN_COMMA] = ",",
-//     [TOKEN_DOT] = ".",
-//     [TOKEN_AT] = "@",
-//     [TOKEN_POUND] = "#",
-//     [TOKEN_ELLIPSIS] = "...",
-//     [TOKEN_QUESTION] = "?",
-//     [TOKEN_SEMICOLON] = ";",
-//     [TOKEN_KEYWORD] = "keyword",
-//     [TOKEN_INT] = "int",
-//     [TOKEN_FLOAT] = "float",
-//     [TOKEN_STR] = "string",
-//     [TOKEN_NAME] = "name",
-//     [TOKEN_NEG] = "~",
-//     [TOKEN_NOT] = "!",
-//     [TOKEN_MUL] = "*",
-//     [TOKEN_DIV] = "/",
-//     [TOKEN_MOD] = "%",
-//     [TOKEN_AND] = "&",
-//     [TOKEN_LSHIFT] = "<<",
-//     [TOKEN_RSHIFT] = ">>",
-//     [TOKEN_ADD] = "+",
-//     [TOKEN_SUB] = "-",
-//     [TOKEN_OR] = "|",
-//     [TOKEN_XOR] = "^",
-//     [TOKEN_EQ] = "==",
-//     [TOKEN_NOTEQ] = "!=",
-//     [TOKEN_LT] = "<",
-//     [TOKEN_GT] = ">",
-//     [TOKEN_LTEQ] = "<=",
-//     [TOKEN_GTEQ] = ">=",
-//     [TOKEN_AND_AND] = "&&",
-//     [TOKEN_OR_OR] = "||",
-//     [TOKEN_ASSIGN] = "=",
-//     [TOKEN_ADD_ASSIGN] = "+=",
-//     [TOKEN_SUB_ASSIGN] = "-=",
-//     [TOKEN_OR_ASSIGN] = "|=",
-//     [TOKEN_AND_ASSIGN] = "&=",
-//     [TOKEN_XOR_ASSIGN] = "^=",
-//     [TOKEN_MUL_ASSIGN] = "*=",
-//     [TOKEN_DIV_ASSIGN] = "/=",
-//     [TOKEN_MOD_ASSIGN] = "%=",
-//     [TOKEN_LSHIFT_ASSIGN] = "<<=",
-//     [TOKEN_RSHIFT_ASSIGN] = ">>=",
-//     [TOKEN_INC] = "++",
-//     [TOKEN_DEC] = "--",
-//     [TOKEN_COLON_ASSIGN] = ":=",
-// };
+var token_kind_names: char const*[] = {
+    [TOKEN_EOF] = "EOF",
+    [TOKEN_COLON] = ":",
+    [TOKEN_LPAREN] = "(",
+    [TOKEN_RPAREN] = ")",
+    [TOKEN_LBRACE] = "{",
+    [TOKEN_RBRACE] = "}",
+    [TOKEN_LBRACKET] = "[",
+    [TOKEN_RBRACKET] = "]",
+    [TOKEN_COMMA] = ",",
+    [TOKEN_DOT] = ".",
+    [TOKEN_AT] = "@",
+    [TOKEN_POUND] = "#",
+    [TOKEN_ELLIPSIS] = "...",
+    [TOKEN_QUESTION] = "?",
+    [TOKEN_SEMICOLON] = ";",
+    [TOKEN_KEYWORD] = "keyword",
+    [TOKEN_INT] = "int",
+    [TOKEN_FLOAT] = "float",
+    [TOKEN_STR] = "string",
+    [TOKEN_NAME] = "name",
+    [TOKEN_NEG] = "~",
+    [TOKEN_NOT] = "!",
+    [TOKEN_MUL] = "*",
+    [TOKEN_DIV] = "/",
+    [TOKEN_MOD] = "%",
+    [TOKEN_AND] = "&",
+    [TOKEN_LSHIFT] = "<<",
+    [TOKEN_RSHIFT] = ">>",
+    [TOKEN_ADD] = "+",
+    [TOKEN_SUB] = "-",
+    [TOKEN_OR] = "|",
+    [TOKEN_XOR] = "^",
+    [TOKEN_EQ] = "==",
+    [TOKEN_NOTEQ] = "!=",
+    [TOKEN_LT] = "<",
+    [TOKEN_GT] = ">",
+    [TOKEN_LTEQ] = "<=",
+    [TOKEN_GTEQ] = ">=",
+    [TOKEN_AND_AND] = "&&",
+    [TOKEN_OR_OR] = "||",
+    [TOKEN_ASSIGN] = "=",
+    [TOKEN_ADD_ASSIGN] = "+=",
+    [TOKEN_SUB_ASSIGN] = "-=",
+    [TOKEN_OR_ASSIGN] = "|=",
+    [TOKEN_AND_ASSIGN] = "&=",
+    [TOKEN_XOR_ASSIGN] = "^=",
+    [TOKEN_MUL_ASSIGN] = "*=",
+    [TOKEN_DIV_ASSIGN] = "/=",
+    [TOKEN_MOD_ASSIGN] = "%=",
+    [TOKEN_LSHIFT_ASSIGN] = "<<=",
+    [TOKEN_RSHIFT_ASSIGN] = ">>=",
+    [TOKEN_INC] = "++",
+    [TOKEN_DEC] = "--",
+    [TOKEN_COLON_ASSIGN] = ":=",
+};
 
-// const char *token_kind_name(TokenKind kind) {
-//     if (kind < sizeof(token_kind_names)/sizeof(*token_kind_names)) {
-//         return token_kind_names[kind];
-//     } else {
-//         return "<unknown>";
-//     }
-// }
+func token_kind_name(kind: TokenKind): char const* {
+    if (kind < sizeof(token_kind_names)/sizeof(*token_kind_names)) {
+        return token_kind_names[kind];
+    } else {
+        return "<unknown>";
+    }
+}
 
-// TokenKind assign_token_to_binary_token[NUM_TOKEN_KINDS] = {
-//     [TOKEN_ADD_ASSIGN] = TOKEN_ADD,
-//     [TOKEN_SUB_ASSIGN] = TOKEN_SUB,
-//     [TOKEN_OR_ASSIGN] = TOKEN_OR,
-//     [TOKEN_AND_ASSIGN] = TOKEN_AND,
-//     [TOKEN_XOR_ASSIGN] = TOKEN_XOR,
-//     [TOKEN_LSHIFT_ASSIGN] = TOKEN_LSHIFT,
-//     [TOKEN_RSHIFT_ASSIGN] = TOKEN_RSHIFT,
-//     [TOKEN_MUL_ASSIGN] = TOKEN_MUL,
-//     [TOKEN_DIV_ASSIGN] = TOKEN_DIV,
-//     [TOKEN_MOD_ASSIGN] = TOKEN_MOD,
-// };
+var assign_token_to_binary_token: TokenKind[NUM_TOKEN_KINDS] = {
+    [TOKEN_ADD_ASSIGN] = TOKEN_ADD,
+    [TOKEN_SUB_ASSIGN] = TOKEN_SUB,
+    [TOKEN_OR_ASSIGN] = TOKEN_OR,
+    [TOKEN_AND_ASSIGN] = TOKEN_AND,
+    [TOKEN_XOR_ASSIGN] = TOKEN_XOR,
+    [TOKEN_LSHIFT_ASSIGN] = TOKEN_LSHIFT,
+    [TOKEN_RSHIFT_ASSIGN] = TOKEN_RSHIFT,
+    [TOKEN_MUL_ASSIGN] = TOKEN_MUL,
+    [TOKEN_DIV_ASSIGN] = TOKEN_DIV,
+    [TOKEN_MOD_ASSIGN] = TOKEN_MOD,
+};
 
-// typedef struct SrcPos {
-//     name: char const*;
-//     int line;
-// } SrcPos;
+struct SrcPos {
+    name: char const*;
+    line: int;
+}
 
-// SrcPos pos_builtin = {.name = "<builtin>"};
+var pos_builtin: SrcPos = {name = "<builtin>"};
 
-// typedef struct Token {
-//     TokenKind kind;
-//     TokenMod mod;
-//     TokenSuffix suffix;
-//     SrcPos pos;
-//     start: char const*;
-//     end: char const*;
-//     union {
-//         unsigned long long int_val;
-//         double float_val;
-//         str_val: char const*;
-//         name: char const*;
-//     };
-// } Token;
+struct Token {
+    kind: TokenKind;
+    mod: TokenMod;
+    suffix: TokenSuffix;
+    pos: SrcPos;
+    start: char const*;
+    end: char const*;
+    val: TokenVal;
+}
 
-// Token token;
-// stream: char const*;
-// line_start: char const*;
+union TokenVal {
+    int_val: ullong;
+    float_val: double;
+    str_val: char const*;
+    name: char const*;
+}
 
-// void warning(SrcPos pos, const char *fmt, ...) {
-//     if (pos.name == NULL) {
-//         pos = pos_builtin;
-//     }
-//     va_list args;
-//     va_start(args, fmt);
-//     printf("%s(%d): warning: ", pos.name, pos.line);
-//     vprintf(fmt, args);
-//     printf("\n");
-//     va_end(args);
-// }
+var token: Token;
+var stream: char const*;
+var line_start: char const*;
 
-// void error(SrcPos pos, const char *fmt, ...) {
-//     if (pos.name == NULL) {
-//         pos = pos_builtin;
-//     }
-//     va_list args;
-//     va_start(args, fmt);
-//     printf("%s(%d): error: ", pos.name, pos.line);
-//     vprintf(fmt, args);
-//     printf("\n");
-//     va_end(args);
-// }
+func vnotice(level: char const*, pos: SrcPos, fmt: char const*, args: va_list) {
+    if (pos.name == NULL) {
+        pos = pos_builtin;
+    }
+    printf("%s(%d): %s: ", pos.name, pos.line, level);
+    vprintf(fmt, args);
+    printf("\n");
+}
+
+func warning(pos: SrcPos, fmt: char const*, ...) {
+    args: va_list;
+    va_start(&args, &fmt);
+    vnotice("warning", pos, fmt, args);
+    va_end(&args);
+}
+
+func verror(pos: SrcPos, fmt: char const*, args: va_list) {
+    vnotice("error", pos, fmt, args);
+}
+
+func error(pos: SrcPos, fmt: char const*, ...) {
+    args: va_list;
+    va_start(&args, &fmt);
+    verror(pos, fmt, args);
+    va_end(&args);
+}
+
+func fatal_error(pos: SrcPos, fmt: char const*, ...) {
+    args: va_list;
+    va_start(&args, &fmt);
+    verror(pos, fmt, args);
+    va_end(&args);
+    exit(1);
+}
 
 // #define fatal_error(...) (error(__VA_ARGS__), exit(1))
 // #define error_here(...) (error(token.pos, __VA_ARGS__))
 // #define warning_here(...) (error(token.pos, __VA_ARGS__))
 // #define fatal_error_here(...) (error_here(__VA_ARGS__), exit(1))
 
-// const char *token_info(void) {
-//     if (token.kind == TOKEN_NAME || token.kind == TOKEN_KEYWORD) {
-//         return token.name;
-//     } else {
-//         return token_kind_name(token.kind);
-//     }
-// }
+func token_info(): char const* {
+    if (token.kind == TOKEN_NAME || token.kind == TOKEN_KEYWORD) {
+        return token.val.name;
+    } else {
+        return token_kind_name(token.kind);
+    }
+}
 
 // uint8_t char_to_digit[256] = {
 //     ['0'] = 0,
@@ -351,7 +365,7 @@ func init_keywords() {
 //     ['f'] = 15, ['F'] = 15,
 // };
 
-// void scan_int(void) {
+// func scan_int() {
 //     int base = 10;
 //     start_digits: char const* = stream;
 //     if (*stream == '0') {
@@ -423,7 +437,7 @@ func init_keywords() {
 //     }
 // }
 
-// void scan_float(void) {
+// func scan_float() {
 //     start: char const* = stream;
 //     while (isdigit(*stream)) {
 //         stream++;
@@ -471,7 +485,7 @@ func init_keywords() {
 //     ['a'] = '\a',
 // };
 
-// int scan_hex_escape(void) {
+// int scan_hex_escape() {
 //     assert(*stream == 'x');
 //     stream++;
 //     int val = char_to_digit[(unsigned char)*stream];
@@ -492,7 +506,7 @@ func init_keywords() {
 //     return val;
 // }
 
-// void scan_char(void) {
+// func scan_char() {
 //     assert(*stream == '\'');
 //     stream++;
 //     int val = 0;
@@ -526,7 +540,7 @@ func init_keywords() {
 //     token.mod = MOD_CHAR;
 // }
 
-// void scan_str(void) {
+// func scan_str() {
 //     assert(*stream == '"');
 //     stream++;
 //     str: char* = NULL;
@@ -612,7 +626,7 @@ func init_keywords() {
 //         } \
 //         break;
 
-// void next_token(void) {
+// func next_token() {
 // repeat:
 //     token.start = stream;
 //     token.mod = 0;
@@ -766,7 +780,7 @@ func init_keywords() {
 // #undef CASE2
 // #undef CASE3
 
-// void init_stream(const char *name, const char *buf) {
+// func init_stream(name: char const*, buf: char const*) {
 //     stream = buf;
 //     line_start = stream;
 //     token.pos.name = name ? name : "<string>";
@@ -778,19 +792,19 @@ func init_keywords() {
 //     return token.kind == kind;
 // }
 
-// bool is_token_eof(void) {
+// bool is_token_eof() {
 //     return token.kind == TOKEN_EOF;
 // }
 
-// bool is_token_name(const char *name) {
+// bool is_token_name(name: char const*) {
 //     return token.kind == TOKEN_NAME && token.name == name;
 // }
 
-// bool is_keyword(const char *name) {
+// bool is_keyword(name: char const*) {
 //     return is_token(TOKEN_KEYWORD) && token.name == name;
 // }
 
-// bool match_keyword(const char *name) {
+// bool match_keyword(name: char const*) {
 //     if (is_keyword(name)) {
 //         next_token();
 //         return true;

@@ -1,10 +1,5 @@
 // Separated from ast.ion for easier diffing with original source split.
 
-// typedef struct Expr Expr;
-// typedef struct Stmt Stmt;
-// typedef struct Decl Decl;
-// typedef struct Typespec Typespec;
-
 // typedef struct NoteArg {
 //     SrcPos pos;
 //     name: char const*;

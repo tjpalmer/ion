@@ -114,7 +114,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     "#endif\n"
 //     ;
 
-// void genln(void) {
+// func genln() {
 //     genf("\n%.*s", gen_indent * 4, "                                                                  ");
 //     gen_pos.line++;
 // }
@@ -136,9 +136,9 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     ['\''] = '\'',
 // };
 
-// const char *get_gen_name(const void *ptr);
+// func get_gen_name(const void *ptr): char const*;
 
-// void gen_char(char c) {
+// func gen_char(char c) {
 //     if (char_to_escape[(unsigned char)c]) {
 //         genf("'\\%c'", char_to_escape[(unsigned char)c]);
 //     } else if (isprint(c)) {
@@ -148,7 +148,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     }
 // }
 
-// void gen_str(const char *str, bool multiline) {
+// func gen_str(str: char const*, bool multiline) {
 //     if (multiline) {
 //         gen_indent++;
 //         genln();
@@ -182,7 +182,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     }
 // }
 
-// void gen_sync_pos(SrcPos pos) {
+// func gen_sync_pos(SrcPos pos) {
 //     if (gen_pos.line != pos.line || gen_pos.name != pos.name) {
 //         genlnf("#line %d", pos.line);
 //         if (gen_pos.name != pos.name) {
@@ -193,11 +193,11 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     }
 // }
 
-// const char *cdecl_paren(const char *str, char c) {
+// func cdecl_paren(str: char const*, char c): char const* {
 //     return c && c != '[' ? strf("(%s)", str) : str;
 // }
 
-// const char *cdecl_name(Type *type) {
+// func cdecl_name(Type *type): char const* {
 //     type_name: char const* = type_names[type->kind];
 //     if (type_name) {
 //         return type_name;
@@ -207,7 +207,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     }
 // }
 
-// char *type_to_cdecl(Type *type, const char *str) {
+// char *type_to_cdecl(Type *type, str: char const*) {
 //     switch (type->kind) {
 //     case TYPE_PTR:
 //         return type_to_cdecl(type->base, cdecl_paren(strf("*%s", str), *str));
@@ -240,9 +240,9 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     }
 // }
 
-// void gen_expr(Expr *expr);
+// func gen_expr(Expr *expr);
 
-// const char *gen_expr_str(Expr *expr) {
+// func gen_expr_str(Expr *expr): char const* {
 //     temp: char* = gen_buf;
 //     gen_buf = NULL;
 //     gen_expr(expr);
@@ -253,7 +253,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 
 // Map gen_name_map;
 
-// const char *get_gen_name_or_default(const void *ptr, const char *default_name) {
+// func get_gen_name_or_default(const void *ptr, default_name: char const*): char const* {
 //     name: char const* = map_get(&gen_name_map, ptr);
 //     if (!name) {
 //         Sym *sym = get_resolved_sym(ptr);
@@ -286,11 +286,11 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     return name;
 // }
 
-// const char *get_gen_name(const void *ptr) {
+// func get_gen_name(const void *ptr): char const* {
 //     return get_gen_name_or_default(ptr, "ERROR");
 // }
 
-// char *typespec_to_cdecl(Typespec *typespec, const char *str) {
+// char *typespec_to_cdecl(Typespec *typespec, str: char const*) {
 //     if (!typespec) {
 //         return strf("void%s%s", *str ? " " : "", str);
 //     }
@@ -329,7 +329,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     }
 // }
 
-// void gen_func_decl(Decl *decl) {
+// func gen_func_decl(Decl *decl) {
 //     assert(decl->kind == DECL_FUNC);
 //     result: char* = NULL;
 //     buf_printf(result, "%s(", get_gen_name(decl));
@@ -360,7 +360,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     return flag_fullgen || sym->reachable == REACHABLE_NATURAL;
 // }
 
-// void gen_forward_decls(void) {
+// func gen_forward_decls() {
 //     for (Sym **it = sorted_syms; it != buf_end(sorted_syms); it++) {
 //         Sym *sym = *it;
 //         Decl *decl = sym->decl;
@@ -384,7 +384,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     }
 // }
 
-// void gen_aggregate(Decl *decl) {
+// func gen_aggregate(Decl *decl) {
 //     assert(decl->kind == DECL_STRUCT || decl->kind == DECL_UNION);
 //     if (decl->is_incomplete) {
 //         return;
@@ -402,15 +402,15 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     genlnf("};");
 // }
 
-// void gen_expr(Expr *expr);
+// func gen_expr(Expr *expr);
 
-// void gen_paren_expr(Expr *expr) {
+// func gen_paren_expr(Expr *expr) {
 //     genf("(");
 //     gen_expr(expr);
 //     genf(")");
 // }
 
-// void gen_expr_compound(Expr *expr) {
+// func gen_expr_compound(Expr *expr) {
 //     Type *expected_type = get_resolved_expected_type(expr);
 //     if (expected_type && !is_ptr_type(expected_type)) {
 //         genf("{");
@@ -464,7 +464,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     [TYPE_FUNC] = "TYPE_FUNC",
 // };
 
-// const char *typeid_kind_name(Type *type) {
+// func typeid_kind_name(Type *type): char const* {
 //     if (type->kind < NUM_TYPE_KINDS) {
 //         name: char const* = typeid_kind_names[type->kind];
 //         if (name) {
@@ -481,7 +481,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     return type->sym && !gen_reachable(type->sym);
 // }
 
-// void gen_typeid(Type *type) {
+// func gen_typeid(Type *type) {
 //     if (type->size == 0 || is_excluded_typeinfo(type)) {
 //         genf("TYPEID0(%d, %s)", type->typeid, typeid_kind_name(type));
 //     } else {
@@ -489,7 +489,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     }
 // }
 
-// void gen_expr(Expr *expr) {
+// func gen_expr(Expr *expr) {
 //     switch (expr->kind) {
 //     case EXPR_PAREN:
 //         genf("(");
@@ -623,9 +623,9 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     }
 // }
 
-// void gen_stmt(Stmt *stmt);
+// func gen_stmt(Stmt *stmt);
 
-// void gen_stmt_block(StmtList block) {
+// func gen_stmt_block(StmtList block) {
 //     genf("{");
 //     gen_indent++;
 //     for (size_t i = 0; i < block.num_stmts; i++) {
@@ -635,7 +635,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     genlnf("}");
 // }
 
-// void gen_simple_stmt(Stmt *stmt) {
+// func gen_simple_stmt(Stmt *stmt) {
 //     switch (stmt->kind) {
 //     case STMT_EXPR:
 //         gen_expr(stmt->expr);
@@ -672,7 +672,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     return expr->kind == EXPR_INT && expr->int_lit.mod == MOD_CHAR;
 // }
 
-// void gen_stmt(Stmt *stmt) {
+// func gen_stmt(Stmt *stmt) {
 //     gen_sync_pos(stmt->pos);
 //     switch (stmt->kind) {
 //     case STMT_RETURN:
@@ -850,7 +850,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     }
 // }
 
-// void gen_decl(Sym *sym) {
+// func gen_decl(Sym *sym) {
 //     Decl *decl = sym->decl;
 //     if (!decl || is_decl_foreign(decl)) {
 //         return;
@@ -902,7 +902,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     genln();
 // }
 
-// void gen_sorted_decls(void) {
+// func gen_sorted_decls() {
 //     for (size_t i = 0; i < buf_len(sorted_syms); i++) {
 //         if (sorted_syms[i]->reachable == REACHABLE_NATURAL) {
 //             gen_decl(sorted_syms[i]);
@@ -910,7 +910,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     }
 // }
 
-// void gen_defs(void) {
+// func gen_defs() {
 //     for (Sym **it = sorted_syms; it != buf_end(sorted_syms); it++) {
 //         Sym *sym = *it;
 //         Decl *decl = sym->decl;
@@ -940,7 +940,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 // Map gen_foreign_headers_map;
 // gen_foreign_headers_buf: char const**;
 
-// static void add_foreign_header(const char *name) {
+// static void add_foreign_header(name: char const*) {
 //     name = str_intern(name);
 //     if (!map_get(&gen_foreign_headers_map, name)) {
 //         map_put(&gen_foreign_headers_map, name, (void *)1);
@@ -950,11 +950,11 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 
 // gen_foreign_sources_buf: char const**;
 
-// static void add_foreign_source(const char *name) {
+// static void add_foreign_source(name: char const*) {
 //     buf_push(gen_foreign_sources_buf, str_intern(name));
 // }
 
-// void gen_include(const char *path) {
+// func gen_include(path: char const*) {
 //     genlnf("#include ");
 //     if (*path == '<') {
 //         genf("%s", path);
@@ -963,7 +963,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     }
 // }
 
-// void gen_foreign_headers(void) {
+// func gen_foreign_headers() {
 //     if (gen_foreign_headers_buf) {
 //         genlnf("// Foreign header files");
 //         for (size_t i = 0; i < buf_len(gen_foreign_headers_buf); i++) {
@@ -972,7 +972,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     }
 // }
 
-// void gen_foreign_sources(void) {
+// func gen_foreign_sources() {
 //     for (size_t i = 0; i < buf_len(gen_foreign_sources_buf); i++) {
 //         gen_include(gen_foreign_sources_buf[i]);
 //     }
@@ -980,7 +980,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 
 // gen_sources_buf: char const**;
 
-// static void put_include_path(char path[MAX_PATH], Package *package, const char *filename) {
+// static void put_include_path(char path[MAX_PATH], Package *package, filename: char const*) {
 //     if (*filename == '<') {
 //         path_copy(path, filename);
 //     } else {
@@ -1040,13 +1040,13 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     }
 // }
 
-// void preprocess_packages(void) {
+// func preprocess_packages() {
 //     for (size_t i = 0; i < buf_len(package_list); i++) {
 //         preprocess_package(package_list[i]);
 //     }
 // }
 
-// void gen_typeinfo_header(const char *kind, Type *type) { 
+// func gen_typeinfo_header(kind: char const*, Type *type) { 
 //     if (type_sizeof(type) == 0) {
 //         genf("&(TypeInfo){%s, .size = 0, .align = 0", kind);
 //     } else {
@@ -1055,7 +1055,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     }
 // }
 
-// void gen_typeinfo_fields(Type *type) {
+// func gen_typeinfo_fields(Type *type) {
 //     gen_indent++;
 //     for (size_t i = 0; i < type->aggregate.num_fields; i++) {
 //         TypeField field = type->aggregate.fields[i];
@@ -1075,7 +1075,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //         genf("},"); \
 //         break;
 
-// void gen_typeinfo(Type *type) {
+// func gen_typeinfo(Type *type) {
 //     switch (type->kind) {
 //     CASE(TYPE_BOOL, bool)
 //     CASE(TYPE_CHAR, char)
@@ -1141,7 +1141,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 
 // #undef CASE
 
-// void gen_typeinfos(void) {
+// func gen_typeinfos() {
 //     genlnf("#define TYPEID0(index, kind) ((ullong)(index) | ((ullong)(kind) << 24))");
 //     genlnf("#define TYPEID(index, kind, ...) ((ullong)(index) | ((ullong)sizeof(__VA_ARGS__) << 32) | ((ullong)(kind) << 24))");
 //     genln();
@@ -1169,12 +1169,12 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     }
 // }
 
-// void gen_package_external_names(void) {
+// func gen_package_external_names() {
 //     for (size_t i = 0; i < buf_len(package_list); i++) {
 //     }
 // }
 
-// void gen_preamble(void) {
+// func gen_preamble() {
 //     genf("%s", gen_preamble_str);
 //     if (gen_preamble_buf) {
 //         genln();
@@ -1183,7 +1183,7 @@ var gen_buf: char* = NULL;  // No auto init to NULL on globals?
 //     }
 // }
 
-// void gen_postamble(void) {
+// func gen_postamble() {
 //     genf("%s", gen_postamble_str);
 //     if (gen_postamble_buf) {
 //         genln();

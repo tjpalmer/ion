@@ -20,7 +20,7 @@ func clamp_max(x: int, max: int): int {
 // #define ALIGN_DOWN_PTR(p, a) ((void *)ALIGN_DOWN((uintptr_t)(p), (a)))
 // #define ALIGN_UP_PTR(p, a) ((void *)ALIGN_UP((uintptr_t)(p), (a)))
 
-// void fatal(const char *fmt, ...) {
+// func fatal(fmt: char const*, ...) {
 //     va_list args;
 //     va_start(args, fmt);
 //     printf("FATAL: ");
@@ -30,7 +30,7 @@ func clamp_max(x: int, max: int): int {
 //     exit(1);
 // }
 
-// void *xcalloc(size_t num_elems, size_t elem_size) {
+// func *xcalloc(size_t num_elems, size_t elem_size) {
 //     void *ptr = calloc(num_elems, elem_size);
 //     if (!ptr) {
 //         perror("xcalloc failed");
@@ -39,7 +39,7 @@ func clamp_max(x: int, max: int): int {
 //     return ptr;
 // }
 
-// void *xrealloc(void *ptr, size_t num_bytes) {
+// func *xrealloc(void *ptr, size_t num_bytes) {
 //     ptr = realloc(ptr, num_bytes);
 //     if (!ptr) {
 //         perror("xrealloc failed");
@@ -48,7 +48,7 @@ func clamp_max(x: int, max: int): int {
 //     return ptr;
 // }
 
-// void *xmalloc(size_t num_bytes) {
+// func *xmalloc(size_t num_bytes) {
 //     void *ptr = malloc(num_bytes);
 //     if (!ptr) {
 //         perror("xmalloc failed");
@@ -57,13 +57,13 @@ func clamp_max(x: int, max: int): int {
 //     return ptr;
 // }
 
-// void *memdup(void *src, size_t size) {
+// func *memdup(void *src, size_t size) {
 //     void *dest = xmalloc(size);
 //     memcpy(dest, src, size);
 //     return dest;
 // }
 
-// char *strf(const char *fmt, ...) {
+// char *strf(fmt: char const*, ...) {
 //     va_list args;
 //     va_start(args, fmt);
 //     size_t n = 1 + vsnprintf(NULL, 0, fmt, args);
@@ -75,7 +75,7 @@ func clamp_max(x: int, max: int): int {
 //     return str;
 // }
 
-// char *read_file(const char *path) {
+// char *read_file(path: char const*) {
 //     FILE *file = fopen(path, "rb");
 //     if (!file) {
 //         return NULL;
@@ -136,7 +136,7 @@ func buf_push(b: void*, item: void*, size: usize) {
 // #define buf_printf(b, ...) ((b) = buf__printf((b), __VA_ARGS__))
 // #define buf_clear(b) ((b) ? buf__hdr(b)->len = 0 : 0)
 
-// void *buf__grow(const void *buf, size_t new_len, size_t elem_size) {
+// func *buf__grow(const void *buf, size_t new_len, size_t elem_size) {
 //     assert(buf_cap(buf) <= (SIZE_MAX - 1)/2);
 //     size_t new_cap = CLAMP_MIN(2*buf_cap(buf), MAX(new_len, 16));
 //     assert(new_len <= new_cap);
@@ -153,7 +153,7 @@ func buf_push(b: void*, item: void*, size: usize) {
 //     return new_hdr->buf;
 // }
 
-// char *buf__printf(char *buf, const char *fmt, ...) {
+// char *buf__printf(char *buf, fmt: char const*, ...) {
 //     va_list args;
 //     va_start(args, fmt);
 //     size_t cap = buf_cap(buf) - buf_len(buf);
@@ -171,7 +171,7 @@ func buf_push(b: void*, item: void*, size: usize) {
 //     return buf;
 // }
 
-// void buf_test(void) {
+// func buf_test() {
 //     buf: int* = NULL;
 //     assert(buf_len(buf) == 0);
 //     int n = 1024;
@@ -204,7 +204,7 @@ struct Arena {
 // #define ARENA_BLOCK_SIZE (1024 * 1024)
 // // #define ARENA_BLOCK_SIZE 1024
 
-// void arena_grow(Arena *arena, size_t min_size) {
+// func arena_grow(Arena *arena, size_t min_size) {
 //     size_t size = ALIGN_UP(CLAMP_MIN(min_size, ARENA_BLOCK_SIZE), ARENA_ALIGNMENT);
 //     arena->ptr = xmalloc(size);
 //     assert(arena->ptr == ALIGN_DOWN_PTR(arena->ptr, ARENA_ALIGNMENT));
@@ -212,7 +212,7 @@ struct Arena {
 //     buf_push(arena->blocks, arena->ptr);
 // }
 
-// void *arena_alloc(Arena *arena, size_t size) {
+// func *arena_alloc(Arena *arena, size_t size) {
 //     if (size > (size_t)(arena->end - arena->ptr)) {
 //         arena_grow(arena, size);
 //         assert(size <= (size_t)(arena->end - arena->ptr));
@@ -224,7 +224,7 @@ struct Arena {
 //     return ptr;
 // }
 
-// void arena_free(Arena *arena) {
+// func arena_free(Arena *arena) {
 //     for (it: char** = arena->blocks; it != buf_end(arena->blocks); it++) {
 //         free(*it);
 //     }
@@ -287,9 +287,9 @@ struct Map {
 //     return 0;
 // }
 
-// void map_put_uint64_from_uint64(Map *map, uint64_t key, uint64_t val);
+// func map_put_uint64_from_uint64(Map *map, uint64_t key, uint64_t val);
 
-// void map_grow(Map *map, size_t new_cap) {
+// func map_grow(Map *map, size_t new_cap) {
 //     new_cap = CLAMP_MIN(new_cap, 16);
 //     Map new_map = {
 //         .keys = xcalloc(new_cap, sizeof(uint64_t)),
@@ -306,7 +306,7 @@ struct Map {
 //     *map = new_map;
 // }
 
-// void map_put_uint64_from_uint64(Map *map, uint64_t key, uint64_t val) {
+// func map_put_uint64_from_uint64(Map *map, uint64_t key, uint64_t val) {
 //     assert(key);
 //     if (!val) {
 //         return;
@@ -332,7 +332,7 @@ struct Map {
 //     }
 // }
 
-// void *map_get(Map *map, const void *key) {
+// func *map_get(Map *map, const void *key) {
 //     return (void *)(uintptr_t)map_get_uint64_from_uint64(map, (uint64_t)(uintptr_t)key);
 // }
 
@@ -340,11 +340,11 @@ func map_put(map: Map*, key: void const*, val: void*) {
     // map_put_uint64_from_uint64(map, (uint64_t)(uintptr_t)key, (uint64_t)(uintptr_t)val);
 }
 
-// void *map_get_from_uint64(Map *map, uint64_t key) {
+// func *map_get_from_uint64(Map *map, uint64_t key) {
 //     return (void *)(uintptr_t)map_get_uint64_from_uint64(map, key);
 // }
 
-// void map_put_from_uint64(Map *map, uint64_t key, void *val) {
+// func map_put_from_uint64(Map *map, uint64_t key, void *val) {
 //     map_put_uint64_from_uint64(map, key, (uint64_t)(uintptr_t)val);
 // }
 
@@ -352,11 +352,11 @@ func map_put(map: Map*, key: void const*, val: void*) {
 //     return map_get_uint64_from_uint64(map, (uint64_t)(uintptr_t)key);
 // }
 
-// void map_put_uint64(Map *map, void *key, uint64_t val) {
+// func map_put_uint64(Map *map, void *key, uint64_t val) {
 //     map_put_uint64_from_uint64(map, (uint64_t)(uintptr_t)key, val);
 // }
 
-// void map_test(void) {
+// func map_test() {
 //     Map map = {0};
 //     enum { N = 1024 };
 //     for (size_t i = 1; i < N; i++) {
@@ -379,7 +379,7 @@ func map_put(map: Map*, key: void const*, val: void*) {
 var intern_arena: Arena;
 var interns: Map;
 
-// const char *str_intern_range(const char *start, const char *end) {
+// func str_intern_range(start: char const*, end: char const*): char const* {
 //     size_t len = end - start;
 //     uint64_t hash = hash_bytes(start, len);
 //     uint64_t key = hash ? hash : 1;
@@ -403,7 +403,7 @@ func str_intern(str: char const*): char const* {
     return str;
 }
 
-// bool str_islower(const char *str) {
+// bool str_islower(str: char const*) {
 //     while (*str) {
 //         if (isalpha(*str) && !islower(*str)) {
 //             return false;

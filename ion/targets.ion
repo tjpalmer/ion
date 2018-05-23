@@ -140,7 +140,7 @@ func init_target() {
     // }
 }
 
-// bool is_excluded_target_filename(const char *name) {
+// bool is_excluded_target_filename(name: char const*) {
 //     end: char const* = name + strlen(name);
 
 //     ptr1: char const* = end;

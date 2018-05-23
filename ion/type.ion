@@ -90,7 +90,7 @@
 // Type *type_usize;
 // Type *type_ssize;
 
-// void complete_type(Type *type);
+// func complete_type(Type *type);
 
 // Map typeid_map;
 
@@ -101,7 +101,7 @@
 //     return map_get(&typeid_map, (void *)(uintptr_t)typeid);
 // }
 
-// void register_typeid(Type *type) {
+// func register_typeid(Type *type) {
 //     map_put(&typeid_map, (void *)(uintptr_t)type->typeid, type);
 // }
 
@@ -364,7 +364,7 @@
 //     return false;
 // }
 
-// void type_complete_struct(Type *type, TypeField *fields, size_t num_fields) {
+// func type_complete_struct(Type *type, TypeField *fields, size_t num_fields) {
 //     assert(type->kind == TYPE_COMPLETING);
 //     type->kind = TYPE_STRUCT;
 //     type->size = 0;
@@ -382,7 +382,7 @@
 //     type->nonmodifiable = nonmodifiable;
 // }
 
-// void type_complete_union(Type *type, TypeField *fields, size_t num_fields) {
+// func type_complete_union(Type *type, TypeField *fields, size_t num_fields) {
 //     assert(type->kind == TYPE_COMPLETING);
 //     type->kind = TYPE_UNION;
 //     type->size = 0;
@@ -415,7 +415,7 @@
 //     return type;
 // }
 
-// void init_builtin_type(Type *type) {
+// func init_builtin_type(Type *type) {
 //     type->typeid = next_typeid++;
 //     register_typeid(type);
 //     type->size = type_metrics[type->kind].size;
@@ -440,7 +440,7 @@ func init_builtin_types() {
     // init_builtin_type(type_double);
 }
 
-// int aggregate_field_index(Type *type, const char *name) {
+// int aggregate_field_index(Type *type, name: char const*) {
 //     assert(is_aggregate_type(type));
 //     for (size_t i = 0; i < type->aggregate.num_fields; i++) {
 //         if (type->aggregate.fields[i].name == name) {
@@ -456,7 +456,7 @@ func init_builtin_types() {
 //     return type->aggregate.fields[index].type;
 // }
 
-// Type *aggregate_field_type_from_name(Type *type, const char *name) {
+// Type *aggregate_field_type_from_name(Type *type, name: char const*) {
 //     assert(is_aggregate_type(type));
 //     int index = aggregate_field_index(type, name);
 //     if (index < 0) {

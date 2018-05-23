@@ -1,12 +1,12 @@
-// Decl *parse_decl_opt(void);
-// Decl *parse_decl(void);
-// Typespec *parse_type(void);
-// Stmt *parse_stmt(void);
-// Expr *parse_expr(void);
-// const char *parse_name(void);
-// Notes parse_notes(void);
+// Decl *parse_decl_opt();
+// Decl *parse_decl();
+// Typespec *parse_type();
+// Stmt *parse_stmt();
+// Expr *parse_expr();
+// func parse_name(): char const*;
+// Notes parse_notes();
 
-// Typespec *parse_type_func_param(void) {
+// Typespec *parse_type_func_param() {
 //     Typespec *type = parse_type();
 //     if (match_token(TOKEN_COLON)) {
 //         if (type->kind != TYPESPEC_NAME) {
@@ -17,7 +17,7 @@
 //     return type;
 // }
 
-// Typespec *parse_type_func(void) {
+// Typespec *parse_type_func() {
 //     SrcPos pos = token.pos;
 //     Typespec **args = NULL;
 //     bool has_varargs = false;
@@ -46,7 +46,7 @@
 //     return new_typespec_func(pos, args, buf_len(args), ret, has_varargs);
 // }
 
-// Typespec *parse_type_base(void) {
+// Typespec *parse_type_base() {
 //     if (is_token(TOKEN_NAME)) {
 //         SrcPos pos = token.pos;
 //         name: char const* = token.name;
@@ -64,7 +64,7 @@
 //     }
 // }
 
-// Typespec *parse_type(void) {
+// Typespec *parse_type() {
 //     Typespec *type = parse_type_base();
 //     SrcPos pos = token.pos;
 //     while (is_token(TOKEN_LBRACKET) || is_token(TOKEN_MUL) || is_keyword(const_keyword)) {
@@ -86,7 +86,7 @@
 //     return type;
 // }
 
-// CompoundField parse_expr_compound_field(void) {
+// CompoundField parse_expr_compound_field() {
 //     SrcPos pos = token.pos;
 //     if (match_token(TOKEN_LBRACKET)) {
 //         Expr *index = parse_expr();
@@ -120,9 +120,9 @@
 //     return new_expr_compound(pos, type, fields, buf_len(fields));
 // }
 
-// Expr *parse_expr_unary(void);
+// Expr *parse_expr_unary();
 
-// Expr *parse_expr_operand(void) {
+// Expr *parse_expr_operand() {
 //     SrcPos pos = token.pos;
 //     if (is_token(TOKEN_INT)) {
 //         unsigned long long val = token.int_val;
@@ -210,7 +210,7 @@
 //     }
 // }
 
-// Expr *parse_expr_base(void) {
+// Expr *parse_expr_base() {
 //     Expr *expr = parse_expr_operand();
 //     while (is_token(TOKEN_LPAREN) || is_token(TOKEN_LBRACKET) || is_token(TOKEN_DOT) || is_token(TOKEN_INC) || is_token(TOKEN_DEC)) {
 //         SrcPos pos = token.pos;
@@ -243,7 +243,7 @@
 //     return expr;
 // }
 
-// bool is_unary_op(void) {
+// bool is_unary_op() {
 //     return
 //         is_token(TOKEN_ADD) ||
 //         is_token(TOKEN_SUB) ||
@@ -255,7 +255,7 @@
 //         is_token(TOKEN_DEC);
 // }
 
-// Expr *parse_expr_unary(void) {
+// Expr *parse_expr_unary() {
 //     if (is_unary_op()) {
 //         SrcPos pos = token.pos;
 //         TokenKind op = token.kind;
@@ -270,11 +270,11 @@
 //     }
 // }
 
-// bool is_mul_op(void) {
+// bool is_mul_op() {
 //     return TOKEN_FIRST_MUL <= token.kind && token.kind <= TOKEN_LAST_MUL;
 // }
 
-// Expr *parse_expr_mul(void) {
+// Expr *parse_expr_mul() {
 //     Expr *expr = parse_expr_unary();
 //     while (is_mul_op()) {
 //         SrcPos pos = token.pos;
@@ -285,11 +285,11 @@
 //     return expr;
 // }
 
-// bool is_add_op(void) {
+// bool is_add_op() {
 //     return TOKEN_FIRST_ADD <= token.kind && token.kind <= TOKEN_LAST_ADD;
 // }
 
-// Expr *parse_expr_add(void) {
+// Expr *parse_expr_add() {
 //     Expr *expr = parse_expr_mul();
 //     while (is_add_op()) {
 //         SrcPos pos = token.pos;
@@ -300,11 +300,11 @@
 //     return expr;
 // }
 
-// bool is_cmp_op(void) {
+// bool is_cmp_op() {
 //     return TOKEN_FIRST_CMP <= token.kind && token.kind <= TOKEN_LAST_CMP;
 // }
 
-// Expr *parse_expr_cmp(void) {
+// Expr *parse_expr_cmp() {
 //     Expr *expr = parse_expr_add();
 //     while (is_cmp_op()) {
 //         SrcPos pos = token.pos;
@@ -315,7 +315,7 @@
 //     return expr;
 // }
 
-// Expr *parse_expr_and(void) {
+// Expr *parse_expr_and() {
 //     Expr *expr = parse_expr_cmp();
 //     while (match_token(TOKEN_AND_AND)) {
 //         SrcPos pos = token.pos;
@@ -324,7 +324,7 @@
 //     return expr;
 // }
 
-// Expr *parse_expr_or(void) {
+// Expr *parse_expr_or() {
 //     Expr *expr = parse_expr_and();
 //     while (match_token(TOKEN_OR_OR)) {
 //         SrcPos pos = token.pos;
@@ -333,7 +333,7 @@
 //     return expr;
 // }
 
-// Expr *parse_expr_ternary(void) {
+// Expr *parse_expr_ternary() {
 //     SrcPos pos = token.pos;
 //     Expr *expr = parse_expr_or();
 //     if (match_token(TOKEN_QUESTION)) {
@@ -345,18 +345,18 @@
 //     return expr;
 // }
 
-// Expr *parse_expr(void) {
+// Expr *parse_expr() {
 //     return parse_expr_ternary();
 // }
 
-// Expr *parse_paren_expr(void) {
+// Expr *parse_paren_expr() {
 //     expect_token(TOKEN_LPAREN);
 //     Expr *expr = parse_expr();
 //     expect_token(TOKEN_RPAREN);
 //     return expr;
 // }
 
-// StmtList parse_stmt_block(void) {
+// StmtList parse_stmt_block() {
 //     SrcPos pos = token.pos;
 //     expect_token(TOKEN_LBRACE);
 //     Stmt **stmts = NULL;
@@ -412,7 +412,7 @@
 //     return stmt;
 // }
 
-// bool is_assign_op(void) {
+// bool is_assign_op() {
 //     return TOKEN_FIRST_ASSIGN <= token.kind && token.kind <= TOKEN_LAST_ASSIGN;
 // }
 
@@ -440,7 +440,7 @@
 //     }
 // }
 
-// Stmt *parse_simple_stmt(void) {
+// Stmt *parse_simple_stmt() {
 //     SrcPos pos = token.pos;
 //     Expr *expr = parse_expr();
 //     Stmt *stmt = parse_init_stmt(expr);
@@ -480,7 +480,7 @@
 //     return new_stmt_for(pos, init, cond, next, parse_stmt_block());
 // }
 
-// SwitchCasePattern parse_switch_case_pattern(void) {
+// SwitchCasePattern parse_switch_case_pattern() {
 //     Expr *start = parse_expr();
 //     Expr *end = NULL;
 //     if (match_token(TOKEN_ELLIPSIS)) {
@@ -489,7 +489,7 @@
 //     return (SwitchCasePattern){start, end};
 // }
 
-// SwitchCase parse_stmt_switch_case(void) {
+// SwitchCase parse_stmt_switch_case() {
 //     SwitchCasePattern *patterns = NULL;
 //     bool is_default = false;
 //     bool is_first_case = true;
@@ -532,9 +532,9 @@
 //     return new_stmt_switch(pos, expr, cases, buf_len(cases));
 // }
 
-// Note parse_note(void);
+// Note parse_note();
 
-// Stmt *parse_stmt(void) {
+// Stmt *parse_stmt() {
 //     Notes notes = parse_notes();
 //     SrcPos pos = token.pos;
 //     Stmt *stmt = NULL;
@@ -580,13 +580,13 @@
 //     return stmt;
 // }
 
-// const char *parse_name(void) {
+// func parse_name(): char const* {
 //     name: char const* = token.name;
 //     expect_token(TOKEN_NAME);
 //     return name;
 // }
 
-// EnumItem parse_decl_enum_item(void) {
+// EnumItem parse_decl_enum_item() {
 //     SrcPos pos = token.pos;
 //     name: char const* = parse_name();
 //     Expr *init = NULL;
@@ -617,7 +617,7 @@
 //     return new_decl_enum(pos, name, type, items, buf_len(items));
 // }
 
-// AggregateItem parse_decl_aggregate_item(void) {
+// AggregateItem parse_decl_aggregate_item() {
 //     SrcPos pos = token.pos;
 //     names: char const** = NULL;
 //     buf_push(names, parse_name());
@@ -688,7 +688,7 @@
 //     return new_decl_typedef(pos, name, type);
 // }
 
-// FuncParam parse_decl_func_param(void) {
+// FuncParam parse_decl_func_param() {
 //     SrcPos pos = token.pos;
 //     name: char const* = parse_name();
 //     expect_token(TOKEN_COLON);
@@ -735,7 +735,7 @@
 //     return decl;
 // }
 
-// NoteArg parse_note_arg(void) {
+// NoteArg parse_note_arg() {
 //     SrcPos pos = token.pos;
 //     Expr *expr = parse_expr();
 //     name: char const* = NULL;
@@ -749,7 +749,7 @@
 //     return (NoteArg){.pos = pos, .name = name, .expr = expr};
 // }
 
-// Note parse_note(void) {
+// Note parse_note() {
 //     SrcPos pos = token.pos;
 //     name: char const* = parse_name();
 //     NoteArg *args = NULL;
@@ -763,7 +763,7 @@
 //     return new_note(pos, name, args, buf_len(args));
 // }
     
-// Notes parse_notes(void) {
+// Notes parse_notes() {
 //     Note *notes = NULL;
 //     while (match_token(TOKEN_AT)) {
 //         buf_push(notes, parse_note());
@@ -810,7 +810,7 @@
 //     return new_decl_import(pos, is_relative, names, buf_len(names), import_all, items, buf_len(items));
 // }
 
-// Decl *parse_decl_opt(void) {
+// Decl *parse_decl_opt() {
 //     SrcPos pos = token.pos;
 //     if (match_keyword(enum_keyword)) {
 //         return parse_decl_enum(pos);
@@ -835,7 +835,7 @@
 //     }
 // }
 
-// Decl *parse_decl(void) {
+// Decl *parse_decl() {
 //     Notes notes = parse_notes();
 //     Decl *decl = parse_decl_opt();
 //     if (!decl) {
@@ -845,7 +845,7 @@
 //     return decl;
 // }
 
-// Decls *parse_decls(void) {
+// Decls *parse_decls() {
 //     Decl **decls = NULL;
 //     while (!is_token(TOKEN_EOF)) {
 //         buf_push(decls, parse_decl());

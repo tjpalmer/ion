@@ -57,7 +57,7 @@ func get_package_sym(package: Package*, name: char const*): Sym* {
     return NULL;
 }
 
-// void add_package(Package *package) {
+// func add_package(Package *package) {
 //     Package *old_package = map_get(&package_map, package->path);
 //     if (old_package != package) {
 //         assert(!old_package);
@@ -72,7 +72,7 @@ func get_package_sym(package: Package*, name: char const*): Sym* {
 //     return old_package;
 // }
 
-// void leave_package(Package *old_package) {
+// func leave_package(Package *old_package) {
 //     current_package = old_package;
 // }
 
@@ -85,7 +85,7 @@ var reachable_syms: Sym**;
 //     return local_syms <= sym && sym < local_syms_end;
 // }
 
-// Sym *sym_new(SymKind kind, const char *name, Decl *decl) {
+// Sym *sym_new(SymKind kind, name: char const*, Decl *decl) {
 //     Sym *sym = xcalloc(1, sizeof(Sym));
 //     sym->kind = kind;
 //     sym->name = name;
@@ -95,7 +95,7 @@ var reachable_syms: Sym**;
 //     return sym;
 // }
 
-// void process_decl_notes(Decl *decl, Sym *sym) {
+// func process_decl_notes(Decl *decl, Sym *sym) {
 //     Note *foreign_note = get_decl_note(decl, foreign_name);
 //     if (foreign_note) {
 //         if (foreign_note->num_args > 1) {
@@ -143,7 +143,7 @@ var reachable_syms: Sym**;
 //     return sym;
 // }
 
-// Sym *sym_get_local(const char *name) {
+// Sym *sym_get_local(name: char const*) {
 //     for (Sym *it = local_syms_end; it != local_syms; it--) {
 //         Sym *sym = it-1;
 //         if (sym->name == name) {
@@ -153,12 +153,12 @@ var reachable_syms: Sym**;
 //     return NULL;
 // }
 
-// Sym *sym_get(const char *name) {
+// Sym *sym_get(name: char const*) {
 //     Sym *sym = sym_get_local(name);
 //     return sym ? sym : get_package_sym(current_package, name);
 // }
 
-// bool sym_push_var(const char *name, Type *type) {
+// bool sym_push_var(name: char const*, Type *type) {
 //     if (sym_get_local(name)) {
 //         return false;
 //     }
@@ -174,15 +174,15 @@ var reachable_syms: Sym**;
 //     return true;
 // }
 
-// Sym *sym_enter(void) {
+// Sym *sym_enter() {
 //     return local_syms_end;
 // }
 
-// void sym_leave(Sym *sym) {
+// func sym_leave(Sym *sym) {
 //     local_syms_end = sym;
 // }
 
-// void sym_global_put(const char *name, Sym *sym) {
+// func sym_global_put(name: char const*, Sym *sym) {
 //     Sym *old_sym = map_get(&current_package->syms_map, name);
 //     if (old_sym) {
 //         if (sym == old_sym) {
@@ -198,9 +198,9 @@ var reachable_syms: Sym**;
 //     buf_push(current_package->syms, sym);
 // }
 
-// void resolve_sym(Sym *sym);
+// func resolve_sym(Sym *sym);
 
-// Sym *sym_global_type(const char *name, Type *type) {
+// Sym *sym_global_type(name: char const*, Type *type) {
 //     name = str_intern(name);
 //     Sym *sym = sym_new(SYM_TYPE, name, NULL);
 //     sym->state = SYM_RESOLVED;
@@ -238,7 +238,7 @@ var reachable_syms: Sym**;
 //     return sym;
 // }
 
-// void put_type_name(char **buf, Type *type) {
+// func put_type_name(char **buf, Type *type) {
 //     type_name: char const* = type_names[type->kind];
 //     if (type_name) {
 //         buf_printf(*buf, "%s", type_name);
@@ -498,7 +498,7 @@ var reachable_syms: Sym**;
 //     }
 // }
 
-// void promote_operand(Operand *operand) {
+// func promote_operand(Operand *operand) {
 //     switch (operand->type->kind) {
 //     case TYPE_BOOL:
 //     case TYPE_CHAR:
@@ -515,7 +515,7 @@ var reachable_syms: Sym**;
 //     }
 // }
 
-// void unify_arithmetic_operands(Operand *left, Operand *right) {
+// func unify_arithmetic_operands(Operand *left, Operand *right) {
 //     if (left->type == type_double) {
 //         cast_operand(right, type_double);
 //     } else if (right->type == type_double) {
@@ -564,7 +564,7 @@ var reachable_syms: Sym**;
 //     return val;
 // }
 
-// void set_resolved_val(void *ptr, Val val) {
+// func set_resolved_val(void *ptr, Val val) {
 //     uint64_t u64;
 //     assert(sizeof(val) == sizeof(u64));
 //     memcpy(&u64, &val, sizeof(val));
@@ -577,7 +577,7 @@ var reachable_syms: Sym**;
 //     return map_get(&resolved_type_map, ptr);
 // }
 
-// void set_resolved_type(void *ptr, Type *type) {
+// func set_resolved_type(void *ptr, Type *type) {
 //     map_put(&resolved_type_map, ptr, type);
 // }
 
@@ -587,7 +587,7 @@ var reachable_syms: Sym**;
 //     return map_get(&resolved_sym_map, ptr);
 // }
 
-// void set_resolved_sym(const void *ptr, Sym *sym) {
+// func set_resolved_sym(const void *ptr, Sym *sym) {
 //     if (!is_local_sym(sym)) {
 //         map_put(&resolved_sym_map, ptr, sym);
 //     }
@@ -599,13 +599,13 @@ var reachable_syms: Sym**;
 //     return map_get(&resolved_expected_type_map, expr);
 // }
 
-// void set_resolved_expected_type(Expr *expr, Type *type) {
+// func set_resolved_expected_type(Expr *expr, Type *type) {
 //     if (expr && type) {
 //         map_put(&resolved_expected_type_map, expr, type);
 //     }
 // }
 
-// Sym *resolve_name(const char *name);
+// Sym *resolve_name(name: char const*);
 // Operand resolve_const_expr(Expr *expr);
 // Operand resolve_expected_expr(Expr *expr, Type *expected_type);
 
@@ -689,7 +689,7 @@ var reachable_syms: Sym**;
 //     return result;
 // }
 
-// void complete_type(Type *type) {
+// func complete_type(Type *type) {
 //     if (type->kind == TYPE_COMPLETING) {
 //         fatal_error(type->sym->decl->pos, "Type completion cycle");
 //         return;
@@ -836,7 +836,7 @@ var reachable_syms: Sym**;
 // Label labels[MAX_LABELS];
 // Label *labels_end = labels;
 
-// Label *get_label(SrcPos pos, const char *name) {
+// Label *get_label(SrcPos pos, name: char const*) {
 //     Label *label;
 //     for (label = labels; label != labels_end; label++) {
 //         if (label->name == name) {
@@ -851,12 +851,12 @@ var reachable_syms: Sym**;
 //     return label;
 // }
 
-// void reference_label(SrcPos pos, const char *name) {
+// func reference_label(SrcPos pos, name: char const*) {
 //     Label *label = get_label(pos, name);
 //     label->referenced = true;
 // }
 
-// void define_label(SrcPos pos, const char *name) {
+// func define_label(SrcPos pos, name: char const*) {
 //     Label *label = get_label(pos, name);
 //     if (label->defined) {
 //         fatal_error(pos, "Multiple definitions of label '%s'", name);
@@ -864,7 +864,7 @@ var reachable_syms: Sym**;
 //     label->defined = true;
 // }
 
-// void resolve_labels(void) {
+// func resolve_labels() {
 //     for (Label *label = labels; label != labels_end; label++) {
 //         if (label->referenced && !label->defined) {
 //             fatal_error(label->pos, "Label '%s' referenced but not defined", label->name);
@@ -883,7 +883,7 @@ var reachable_syms: Sym**;
 //     return is_scalar_type(operand.type);
 // }
 
-// void resolve_cond_expr(Expr *expr) {
+// func resolve_cond_expr(Expr *expr) {
 //     Operand cond = resolve_expr_rvalue(expr);
 //     if (!is_cond_operand(cond)) {
 //         fatal_error(expr->pos, "Conditional expression must have scalar type");
@@ -900,10 +900,10 @@ var reachable_syms: Sym**;
 //     return returns;
 // }
 
-// Operand resolve_expr_binary_op(TokenKind op, const char *op_name, SrcPos pos, Operand left, Operand right);
-// Operand resolve_name_operand(SrcPos pos, const char *name);
+// Operand resolve_expr_binary_op(TokenKind op, op_name: char const*, SrcPos pos, Operand left, Operand right);
+// Operand resolve_name_operand(SrcPos pos, name: char const*);
 
-// void resolve_stmt_assign(Stmt *stmt) {
+// func resolve_stmt_assign(Stmt *stmt) {
 //     assert(stmt->kind == STMT_ASSIGN);
 //     Operand left = resolve_expr(stmt->assign.left);
 //     if (!left.is_lvalue) {
@@ -937,7 +937,7 @@ var reachable_syms: Sym**;
 //     }
 // }
 
-// void resolve_stmt_init(Stmt *stmt) {
+// func resolve_stmt_init(Stmt *stmt) {
 //     assert(stmt->kind == STMT_INIT);
 //     Type *type = resolve_init(stmt->pos, stmt->init.type, stmt->init.expr);
 //     if (!sym_push_var(stmt->init.name, type)) {
@@ -945,7 +945,7 @@ var reachable_syms: Sym**;
 //     }
 // }
 
-// void resolve_static_assert(Note note) {
+// func resolve_static_assert(Note note) {
 //     if (note.num_args != 1) {
 //         fatal_error(note.pos, "#static_assert takes 1 argument");
 //     }
@@ -1111,7 +1111,7 @@ var reachable_syms: Sym**;
 //     }
 // }
 
-// void resolve_func_body(Sym *sym) {
+// func resolve_func_body(Sym *sym) {
 //     Decl *decl = sym->decl;
 //     assert(decl->kind == DECL_FUNC);
 //     assert(sym->state == SYM_RESOLVED);
@@ -1189,7 +1189,7 @@ func resolve_sym(sym: Sym*) {
     // }
 }
 
-// void finalize_sym(Sym *sym) {
+// func finalize_sym(Sym *sym) {
 //     assert(sym->state == SYM_RESOLVED);
 //     if (sym->decl && !is_decl_foreign(sym->decl) && !sym->decl->is_incomplete) {
 //         if (sym->kind == SYM_TYPE) {
@@ -1200,7 +1200,7 @@ func resolve_sym(sym: Sym*) {
 //     }
 // }
 
-// Sym *resolve_name(const char *name) {
+// Sym *resolve_name(name: char const*) {
 //     Sym *sym = sym_get(name);
 //     if (!sym) {
 //         return NULL;
@@ -1393,7 +1393,7 @@ func resolve_sym(sym: Sym*) {
 //     }
 // }
 
-// Operand resolve_name_operand(SrcPos pos, const char *name) {
+// Operand resolve_name_operand(SrcPos pos, name: char const*) {
 //     Sym *sym = resolve_name(name);
 //     if (!sym) {
 //         fatal_error(pos, "Unresolved name '%s'", name);
@@ -1473,7 +1473,7 @@ func resolve_sym(sym: Sym*) {
 //     return resolve_binary_op(op, left, right);
 // }
 
-// Operand resolve_expr_binary_op(TokenKind op, const char *op_name, SrcPos pos, Operand left, Operand right) {
+// Operand resolve_expr_binary_op(TokenKind op, op_name: char const*, SrcPos pos, Operand left, Operand right) {
 //     switch (op) {
 //     case TOKEN_MUL:
 //     case TOKEN_DIV:
@@ -2098,7 +2098,7 @@ func resolve_sym(sym: Sym*) {
 
 var decl_note_names: Map;
 
-// void init_builtin_syms() {
+// func init_builtin_syms() {
 //     assert(current_package);
 //     sym_global_type("void", type_void);
 //     sym_global_type("bool", type_bool);
@@ -2117,7 +2117,7 @@ var decl_note_names: Map;
 //     sym_global_type("double", type_double);
 // }
 
-// void add_package_decls(Package *package) {
+// func add_package_decls(Package *package) {
 //     for (size_t i = 0; i < package->num_decls; i++) {
 //         Decl *decl = package->decls[i];
 //         if (decl->kind == DECL_NOTE) {
@@ -2152,7 +2152,7 @@ var decl_note_names: Map;
 // extern package_search_paths: char const**;
 // extern int num_package_search_paths;
 
-// bool is_package_dir(const char *search_path, const char *package_path) {
+// bool is_package_dir(search_path: char const*, package_path: char const*) {
 //     char path[MAX_PATH];
 //     path_copy(path, search_path);
 //     path_join(path, package_path);
@@ -2167,7 +2167,7 @@ var decl_note_names: Map;
 //     return false;
 // }
 
-// bool copy_package_full_path(char dest[MAX_PATH], const char *package_path) {
+// bool copy_package_full_path(char dest[MAX_PATH], package_path: char const*) {
 //     for (int i = 0; i < num_package_search_paths; i++) {
 //         if (is_package_dir(package_search_paths[i], package_path)) {
 //             path_copy(dest, package_search_paths[i]);
@@ -2199,7 +2199,7 @@ func import_package(package_path: char const*): Package* {
     return NULL;
 }
 
-// void import_all_package_symbols(Package *package) {
+// func import_all_package_symbols(Package *package) {
 //     // TODO: should have a more general mechanism
 //     main_name: char const* = str_intern("main");
 //     for (size_t i = 0; i < buf_len(package->syms); i++) {
@@ -2209,7 +2209,7 @@ func import_package(package_path: char const*): Package* {
 //     }
 // }
 
-// void import_package_symbols(Decl *decl, Package *package) {
+// func import_package_symbols(Decl *decl, Package *package) {
 //     for (size_t i = 0; i < decl->import.num_items; i++) {
 //         ImportItem item = decl->import.items[i];
 //         Sym *sym = get_package_sym(package, item.name);
@@ -2220,7 +2220,7 @@ func import_package(package_path: char const*): Package* {
 //     }
 // }
 
-// void process_package_imports(Package *package) {
+// func process_package_imports(Package *package) {
 //     for (size_t i = 0; i < package->num_decls; i++) {
 //         Decl *decl = package->decls[i];
 //         if (decl->kind == DECL_NOTE) {

@@ -1,13 +1,13 @@
 // Arena ast_arena;
 
-// void *ast_alloc(size_t size) {
+// func *ast_alloc(size_t size) {
 //     assert(size != 0);
 //     void *ptr = arena_alloc(&ast_arena, size);
 //     memset(ptr, 0, size);
 //     return ptr;
 // }
 
-// void *ast_dup(const void *src, size_t size) {
+// func *ast_dup(const void *src, size_t size) {
 //     if (size == 0) {
 //         return NULL;
 //     }
@@ -18,7 +18,7 @@
 
 // #define AST_DUP(x) ast_dup(x, num_##x * sizeof(*x))
 
-// Note new_note(SrcPos pos, const char *name, NoteArg *args, size_t num_args) {
+// Note new_note(SrcPos pos, name: char const*, NoteArg *args, size_t num_args) {
 //     return (Note){.pos = pos, .name = name, .args = AST_DUP(args), .num_args = num_args};
 // }
 
@@ -37,7 +37,7 @@
 //     return t;
 // }
 
-// Typespec *new_typespec_name(SrcPos pos, const char *name) {
+// Typespec *new_typespec_name(SrcPos pos, name: char const*) {
 //     Typespec *t = new_typespec(TYPESPEC_NAME, pos);
 //     t->name = name;
 //     return t;
@@ -79,7 +79,7 @@
 //     return d;
 // }
 
-// Decl *new_decl(DeclKind kind, SrcPos pos, const char *name) {
+// Decl *new_decl(DeclKind kind, SrcPos pos, name: char const*) {
 //     Decl *d = ast_alloc(sizeof(Decl));
 //     d->kind = kind;
 //     d->pos = pos;
@@ -87,7 +87,7 @@
 //     return d;
 // }
 
-// Note *get_decl_note(Decl *decl, const char *name) {
+// Note *get_decl_note(Decl *decl, name: char const*) {
 //     for (size_t i = 0; i < decl->notes.num_notes; i++) {
 //         Note *note = decl->notes.notes + i;
 //         if (note->name == name) {
@@ -101,7 +101,7 @@
 //     return get_decl_note(decl, foreign_name) != NULL;
 // }
 
-// Decl *new_decl_enum(SrcPos pos, const char *name, Typespec *type, EnumItem *items, size_t num_items) {
+// Decl *new_decl_enum(SrcPos pos, name: char const*, Typespec *type, EnumItem *items, size_t num_items) {
 //     Decl *d = new_decl(DECL_ENUM, pos, name);
 //     d->enum_decl.type = type;
 //     d->enum_decl.items = AST_DUP(items);
@@ -109,7 +109,7 @@
 //     return d;
 // }
 
-// Decl *new_decl_aggregate(SrcPos pos, DeclKind kind, const char *name, AggregateItem *items, size_t num_items) {
+// Decl *new_decl_aggregate(SrcPos pos, DeclKind kind, name: char const*, AggregateItem *items, size_t num_items) {
 //     assert(kind == DECL_STRUCT || kind == DECL_UNION);
 //     Decl *d = new_decl(kind, pos, name);
 //     d->aggregate.items = AST_DUP(items);
@@ -117,21 +117,21 @@
 //     return d;
 // }
 
-// Decl *new_decl_union(SrcPos pos, const char *name, AggregateItem *items, size_t num_items) {
+// Decl *new_decl_union(SrcPos pos, name: char const*, AggregateItem *items, size_t num_items) {
 //     Decl *d = new_decl(DECL_UNION, pos, name);
 //     d->aggregate.items = AST_DUP(items);
 //     d->aggregate.num_items = num_items;
 //     return d;
 // }
 
-// Decl *new_decl_var(SrcPos pos, const char *name, Typespec *type, Expr *expr) {
+// Decl *new_decl_var(SrcPos pos, name: char const*, Typespec *type, Expr *expr) {
 //     Decl *d = new_decl(DECL_VAR, pos, name);
 //     d->var.type = type;
 //     d->var.expr = expr;
 //     return d;
 // }
 
-// Decl *new_decl_func(SrcPos pos, const char *name, FuncParam *params, size_t num_params, Typespec *ret_type, bool has_varargs, StmtList block) {
+// Decl *new_decl_func(SrcPos pos, name: char const*, FuncParam *params, size_t num_params, Typespec *ret_type, bool has_varargs, StmtList block) {
 //     Decl *d = new_decl(DECL_FUNC, pos, name);
 //     d->func.params = AST_DUP(params);
 //     d->func.num_params = num_params;
@@ -141,14 +141,14 @@
 //     return d;
 // }
 
-// Decl *new_decl_const(SrcPos pos, const char *name, Typespec *type, Expr *expr) {
+// Decl *new_decl_const(SrcPos pos, name: char const*, Typespec *type, Expr *expr) {
 //     Decl *d = new_decl(DECL_CONST, pos, name);
 //     d->const_decl.type = type;
 //     d->const_decl.expr = expr;
 //     return d;
 // }
 
-// Decl *new_decl_typedef(SrcPos pos, const char *name, Typespec *type) {
+// Decl *new_decl_typedef(SrcPos pos, name: char const*, Typespec *type) {
 //     Decl *d = new_decl(DECL_TYPEDEF, pos, name);
 //     d->typedef_decl.type = type;
 //     return d;
@@ -160,7 +160,7 @@
 //     return d;
 // }
 
-// Decl *new_decl_import(SrcPos pos, bool is_relative, const char **names, size_t num_names, bool import_all, ImportItem *items, size_t num_items) {
+// Decl *new_decl_import(SrcPos pos, bool is_relative, names: char const**, size_t num_names, bool import_all, ImportItem *items, size_t num_items) {
 //     Decl *d = new_decl(DECL_IMPORT, pos, NULL);
 //     d->import.is_relative = is_relative;
 //     d->import.names = AST_DUP(names);
@@ -220,7 +220,7 @@
 //     return e;
 // }
 
-// Expr *new_expr_offsetof(SrcPos pos, Typespec *type, const char *name) {
+// Expr *new_expr_offsetof(SrcPos pos, Typespec *type, name: char const*) {
 //     Expr *e = new_expr(EXPR_OFFSETOF, pos);
 //     e->offsetof_field.type = type;
 //     e->offsetof_field.name = name;
@@ -250,14 +250,14 @@
 //     return e;
 // }
 
-// Expr *new_expr_str(SrcPos pos, const char *val, TokenMod mod) {
+// Expr *new_expr_str(SrcPos pos, val: char const*, TokenMod mod) {
 //     Expr *e = new_expr(EXPR_STR, pos);
 //     e->str_lit.val = val;
 //     e->str_lit.mod = mod;
 //     return e;
 // }
 
-// Expr *new_expr_name(SrcPos pos, const char *name) {
+// Expr *new_expr_name(SrcPos pos, name: char const*) {
 //     Expr *e = new_expr(EXPR_NAME, pos);
 //     e->name = name;
 //     return e;
@@ -293,7 +293,7 @@
 //     return e;
 // }
 
-// Expr *new_expr_field(SrcPos pos, Expr *expr, const char *name) {
+// Expr *new_expr_field(SrcPos pos, Expr *expr, name: char const*) {
 //     Expr *e = new_expr(EXPR_FIELD, pos);
 //     e->field.expr = expr;
 //     e->field.name = name;
@@ -323,7 +323,7 @@
 //     return e;
 // }
 
-// Note *get_stmt_note(Stmt *stmt, const char *name) {
+// Note *get_stmt_note(Stmt *stmt, name: char const*) {
 //     for (size_t i = 0; i < stmt->notes.num_notes; i++) {
 //         Note *note = stmt->notes.notes + i;
 //         if (note->name == name) {
@@ -340,13 +340,13 @@
 //     return s;
 // }
 
-// Stmt *new_stmt_label(SrcPos pos, const char *label) {
+// Stmt *new_stmt_label(SrcPos pos, label: char const*) {
 //     Stmt *s = new_stmt(STMT_LABEL, pos);
 //     s->label = label;
 //     return s;
 // }
 
-// Stmt *new_stmt_goto(SrcPos pos, const char *label) {
+// Stmt *new_stmt_goto(SrcPos pos, label: char const*) {
 //     Stmt *s = new_stmt(STMT_GOTO, pos);
 //     s->label = label;
 //     return s;
@@ -434,7 +434,7 @@
 //     return s;
 // }
 
-// Stmt *new_stmt_init(SrcPos pos, const char *name, Typespec *type, Expr *expr) {
+// Stmt *new_stmt_init(SrcPos pos, name: char const*, Typespec *type, Expr *expr) {
 //     Stmt *s = new_stmt(STMT_INIT, pos);
 //     s->init.name = name;
 //     s->init.type = type;

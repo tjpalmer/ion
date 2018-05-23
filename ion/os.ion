@@ -96,7 +96,7 @@ func strdup(str: char const*): char* {
 //     return true;
 // }
 
-// const char **dir_list_buf(const char *filespec) {
+// func dir_list_buf(filespec: char const*): char const** {
 //     buf: char const** = NULL;
 //     DirListIter iter;
 //     for (dir_list(&iter, filespec); iter.valid; dir_list_next(&iter)) {
