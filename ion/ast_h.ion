@@ -1,257 +1,259 @@
-// Separated from ast.ion for easier diffing with original source split.
+// Kept separate from ast.ion for easier diffing with original source split.
 
-// typedef struct NoteArg {
-//     SrcPos pos;
-//     name: char const*;
-//     Expr *expr;
-// } NoteArg;
+struct NoteArg {
+    pos: SrcPos;
+    name: char const*;
+    expr: Expr*;
+}
 
-// typedef struct Note {
-//     SrcPos pos;
-//     name: char const*;
-//     NoteArg *args;
-//     size_t num_args;
-// } Note;
+struct Note {
+    pos: SrcPos;
+    name: char const*;
+    args: NoteArg*;
+    num_args: usize;
+}
 
-// typedef struct Notes {
-//     Note *notes;
-//     size_t num_notes;
-// } Notes;
+struct Notes {
+    notes: Note*;
+    num_notes: usize;
+}
 
-// typedef struct StmtList {
-//     SrcPos pos;
-//     Stmt **stmts;
-//     size_t num_stmts;
-// } StmtList;
+struct StmtList {
+    pos: SrcPos;
+    stmts: Stmt**;
+    num_stmts: usize;
+}
 
-// typedef enum TypespecKind {
-//     TYPESPEC_NONE,
-//     TYPESPEC_NAME,
-//     TYPESPEC_FUNC,
-//     TYPESPEC_ARRAY,
-//     TYPESPEC_PTR,
-//     TYPESPEC_CONST,
-// } TypespecKind;
+enum TypespecKind {
+    TYPESPEC_NONE,
+    TYPESPEC_NAME,
+    TYPESPEC_FUNC,
+    TYPESPEC_ARRAY,
+    TYPESPEC_PTR,
+    TYPESPEC_CONST,
+}
 
-// struct Typespec {
-//     TypespecKind kind;
-//     SrcPos pos;
-//     Typespec *base;
-//     union {
-//         name: char const*;
-//         struct {
-//             Typespec **args;
-//             size_t num_args;
-//             bool has_varargs;
-//             Typespec *ret;
-//         } func;
-//         Expr *num_elems;
-//     };
-// };
+struct Typespec {
+    kind: TypespecKind;
+    pos: SrcPos;
+    base: Typespec*;
+    // union {
+    //     name: char const*;
+    //     struct {
+    //         Typespec **args;
+    //         size_t num_args;
+    //         bool has_varargs;
+    //         Typespec *ret;
+    //     } func;
+    //     Expr *num_elems;
+    // };
+}
 
-// typedef struct FuncParam {
-//     SrcPos pos;
-//     name: char const*;
-//     Typespec *type;
-// } FuncParam;
+struct FuncParam {
+    pos: SrcPos;
+    name: char const*;
+    type: Typespec*;
+}
 
-// typedef struct AggregateItem {
-//     SrcPos pos;
-//     names: char const**;
-//     size_t num_names;
-//     Typespec *type;
-// } AggregateItem;
+struct AggregateItem {
+    pos: SrcPos;
+    names: char const**;
+    num_names: usize;
+    type: Typespec*;
+}
 
-// typedef struct EnumItem {
-//     SrcPos pos;
-//     name: char const*;
-//     Expr *init;
-// } EnumItem;
+struct EnumItem {
+    pos: SrcPos;
+    name: char const*;
+    init: Expr*;
+}
 
-// typedef struct ImportItem {
-//     name: char const*;
-//     rename: char const*;
-// } ImportItem;
+struct ImportItem {
+    name: char const*;
+    rename: char const*;
+}
 
-// typedef enum DeclKind {
-//     DECL_NONE,
-//     DECL_ENUM,
-//     DECL_STRUCT,
-//     DECL_UNION,
-//     DECL_VAR,
-//     DECL_CONST,
-//     DECL_TYPEDEF,
-//     DECL_FUNC,
-//     DECL_NOTE,
-//     DECL_IMPORT,
-// } DeclKind;
+enum DeclKind {
+    DECL_NONE,
+    DECL_ENUM,
+    DECL_STRUCT,
+    DECL_UNION,
+    DECL_VAR,
+    DECL_CONST,
+    DECL_TYPEDEF,
+    DECL_FUNC,
+    DECL_NOTE,
+    DECL_IMPORT,
+}
 
-// struct Decl {
-//     DeclKind kind;
-//     SrcPos pos;
-//     name: char const*;
-//     Notes notes;
-//     bool is_incomplete;
-//     union {
-//         Note note;
-//         struct {
-//             Typespec *type;
-//             EnumItem *items;
-//             size_t num_items;
-//         } enum_decl;
-//         struct {
-//             AggregateItem *items;
-//             size_t num_items;
-//         } aggregate;
-//         struct {
-//             FuncParam *params;
-//             size_t num_params;
-//             Typespec *ret_type;
-//             bool has_varargs;
-//             StmtList block;
-//         } func;
-//         struct {
-//             Typespec *type;
-//         } typedef_decl;
-//         struct {
-//             Typespec *type;
-//             Expr *expr;
-//         } var;
-//         struct {
-//             Typespec *type;
-//             Expr *expr;
-//         } const_decl;
-//         struct {
-//             bool is_relative;
-//             names: char const**;
-//             size_t num_names;
-//             bool import_all;
-//             ImportItem *items;
-//             size_t num_items;
-//         } import;
-//     };
-// };
+struct Decl {
+    kind: DeclKind;
+    pos: SrcPos;
+    name: char const*;
+    notes: Note;
+    is_incomplete: bool;
+    // union {
+    //     Note note;
+    //     struct {
+    //         Typespec *type;
+    //         EnumItem *items;
+    //         size_t num_items;
+    //     } enum_decl;
+    //     struct {
+    //         AggregateItem *items;
+    //         size_t num_items;
+    //     } aggregate;
+    //     struct {
+    //         FuncParam *params;
+    //         size_t num_params;
+    //         Typespec *ret_type;
+    //         bool has_varargs;
+    //         StmtList block;
+    //     } func;
+    //     struct {
+    //         Typespec *type;
+    //     } typedef_decl;
+    //     struct {
+    //         Typespec *type;
+    //         Expr *expr;
+    //     } var;
+    //     struct {
+    //         Typespec *type;
+    //         Expr *expr;
+    //     } const_decl;
+    //     struct {
+    //         bool is_relative;
+    //         names: char const**;
+    //         size_t num_names;
+    //         bool import_all;
+    //         ImportItem *items;
+    //         size_t num_items;
+    //     } import;
+    // };
+}
 
-// typedef struct Decls {
-//     Decl **decls;
-//     size_t num_decls;
-// } Decls;
+struct Decls {
+    decls: Decl**;
+    num_decls: usize;
+}
 
-// typedef enum ExprKind {
-//     EXPR_NONE,
-//     EXPR_PAREN,
-//     EXPR_INT,
-//     EXPR_FLOAT,
-//     EXPR_STR,
-//     EXPR_NAME,
-//     EXPR_CAST,
-//     EXPR_CALL,
-//     EXPR_INDEX,
-//     EXPR_FIELD,
-//     EXPR_COMPOUND,
-//     EXPR_UNARY,
-//     EXPR_BINARY,
-//     EXPR_TERNARY,
-//     EXPR_MODIFY,
-//     EXPR_SIZEOF_EXPR,
-//     EXPR_SIZEOF_TYPE,
-//     EXPR_TYPEOF_EXPR,
-//     EXPR_TYPEOF_TYPE,
-//     EXPR_ALIGNOF_EXPR,
-//     EXPR_ALIGNOF_TYPE,
-//     EXPR_OFFSETOF,
-// } ExprKind;
+enum ExprKind {
+    EXPR_NONE,
+    EXPR_PAREN,
+    EXPR_INT,
+    EXPR_FLOAT,
+    EXPR_STR,
+    EXPR_NAME,
+    EXPR_CAST,
+    EXPR_CALL,
+    EXPR_INDEX,
+    EXPR_FIELD,
+    EXPR_COMPOUND,
+    EXPR_UNARY,
+    EXPR_BINARY,
+    EXPR_TERNARY,
+    EXPR_MODIFY,
+    EXPR_SIZEOF_EXPR,
+    EXPR_SIZEOF_TYPE,
+    EXPR_TYPEOF_EXPR,
+    EXPR_TYPEOF_TYPE,
+    EXPR_ALIGNOF_EXPR,
+    EXPR_ALIGNOF_TYPE,
+    EXPR_OFFSETOF,
+}
 
-// typedef enum CompoundFieldKind {
-//     FIELD_DEFAULT,
-//     FIELD_NAME,
-//     FIELD_INDEX,
-// } CompoundFieldKind;
+enum CompoundFieldKind {
+    FIELD_DEFAULT,
+    FIELD_NAME,
+    FIELD_INDEX,
+}
 
-// typedef struct CompoundField {
-//     CompoundFieldKind kind;
-//     SrcPos pos;
-//     Expr *init;
-//     union {
-//         name: char const*;
-//         Expr *index;
-//     };
-// } CompoundField;
+struct CompoundField {
+    kind: CompoundFieldKind;
+    pos: SrcPos;
+    init: Expr*;
+    key: CompoundFieldKey;
+}
 
-// struct Expr {
-//     ExprKind kind;
-//     SrcPos pos;
-//     union {
-//         struct {
-//             Expr *expr;
-//         } paren;
-//         struct {
-//             ullong val;
-//             TokenMod mod;
-//             TokenSuffix suffix;
-//         } int_lit;
-//         struct {
-//             double val;
-//             TokenSuffix suffix;
-//         } float_lit;
-//         struct {
-//             val: char const*;
-//             TokenMod mod;
-//         } str_lit;
-//         name: char const*;
-//         Expr *sizeof_expr;
-//         Typespec *sizeof_type;
-//         Expr *typeof_expr;
-//         Typespec *typeof_type;
-//         Expr *alignof_expr;
-//         Typespec *alignof_type;
-//         struct {
-//             Typespec *type;
-//             name: char const*;
-//         } offsetof_field;
-//         struct {
-//             Typespec *type;
-//             CompoundField *fields;
-//             size_t num_fields;
-//         } compound;
-//         struct {
-//             Typespec *type;
-//             Expr *expr;            
-//         } cast;
-//         struct {
-//             TokenKind op;
-//             bool post;
-//             Expr *expr;
-//         } modify;
-//         struct {
-//             TokenKind op;
-//             Expr *expr;
-//         } unary;
-//         struct {
-//             TokenKind op;
-//             Expr *left;
-//             Expr *right;
-//         } binary;
-//         struct {
-//             Expr *cond;
-//             Expr *then_expr;
-//             Expr *else_expr;
-//         } ternary;
-//         struct {
-//             Expr *expr;
-//             Expr **args;
-//             size_t num_args;            
-//         } call;
-//         struct {
-//             Expr *expr;
-//             Expr *index;
-//         } index;
-//         struct {
-//             Expr *expr;
-//             name: char const*;
-//         } field;
-//     };
-// };
+union CompoundFieldKey {
+	name: char const*;
+	index: Expr*;
+}
+
+struct Expr {
+    kind: ExprKind;
+    pos: SrcPos;
+    // union {
+    //     struct {
+    //         Expr *expr;
+    //     } paren;
+    //     struct {
+    //         ullong val;
+    //         TokenMod mod;
+    //         TokenSuffix suffix;
+    //     } int_lit;
+    //     struct {
+    //         double val;
+    //         TokenSuffix suffix;
+    //     } float_lit;
+    //     struct {
+    //         val: char const*;
+    //         TokenMod mod;
+    //     } str_lit;
+    //     name: char const*;
+    //     Expr *sizeof_expr;
+    //     Typespec *sizeof_type;
+    //     Expr *typeof_expr;
+    //     Typespec *typeof_type;
+    //     Expr *alignof_expr;
+    //     Typespec *alignof_type;
+    //     struct {
+    //         Typespec *type;
+    //         name: char const*;
+    //     } offsetof_field;
+    //     struct {
+    //         Typespec *type;
+    //         CompoundField *fields;
+    //         size_t num_fields;
+    //     } compound;
+    //     struct {
+    //         Typespec *type;
+    //         Expr *expr;            
+    //     } cast;
+    //     struct {
+    //         TokenKind op;
+    //         bool post;
+    //         Expr *expr;
+    //     } modify;
+    //     struct {
+    //         TokenKind op;
+    //         Expr *expr;
+    //     } unary;
+    //     struct {
+    //         TokenKind op;
+    //         Expr *left;
+    //         Expr *right;
+    //     } binary;
+    //     struct {
+    //         Expr *cond;
+    //         Expr *then_expr;
+    //         Expr *else_expr;
+    //     } ternary;
+    //     struct {
+    //         Expr *expr;
+    //         Expr **args;
+    //         size_t num_args;            
+    //     } call;
+    //     struct {
+    //         Expr *expr;
+    //         Expr *index;
+    //     } index;
+    //     struct {
+    //         Expr *expr;
+    //         name: char const*;
+    //     } field;
+    // };
+}
 
 // typedef struct ElseIf {
 //     Expr *cond;
@@ -270,68 +272,68 @@
 //     StmtList block;
 // } SwitchCase;
 
-// typedef enum StmtKind {
-//     STMT_NONE,
-//     STMT_DECL,
-//     STMT_RETURN,
-//     STMT_BREAK,
-//     STMT_CONTINUE,
-//     STMT_BLOCK,
-//     STMT_IF,
-//     STMT_WHILE,
-//     STMT_DO_WHILE,
-//     STMT_FOR,
-//     STMT_SWITCH,
-//     STMT_ASSIGN,
-//     STMT_INIT,
-//     STMT_EXPR,
-//     STMT_NOTE,
-//     STMT_LABEL,
-//     STMT_GOTO,
-// } StmtKind;
+enum StmtKind {
+    STMT_NONE,
+    STMT_DECL,
+    STMT_RETURN,
+    STMT_BREAK,
+    STMT_CONTINUE,
+    STMT_BLOCK,
+    STMT_IF,
+    STMT_WHILE,
+    STMT_DO_WHILE,
+    STMT_FOR,
+    STMT_SWITCH,
+    STMT_ASSIGN,
+    STMT_INIT,
+    STMT_EXPR,
+    STMT_NOTE,
+    STMT_LABEL,
+    STMT_GOTO,
+}
 
-// struct Stmt {
-//     StmtKind kind;
-//     Notes notes;
-//     SrcPos pos;
-//     union {
-//         Note note;
-//         Expr *expr;
-//         Decl *decl;
-//         struct {
-//             Stmt *init;
-//             Expr *cond;
-//             StmtList then_block;
-//             ElseIf *elseifs;
-//             size_t num_elseifs;
-//             StmtList else_block;            
-//         } if_stmt;
-//         struct {
-//             Expr *cond;
-//             StmtList block;
-//         } while_stmt;
-//         struct {
-//             Stmt *init;
-//             Expr *cond;
-//             Stmt *next;
-//             StmtList block;
-//         } for_stmt;
-//         struct {
-//             Expr *expr;
-//             SwitchCase *cases;
-//             size_t num_cases;            
-//         } switch_stmt;
-//         StmtList block;
-//         struct {
-//             TokenKind op;
-//             Expr *left;
-//             Expr *right;
-//         } assign;
-//         struct {
-//             name: char const*;
-//             Typespec *type;
-//             Expr *expr;
-//         } init;
-//         label: char const*;
-//     };
-// };
+struct Stmt {
+    kind: StmtKind;
+    notes: Notes;
+    pos: SrcPos;
+    // union {
+    //     Note note;
+    //     Expr *expr;
+    //     Decl *decl;
+    //     struct {
+    //         Stmt *init;
+    //         Expr *cond;
+    //         StmtList then_block;
+    //         ElseIf *elseifs;
+    //         size_t num_elseifs;
+    //         StmtList else_block;            
+    //     } if_stmt;
+    //     struct {
+    //         Expr *cond;
+    //         StmtList block;
+    //     } while_stmt;
+    //     struct {
+    //         Stmt *init;
+    //         Expr *cond;
+    //         Stmt *next;
+    //         StmtList block;
+    //     } for_stmt;
+    //     struct {
+    //         Expr *expr;
+    //         SwitchCase *cases;
+    //         size_t num_cases;            
+    //     } switch_stmt;
+    //     StmtList block;
+    //     struct {
+    //         TokenKind op;
+    //         Expr *left;
+    //         Expr *right;
+    //     } assign;
+    //     struct {
+    //         name: char const*;
+    //         Typespec *type;
+    //         Expr *expr;
+    //     } init;
+    //     label: char const*;
+    // };
+}
