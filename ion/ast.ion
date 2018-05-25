@@ -1,13 +1,13 @@
-// Arena ast_arena;
+var ast_arena: Arena;
 
-// func *ast_alloc(size_t size) {
+// func ast_alloc(size_t size): void* {
 //     assert(size != 0);
 //     void *ptr = arena_alloc(&ast_arena, size);
 //     memset(ptr, 0, size);
 //     return ptr;
 // }
 
-// func *ast_dup(const void *src, size_t size) {
+// func ast_dup(const void *src, size_t size): void* {
 //     if (size == 0) {
 //         return NULL;
 //     }

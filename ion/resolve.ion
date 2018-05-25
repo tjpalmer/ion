@@ -1666,7 +1666,7 @@ func resolve_sym(sym: Sym*) {
 //             index++;
 //         }
 //     } else if (type->kind == TYPE_ARRAY) {
-//         int index = 0, max_index = 0;
+//         index: usize = 0, max_index: usize = 0;  // were int, but can't be negative below.
 //         for (size_t i = 0; i < expr->compound.num_fields; i++) {
 //             CompoundField field = expr->compound.fields[i];
 //             if (field.kind == FIELD_NAME) {

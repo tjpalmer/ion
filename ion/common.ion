@@ -1,108 +1,130 @@
 // #define MIN(x, y) ((x) <= (y) ? (x) : (y))
-func min(x: int, y: int): int {
+func min(x: usize, y: usize): usize {
     return x <= y ? x : y;
 }
 
 // #define MAX(x, y) ((x) >= (y) ? (x) : (y))
-func max(x: int, y: int): int {
+func max(x: usize, y: usize): usize {
     return x >= y ? x : y;
 }
 
 // #define CLAMP_MAX(x, max) MIN(x, max)
-func clamp_max(x: int, max: int): int {
+func clamp_max(x: usize, max: usize): usize {
     return min(x, max);
 }
 
 // #define CLAMP_MIN(x, min) MAX(x, min)
+func clamp_min(x: usize, min: usize): usize {
+    return max(x, min);
+}
+
 // #define IS_POW2(x) (((x) != 0) && ((x) & ((x)-1)) == 0)
+func is_pow2(x: usize): usize {
+    return x != 0 && x & (x - 1) == 0;
+}
+
 // #define ALIGN_DOWN(n, a) ((n) & ~((a) - 1))
+func align_down(n: uintptr, a: usize): uintptr {
+    return n & ~(a - 1);
+}
+
 // #define ALIGN_UP(n, a) ALIGN_DOWN((n) + (a) - 1, (a))
+func align_up(n: uintptr, a: usize): uintptr {
+    return align_down(n + a - 1, a);
+}
+
 // #define ALIGN_DOWN_PTR(p, a) ((void *)ALIGN_DOWN((uintptr_t)(p), (a)))
+func align_down_ptr(p: void*, a: usize): void* {
+    return (:void*)align_down((:uintptr)p, a);
+}
+
 // #define ALIGN_UP_PTR(p, a) ((void *)ALIGN_UP((uintptr_t)(p), (a)))
+func align_up_ptr(p: void*, a: usize): void* {
+    return (:void*)align_up((:uintptr)p, a);
+}
 
-// func fatal(fmt: char const*, ...) {
-//     va_list args;
-//     va_start(args, fmt);
-//     printf("FATAL: ");
-//     vprintf(fmt, args);
-//     printf("\n");
-//     va_end(args);
-//     exit(1);
-// }
+func fatal(fmt: char const*, ...) {
+    args: va_list;
+    va_start(&args, &fmt);
+    printf("FATAL: ");
+    vprintf(fmt, args);
+    printf("\n");
+    va_end(&args);
+    exit(1);
+}
 
-// func *xcalloc(size_t num_elems, size_t elem_size) {
-//     void *ptr = calloc(num_elems, elem_size);
-//     if (!ptr) {
-//         perror("xcalloc failed");
-//         exit(1);
-//     }
-//     return ptr;
-// }
+func xcalloc(num_elems: usize, elem_size: usize): void* {
+    ptr := calloc(num_elems, elem_size);
+    if (!ptr) {
+        perror("xcalloc failed");
+        exit(1);
+    }
+    return ptr;
+}
 
-// func *xrealloc(void *ptr, size_t num_bytes) {
-//     ptr = realloc(ptr, num_bytes);
-//     if (!ptr) {
-//         perror("xrealloc failed");
-//         exit(1);
-//     }
-//     return ptr;
-// }
+func xrealloc(ptr: void*, num_bytes: usize): void* {
+    ptr = realloc(ptr, num_bytes);
+    if (!ptr) {
+        perror("xrealloc failed");
+        exit(1);
+    }
+    return ptr;
+}
 
-// func *xmalloc(size_t num_bytes) {
-//     void *ptr = malloc(num_bytes);
-//     if (!ptr) {
-//         perror("xmalloc failed");
-//         exit(1);
-//     }
-//     return ptr;
-// }
+func xmalloc(num_bytes: usize): void* {
+    ptr := malloc(num_bytes);
+    if (!ptr) {
+        perror("xmalloc failed");
+        exit(1);
+    }
+    return ptr;
+}
 
-// func *memdup(void *src, size_t size) {
-//     void *dest = xmalloc(size);
-//     memcpy(dest, src, size);
-//     return dest;
-// }
+func memdup(src: void*, size: usize): void* {
+    dest := xmalloc(size);
+    memcpy(dest, src, size);
+    return dest;
+}
 
-// char *strf(fmt: char const*, ...) {
-//     va_list args;
-//     va_start(args, fmt);
-//     size_t n = 1 + vsnprintf(NULL, 0, fmt, args);
-//     va_end(args);
-//     str: char* = xmalloc(n);
-//     va_start(args, fmt);
-//     vsnprintf(str, n, fmt, args);
-//     va_end(args);
-//     return str;
-// }
+func strf(fmt: char const*, ...): char* {
+    args: va_list;
+    va_start(&args, &fmt);
+    n := 1 + vsnprintf(NULL, 0, fmt, args);
+    va_end(&args);
+    str: char* = xmalloc(n);
+    va_start(&args, &fmt);
+    vsnprintf(str, n, fmt, args);
+    va_end(&args);
+    return str;
+}
 
-// char *read_file(path: char const*) {
-//     FILE *file = fopen(path, "rb");
-//     if (!file) {
-//         return NULL;
-//     }
-//     fseek(file, 0, SEEK_END);
-//     long len = ftell(file);
-//     fseek(file, 0, SEEK_SET);
-//     buf: char* = xmalloc(len + 1);
-//     if (len && fread(buf, len, 1, file) != 1) {
-//         fclose(file);
-//         free(buf);
-//         return NULL;
-//     }
-//     fclose(file);   
-//     buf[len] = 0;
-//     return buf;
-// }
+func read_file(path: char const*): char* {
+    file := fopen(path, "rb");
+    if (!file) {
+        return NULL;
+    }
+    fseek(file, 0, SEEK_END);
+    len := ftell(file);
+    fseek(file, 0, SEEK_SET);
+    buf: char* = xmalloc(len + 1);
+    if (len && fread(buf, len, 1, file) != 1) {
+        fclose(file);
+        free(buf);
+        return NULL;
+    }
+    fclose(file);   
+    buf[len] = 0;
+    return buf;
+}
 
 func write_file(path: char const*, buf: char const*, len: usize): bool {
-    // FILE *file = fopen(path, "w");
-    // if (!file) {
-    //     return false;
-    // }
-    // size_t n = fwrite(buf, len, 1, file);
-    // fclose(file);
-    // return n == 1;
-    return false;
+    file := fopen(path, "w");
+    if (!file) {
+        return false;
+    }
+    n := fwrite(buf, len, 1, file);
+    fclose(file);
+    return n == 1;
 }
 
 // Stretchy buffers, invented (?) by Sean Barrett
@@ -136,7 +158,7 @@ func buf_push(b: void*, item: void*, size: usize) {
 // #define buf_printf(b, ...) ((b) = buf__printf((b), __VA_ARGS__))
 // #define buf_clear(b) ((b) ? buf__hdr(b)->len = 0 : 0)
 
-// func *buf__grow(const void *buf, size_t new_len, size_t elem_size) {
+// func buf__grow(const void *buf, size_t new_len, size_t elem_size): void* {
 //     assert(buf_cap(buf) <= (SIZE_MAX - 1)/2);
 //     size_t new_cap = CLAMP_MIN(2*buf_cap(buf), MAX(new_len, 16));
 //     assert(new_len <= new_cap);
@@ -212,7 +234,7 @@ struct Arena {
 //     buf_push(arena->blocks, arena->ptr);
 // }
 
-// func *arena_alloc(Arena *arena, size_t size) {
+// func arena_alloc(Arena *arena, size_t size): void* {
 //     if (size > (size_t)(arena->end - arena->ptr)) {
 //         arena_grow(arena, size);
 //         assert(size <= (size_t)(arena->end - arena->ptr));
@@ -332,7 +354,7 @@ struct Map {
 //     }
 // }
 
-// func *map_get(Map *map, const void *key) {
+// func map_get(Map *map, const void *key): void* {
 //     return (void *)(uintptr_t)map_get_uint64_from_uint64(map, (uint64_t)(uintptr_t)key);
 // }
 
@@ -340,7 +362,7 @@ func map_put(map: Map*, key: void const*, val: void*) {
     // map_put_uint64_from_uint64(map, (uint64_t)(uintptr_t)key, (uint64_t)(uintptr_t)val);
 }
 
-// func *map_get_from_uint64(Map *map, uint64_t key) {
+// func map_get_from_uint64(Map *map, uint64_t key): void* {
 //     return (void *)(uintptr_t)map_get_uint64_from_uint64(map, key);
 // }
 

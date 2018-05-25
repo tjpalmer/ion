@@ -255,22 +255,22 @@ struct Expr {
     // };
 }
 
-// typedef struct ElseIf {
-//     Expr *cond;
-//     StmtList block;
-// } ElseIf;
+struct ElseIf {
+    cond: Expr*;
+    block: StmtList;
+}
 
-// typedef struct SwitchCasePattern {
-//     Expr *start;
-//     Expr *end;
-// } SwitchCasePattern;
+struct SwitchCasePattern {
+    start: Expr*;
+    end: Expr*;
+}
 
-// typedef struct SwitchCase {
-//     SwitchCasePattern *patterns;
-//     size_t num_patterns;
-//     bool is_default;
-//     StmtList block;
-// } SwitchCase;
+struct SwitchCase {
+    patterns: SwitchCasePattern*;
+    num_patterns: usize;
+    is_default: bool;
+    block: StmtList;
+}
 
 enum StmtKind {
     STMT_NONE,
