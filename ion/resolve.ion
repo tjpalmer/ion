@@ -1,10 +1,10 @@
-// typedef enum SymKind {
-//     SYM_NONE,
-//     SYM_VAR,
-//     SYM_CONST,
-//     SYM_FUNC,
-//     SYM_TYPE,
-// } SymKind;
+enum SymKind {
+    SYM_NONE,
+    SYM_VAR,
+    SYM_CONST,
+    SYM_FUNC,
+    SYM_TYPE,
+}
 
 // typedef enum SymState {
 //     SYM_UNRESOLVED,
@@ -14,8 +14,8 @@
 
 struct Sym {
     name: char const*;
-    // struct Package *package;
-    // SymKind kind;
+    package: Package*;
+    kind: SymKind;
     // SymState state;
     // uint8_t reachable;
     // Decl *decl;
@@ -244,26 +244,26 @@ var reachable_syms: Sym**;
 //         buf_printf(*buf, "%s", type_name);
 //     } else {
 //         switch (type->kind) {
-//         case TYPE_STRUCT:
-//         case TYPE_UNION:
-//         case TYPE_ENUM:
-//         case TYPE_INCOMPLETE:
+//         case CMPL_TYPE_STRUCT:
+//         case CMPL_TYPE_UNION:
+//         case CMPL_TYPE_ENUM:
+//         case CMPL_TYPE_INCOMPLETE:
 //             assert(type->sym);
 //             buf_printf(*buf, "%s", type->sym->name);
 //             break;
-//         case TYPE_CONST:
+//         case CMPL_TYPE_CONST:
 //             put_type_name(buf, type->base);
 //             buf_printf(*buf, " const");
 //             break;
-//         case TYPE_PTR:
+//         case CMPL_TYPE_PTR:
 //             put_type_name(buf, type->base);
 //             buf_printf(*buf, "*");
 //             break;
-//         case TYPE_ARRAY:
+//         case CMPL_TYPE_ARRAY:
 //             put_type_name(buf, type->base);
 //             buf_printf(*buf, "[%zu]", type->num_elems);
 //             break;
-//         case TYPE_FUNC:
+//         case CMPL_TYPE_FUNC:
 //             buf_printf(*buf, "func(");
 //             for (size_t i = 0; i < type->func.num_params; i++) {
 //                 if (i != 0) {
@@ -325,7 +325,7 @@ var reachable_syms: Sym**;
 
 // Type *type_decay(Type *type) {
 //     type = unqualify_type(type);
-//     if (type->kind == TYPE_ARRAY) {
+//     if (type->kind == CMPL_TYPE_ARRAY) {
 //         type = type_ptr(type->base);
 //     }
 //     return type;
@@ -342,48 +342,48 @@ var reachable_syms: Sym**;
 // #define CASE(k, t) \
 //     case k: \
 //         switch (type->kind) { \
-//         case TYPE_BOOL: \
+//         case CMPL_TYPE_BOOL: \
 //             operand->val.b = (bool)operand->val.t; \
 //             break; \
-//         case TYPE_CHAR: \
+//         case CMPL_TYPE_CHAR: \
 //             operand->val.c = (char)operand->val.t; \
 //             break; \
-//         case TYPE_UCHAR: \
+//         case CMPL_TYPE_UCHAR: \
 //             operand->val.uc = (unsigned char)operand->val.t; \
 //             break; \
-//         case TYPE_SCHAR: \
+//         case CMPL_TYPE_SCHAR: \
 //             operand->val.sc = (signed char)operand->val.t; \
 //             break; \
-//         case TYPE_SHORT: \
+//         case CMPL_TYPE_SHORT: \
 //             operand->val.s = (short)operand->val.t; \
 //             break; \
-//         case TYPE_USHORT: \
+//         case CMPL_TYPE_USHORT: \
 //             operand->val.us = (unsigned short)operand->val.t; \
 //             break; \
-//         case TYPE_INT: \
-//         case TYPE_ENUM: \
+//         case CMPL_TYPE_INT: \
+//         case CMPL_TYPE_ENUM: \
 //             operand->val.i = (int)operand->val.t; \
 //             break; \
-//         case TYPE_UINT: \
+//         case CMPL_TYPE_UINT: \
 //             operand->val.u = (unsigned)operand->val.t; \
 //             break; \
-//         case TYPE_LONG: \
+//         case CMPL_TYPE_LONG: \
 //             operand->val.l = (long)operand->val.t; \
 //             break; \
-//         case TYPE_ULONG: \
+//         case CMPL_TYPE_ULONG: \
 //             operand->val.ul = (unsigned long)operand->val.t; \
 //             break; \
-//         case TYPE_LLONG: \
+//         case CMPL_TYPE_LLONG: \
 //             operand->val.ll = (long long)operand->val.t; \
 //             break; \
-//         case TYPE_ULLONG: \
+//         case CMPL_TYPE_ULLONG: \
 //             operand->val.ull = (ullong)operand->val.t; \
 //             break; \
-//         case TYPE_PTR: \
+//         case CMPL_TYPE_PTR: \
 //             operand->val.p = (uintptr_t)operand->val.t; \
 //             break; \
-//         case TYPE_FLOAT: \
-//         case TYPE_DOUBLE: \
+//         case CMPL_TYPE_FLOAT: \
+//         case CMPL_TYPE_DOUBLE: \
 //             break; \
 //         default: \
 //             operand->is_const = false; \
@@ -445,27 +445,27 @@ var reachable_syms: Sym**;
 //             if (is_floating_type(operand->type)) {
 //                 operand->is_const = !is_integer_type(type);
 //             } else {
-//                 if (type->kind == TYPE_ENUM) {
+//                 if (type->kind == CMPL_TYPE_ENUM) {
 //                     type = type->base;
 //                 }
 //                 Type *operand_type = operand->type;
-//                 if (operand_type->kind == TYPE_ENUM) {
+//                 if (operand_type->kind == CMPL_TYPE_ENUM) {
 //                     operand_type = operand_type->base;
 //                 }
 //                 switch (operand_type->kind) {
-//                 CASE(TYPE_BOOL, b)
-//                 CASE(TYPE_CHAR, c)
-//                 CASE(TYPE_UCHAR, uc)
-//                 CASE(TYPE_SCHAR, sc)
-//                 CASE(TYPE_SHORT, s)
-//                 CASE(TYPE_USHORT, us)
-//                 CASE(TYPE_INT, i)
-//                 CASE(TYPE_UINT, u)
-//                 CASE(TYPE_LONG, l)
-//                 CASE(TYPE_ULONG, ul)
-//                 CASE(TYPE_LLONG, ll)
-//                 CASE(TYPE_ULLONG, ull)
-//                 CASE(TYPE_PTR, p)
+//                 CASE(CMPL_TYPE_BOOL, b)
+//                 CASE(CMPL_TYPE_CHAR, c)
+//                 CASE(CMPL_TYPE_UCHAR, uc)
+//                 CASE(CMPL_TYPE_SCHAR, sc)
+//                 CASE(CMPL_TYPE_SHORT, s)
+//                 CASE(CMPL_TYPE_USHORT, us)
+//                 CASE(CMPL_TYPE_INT, i)
+//                 CASE(CMPL_TYPE_UINT, u)
+//                 CASE(CMPL_TYPE_LONG, l)
+//                 CASE(CMPL_TYPE_ULONG, ul)
+//                 CASE(CMPL_TYPE_LLONG, ll)
+//                 CASE(CMPL_TYPE_ULLONG, ull)
+//                 CASE(CMPL_TYPE_PTR, p)
 //                 default:
 //                     operand->is_const = false;
 //                     break;
@@ -500,13 +500,13 @@ var reachable_syms: Sym**;
 
 // func promote_operand(Operand *operand) {
 //     switch (operand->type->kind) {
-//     case TYPE_BOOL:
-//     case TYPE_CHAR:
-//     case TYPE_SCHAR:
-//     case TYPE_UCHAR:
-//     case TYPE_SHORT:
-//     case TYPE_USHORT:
-//     case TYPE_ENUM:
+//     case CMPL_TYPE_BOOL:
+//     case CMPL_TYPE_CHAR:
+//     case CMPL_TYPE_SCHAR:
+//     case CMPL_TYPE_UCHAR:
+//     case CMPL_TYPE_SHORT:
+//     case CMPL_TYPE_USHORT:
+//     case CMPL_TYPE_ENUM:
 //         cast_operand(operand, type_int);
 //         break;
 //     default:
@@ -541,10 +541,10 @@ var reachable_syms: Sym**;
 //             } else if (is_signed_type(right->type) && type_rank(left->type) >= type_rank(right->type)) {
 //                 cast_operand(right, left->type);
 //             } else if (is_signed_type(left->type) && type_sizeof(left->type) > type_sizeof(right->type)) {
-//                 cast_operand(right, left->type);            
+//                 cast_operand(right, left->type);
 //             } else if (is_signed_type(right->type) && type_sizeof(right->type) > type_sizeof(left->type)) {
 //                 cast_operand(left, right->type);
-//             } else { 
+//             } else {
 //                 Type *type = unsigned_type(is_signed_type(left->type) ? left->type : right->type);
 //                 cast_operand(left, type);
 //                 cast_operand(right, type);
@@ -581,11 +581,11 @@ var reachable_syms: Sym**;
 //     map_put(&resolved_type_map, ptr, type);
 // }
 
-// Map resolved_sym_map;
+var resolved_sym_map: Map;
 
-// Sym *get_resolved_sym(const void *ptr) {
-//     return map_get(&resolved_sym_map, ptr);
-// }
+func get_resolved_sym(ptr: void const*): Sym* {
+    return map_get(&resolved_sym_map, ptr);
+}
 
 // func set_resolved_sym(const void *ptr, Sym *sym) {
 //     if (!is_local_sym(sym)) {
@@ -690,10 +690,10 @@ var reachable_syms: Sym**;
 // }
 
 // func complete_type(Type *type) {
-//     if (type->kind == TYPE_COMPLETING) {
+//     if (type->kind == CMPL_TYPE_COMPLETING) {
 //         fatal_error(type->sym->decl->pos, "Type completion cycle");
 //         return;
-//     } else if (type->kind != TYPE_INCOMPLETE) {
+//     } else if (type->kind != CMPL_TYPE_INCOMPLETE) {
 //         return;
 //     }
 //     Sym *sym = type->sym;
@@ -702,7 +702,7 @@ var reachable_syms: Sym**;
 //     if (decl->is_incomplete) {
 //         fatal_error(decl->pos, "Trying to use incomplete type as complete type");
 //     }
-//     type->kind = TYPE_COMPLETING;
+//     type->kind = CMPL_TYPE_COMPLETING;
 //     assert(decl->kind == DECL_STRUCT || decl->kind == DECL_UNION);
 //     TypeField *fields = NULL;
 //     for (size_t i = 0; i < decl->aggregate.num_items; i++) {
@@ -922,7 +922,7 @@ var reachable_syms: Sym**;
 //     if (stmt->assign.op == TOKEN_ASSIGN) {
 //         result = right;
 //     } else if (stmt->assign.op == TOKEN_ADD_ASSIGN || stmt->assign.op == TOKEN_SUB_ASSIGN) {
-//         if (left.type->kind == TYPE_PTR && is_integer_type(right.type)) {
+//         if (left.type->kind == CMPL_TYPE_PTR && is_integer_type(right.type)) {
 //             result = operand_rvalue(left.type);
 //         } else if (is_arithmetic_type(left.type) && is_arithmetic_type(right.type)) {
 //             result = resolve_expr_binary_op(binary_op, assign_op_name, stmt->pos, left, right);
@@ -1221,7 +1221,7 @@ func resolve_sym(sym: Sym*) {
 //         type = unqualify_type(operand.type);
 //         complete_type(type);
 //     }
-//     if (type->kind != TYPE_STRUCT && type->kind != TYPE_UNION) {
+//     if (type->kind != CMPL_TYPE_STRUCT && type->kind != CMPL_TYPE_UNION) {
 //         fatal_error(expr->pos, "Can only access fields on aggregates or pointers to aggregates");
 //         return operand_null;
 //     }
@@ -1644,7 +1644,7 @@ func resolve_sym(sym: Sym*) {
 //     complete_type(type);
 //     bool is_const = is_const_type(type);
 //     type = unqualify_type(type);
-//     if (type->kind == TYPE_STRUCT || type->kind == TYPE_UNION) {
+//     if (type->kind == CMPL_TYPE_STRUCT || type->kind == CMPL_TYPE_UNION) {
 //         int index = 0;
 //         for (size_t i = 0; i < expr->compound.num_fields; i++) {
 //             CompoundField field = expr->compound.fields[i];
@@ -1665,7 +1665,7 @@ func resolve_sym(sym: Sym*) {
 //             }
 //             index++;
 //         }
-//     } else if (type->kind == TYPE_ARRAY) {
+//     } else if (type->kind == CMPL_TYPE_ARRAY) {
 //         index: usize = 0, max_index: usize = 0;  // were int, but can't be negative below.
 //         for (size_t i = 0; i < expr->compound.num_fields; i++) {
 //             CompoundField field = expr->compound.fields[i];
@@ -1729,7 +1729,7 @@ func resolve_sym(sym: Sym*) {
 //         }
 //     }
 //     Operand func = resolve_expr_rvalue(expr->call.expr);
-//     if (func.type->kind != TYPE_FUNC) {
+//     if (func.type->kind != CMPL_TYPE_FUNC) {
 //         fatal_error(expr->pos, "Cannot call non-function value");
 //     }
 //     size_t num_params = func.type->func.num_params;
@@ -1806,11 +1806,11 @@ func resolve_sym(sym: Sym*) {
 
 // Operand resolve_expr_int(Expr *expr) {
 //     assert(expr->kind == EXPR_INT);
-//     ullong int_max = type_metrics[TYPE_INT].max;
-//     ullong uint_max = type_metrics[TYPE_UINT].max;
-//     ullong long_max = type_metrics[TYPE_LONG].max;
-//     ullong ulong_max = type_metrics[TYPE_ULONG].max;
-//     ullong llong_max = type_metrics[TYPE_LLONG].max;
+//     ullong int_max = type_metrics[CMPL_TYPE_INT].max;
+//     ullong uint_max = type_metrics[CMPL_TYPE_UINT].max;
+//     ullong long_max = type_metrics[CMPL_TYPE_LONG].max;
+//     ullong ulong_max = type_metrics[CMPL_TYPE_ULONG].max;
+//     ullong llong_max = type_metrics[CMPL_TYPE_LLONG].max;
 //     ullong val = expr->int_lit.val;
 //     Operand operand = operand_const(type_ullong, (Val){.ull = val});
 //     Type *type = type_ullong;
@@ -1938,7 +1938,7 @@ func resolve_sym(sym: Sym*) {
 //     if (type->nonmodifiable) {
 //         fatal_error(expr->pos, "Cannot modify non-modifiable type");
 //     }
-//     if (!(is_integer_type(type) || type->kind == TYPE_PTR)) {
+//     if (!(is_integer_type(type) || type->kind == CMPL_TYPE_PTR)) {
 //         fatal_error(expr->pos, "%s only valid for integer and pointer types", token_kind_name(expr->modify.op));
 //     }
 //     return operand_rvalue(type);
@@ -1952,7 +1952,7 @@ func resolve_sym(sym: Sym*) {
 //         break;
 //     case EXPR_INT:
 //         result = resolve_expr_int(expr);
-//         break;  
+//         break;
 //     case EXPR_FLOAT:
 //         result = operand_const(expr->float_lit.suffix == SUFFIX_D ? type_double : type_float, (Val){0});
 //         break;
@@ -2066,7 +2066,7 @@ func resolve_sym(sym: Sym*) {
 //     case EXPR_OFFSETOF: {
 //         Type *type = resolve_typespec(expr->offsetof_field.type);
 //         complete_type(type);
-//         if (type->kind != TYPE_STRUCT && type->kind != TYPE_UNION) {
+//         if (type->kind != CMPL_TYPE_STRUCT && type->kind != CMPL_TYPE_UNION) {
 //             fatal_error(expr->pos, "offsetof can only be used with struct/union types");
 //         }
 //         int field = aggregate_field_index(type, expr->offsetof_field.name);

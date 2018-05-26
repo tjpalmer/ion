@@ -1,235 +1,232 @@
-// enum TypeKind {
-//     TYPE_NONE,
-//     TYPE_INCOMPLETE,
-//     TYPE_COMPLETING,
-//     TYPE_VOID,
-//     TYPE_BOOL,
-//     TYPE_CHAR,
-//     TYPE_SCHAR,
-//     TYPE_UCHAR,
-//     TYPE_SHORT,
-//     TYPE_USHORT,
-//     TYPE_INT,
-//     TYPE_UINT,
-//     TYPE_LONG,
-//     TYPE_ULONG,
-//     TYPE_LLONG,
-//     TYPE_ULLONG,
-//     TYPE_ENUM,
-//     TYPE_FLOAT,
-//     TYPE_DOUBLE,
-//     TYPE_PTR,
-//     TYPE_FUNC,
-//     TYPE_ARRAY,
-//     TYPE_STRUCT,
-//     TYPE_UNION,
-//     TYPE_CONST,
-//     NUM_TYPE_KINDS,
-// }
-
-// typedef struct Type Type;
-// typedef struct Sym Sym;
+enum CompilerTypeKind {
+    CMPL_TYPE_NONE,
+    CMPL_TYPE_INCOMPLETE,
+    CMPL_TYPE_COMPLETING,
+    CMPL_TYPE_VOID,
+    CMPL_TYPE_BOOL,
+    CMPL_TYPE_CHAR,
+    CMPL_TYPE_SCHAR,
+    CMPL_TYPE_UCHAR,
+    CMPL_TYPE_SHORT,
+    CMPL_TYPE_USHORT,
+    CMPL_TYPE_INT,
+    CMPL_TYPE_UINT,
+    CMPL_TYPE_LONG,
+    CMPL_TYPE_ULONG,
+    CMPL_TYPE_LLONG,
+    CMPL_TYPE_ULLONG,
+    CMPL_TYPE_ENUM,
+    CMPL_TYPE_FLOAT,
+    CMPL_TYPE_DOUBLE,
+    CMPL_TYPE_PTR,
+    CMPL_TYPE_FUNC,
+    CMPL_TYPE_ARRAY,
+    CMPL_TYPE_STRUCT,
+    CMPL_TYPE_UNION,
+    CMPL_TYPE_CONST,
+    NUM_CMPL_TYPE_KINDS,
+}
 
 // typedef struct TypeField {
 //     name: char const*;
 //     Type *type;
-//     size_t offset;
+//     usize offset;
 // } TypeField;
 
-// struct Type {
-//     TypeKind kind;
-//     size_t size;
-//     size_t align;
-//     Sym *sym;
-//     Type *base;
-//     int typeid;
-//     bool nonmodifiable;
+struct Type {
+    kind: CompilerTypeKind;
+    size: usize;
+    align: usize;
+    sym: Sym*;
+    base: Type*;
+    typeid: int;
+    nonmodifiable: bool;
 //     union {
-//         size_t num_elems;
+//         num_elems: usize;
 //         struct {
-//             TypeField *fields;
-//             size_t num_fields;
+//             fields: TypeField*;
+//             num_fields: usize;
 //         } aggregate;
 //         struct {
-//             Type **params;
-//             size_t num_params;
-//             bool has_varargs;
-//             Type *ret;
+//             params: Type**;
+//             num_params: usize;
+//             has_varargs: bool;
+//             ret: Type*;
 //         } func;
 //     };
-// };
+}
 
 // typedef struct TypeMetrics {
-//     size_t size;
-//     size_t align;
-//     bool sign;
-//     ullong max;
+//     size: usize;
+//     align: usize;
+//     sign: bool;
+//     max: ullong;
 // } TypeMetrics;
 
-// TypeMetrics *type_metrics;
+// var type_metrics: TypeMetrics*;
 
-// Type *type_void = &(Type){TYPE_VOID};
-// Type *type_bool = &(Type){TYPE_BOOL};
-// Type *type_char = &(Type){TYPE_CHAR};
-// Type *type_uchar = &(Type){TYPE_UCHAR};
-// Type *type_schar = &(Type){TYPE_SCHAR};
-// Type *type_short = &(Type){TYPE_SHORT};
-// Type *type_ushort = &(Type){TYPE_USHORT};
-// Type *type_int = &(Type){TYPE_INT};
-// Type *type_uint = &(Type){TYPE_UINT};
-// Type *type_long = &(Type){TYPE_LONG};
-// Type *type_ulong = &(Type){TYPE_ULONG};
-// Type *type_llong = &(Type){TYPE_LLONG};
-// Type *type_ullong = &(Type){TYPE_ULLONG};
-// Type *type_float = &(Type){TYPE_FLOAT};
-// Type *type_double = &(Type){TYPE_DOUBLE};
+// var type_void: Type* = &(Type){CMPL_TYPE_VOID};
+// var type_bool: Type* = &(Type){CMPL_TYPE_BOOL};
+// var type_char: Type* = &(Type){CMPL_TYPE_CHAR};
+// var type_uchar: Type* = &(Type){CMPL_TYPE_UCHAR};
+// var type_schar: Type* = &(Type){CMPL_TYPE_SCHAR};
+// var type_short: Type* = &(Type){CMPL_TYPE_SHORT};
+// var type_ushort: Type* = &(Type){CMPL_TYPE_USHORT};
+// var type_int: Type* = &(Type){CMPL_TYPE_INT};
+// var type_uint: Type* = &(Type){CMPL_TYPE_UINT};
+// var type_long: Type* = &(Type){CMPL_TYPE_LONG};
+// var type_ulong: Type* = &(Type){CMPL_TYPE_ULONG};
+// var type_llong: Type* = &(Type){CMPL_TYPE_LLONG};
+// var type_ullong: Type* = &(Type){CMPL_TYPE_ULLONG};
+// var type_float: Type* = &(Type){CMPL_TYPE_FLOAT};
+// var type_double: Type* = &(Type){CMPL_TYPE_DOUBLE};
 
-// int next_typeid = 1;
+// var next_typeid: int = 1;
 
-// Type *type_uintptr;
-// Type *type_usize;
-// Type *type_ssize;
+// var type_uintptr: Type*;
+// var type_usize: Type*;
+// var type_ssize: Type*;
 
-// func complete_type(Type *type);
+// func complete_type(type: Type*);
 
-// Map typeid_map;
+// var typeid_map: Map;
 
-// Type *get_type_from_typeid(int typeid) {
+// func get_type_from_typeid(typeid: int): Type* {
 //     if (typeid == 0) {
 //         return NULL;
 //     }
 //     return map_get(&typeid_map, (void *)(uintptr_t)typeid);
 // }
 
-// func register_typeid(Type *type) {
+// func register_typeid(type: Type*) {
 //     map_put(&typeid_map, (void *)(uintptr_t)type->typeid, type);
 // }
 
-// Type *type_alloc(TypeKind kind) {
-//     Type *type = xcalloc(1, sizeof(Type));
+// func type_alloc(kind: TypeKind): Type* {
+//     type: Type* = xcalloc(1, sizeof(Type));
 //     type->kind = kind;
 //     type->typeid = next_typeid++;
 //     register_typeid(type);
 //     return type;
 // }
 
-// func is_ptr_type(Type *type): bool {
-//     return type->kind == TYPE_PTR;
+// func is_ptr_type(type: Type*): bool {
+//     return type->kind == CMPL_TYPE_PTR;
 // }
 
-// func is_func_type(Type *type): bool {
-//     return type->kind == TYPE_FUNC;
+// func is_func_type(type: Type*): bool {
+//     return type->kind == CMPL_TYPE_FUNC;
 // }
 
-// func is_ptr_like_type(Type *type): bool {
-//     return type->kind == TYPE_PTR || type->kind == TYPE_FUNC;
+// func is_ptr_like_type(type: Type*): bool {
+//     return type->kind == CMPL_TYPE_PTR || type->kind == CMPL_TYPE_FUNC;
 // }
 
-// func is_const_type(Type *type): bool {
-//     return type->kind == TYPE_CONST;
+// func is_const_type(type: Type*): bool {
+//     return type->kind == CMPL_TYPE_CONST;
 // }
 
-// func is_array_type(Type *type): bool {
-//     return type->kind == TYPE_ARRAY;
+// func is_array_type(type: Type*): bool {
+//     return type->kind == CMPL_TYPE_ARRAY;
 // }
 
-// func is_incomplete_array_type(Type *type): bool {
+// func is_incomplete_array_type(type: Type*): bool {
 //     return is_array_type(type) && type->num_elems == 0;
 // }
 
-// func is_integer_type(Type *type): bool {
-//     return TYPE_BOOL <= type->kind && type->kind <= TYPE_ENUM;
+// func is_integer_type(type: Type*): bool {
+//     return CMPL_TYPE_BOOL <= type->kind && type->kind <= CMPL_TYPE_ENUM;
 // }
 
-// func is_floating_type(Type *type): bool {
-//     return TYPE_FLOAT <= type->kind && type->kind <= TYPE_DOUBLE;
+// func is_floating_type(type: Type*): bool {
+//     return CMPL_TYPE_FLOAT <= type->kind && type->kind <= CMPL_TYPE_DOUBLE;
 // }
 
-// func is_arithmetic_type(Type *type): bool {
-//     return TYPE_BOOL <= type->kind && type->kind <= TYPE_DOUBLE;
+// func is_arithmetic_type(type: Type*): bool {
+//     return CMPL_TYPE_BOOL <= type->kind && type->kind <= CMPL_TYPE_DOUBLE;
 // }
 
-// func is_scalar_type(Type *type): bool {
-//     return TYPE_BOOL <= type->kind && type->kind <= TYPE_FUNC;
+// func is_scalar_type(type: Type*): bool {
+//     return CMPL_TYPE_BOOL <= type->kind && type->kind <= CMPL_TYPE_FUNC;
 // }
 
-// func is_aggregate_type(Type *type): bool {
-//     return type->kind == TYPE_STRUCT || type->kind == TYPE_UNION;
+// func is_aggregate_type(type: Type*): bool {
+//     return type->kind == CMPL_TYPE_STRUCT || type->kind == CMPL_TYPE_UNION;
 // }
 
-// func is_signed_type(Type *type): bool {
+// func is_signed_type(type: Type*): bool {
 //     switch (type->kind) {
-//     case TYPE_CHAR:
-//         return type_metrics[TYPE_CHAR].sign;
-//     case TYPE_SCHAR:
-//     case TYPE_SHORT:
-//     case TYPE_INT:
-//     case TYPE_LONG:
-//     case TYPE_LLONG:
+//     case CMPL_TYPE_CHAR:
+//         return type_metrics[CMPL_TYPE_CHAR].sign;
+//     case CMPL_TYPE_SCHAR:
+//     case CMPL_TYPE_SHORT:
+//     case CMPL_TYPE_INT:
+//     case CMPL_TYPE_LONG:
+//     case CMPL_TYPE_LLONG:
 //         return true;
 //     default:
 //         return false;
 //     }
 // }
 
-// type_names: char const*[NUM_TYPE_KINDS] = {
-//     [TYPE_VOID] = "void",
-//     [TYPE_BOOL] = "bool",
-//     [TYPE_CHAR] = "char",
-//     [TYPE_SCHAR] = "schar",
-//     [TYPE_UCHAR] = "uchar",
-//     [TYPE_SHORT] = "short",
-//     [TYPE_USHORT] = "ushort",
-//     [TYPE_INT] = "int",
-//     [TYPE_UINT] = "uint",
-//     [TYPE_LONG] = "long",
-//     [TYPE_ULONG] = "ulong",
-//     [TYPE_LLONG] = "llong",
-//     [TYPE_ULLONG] = "ullong",
-//     [TYPE_FLOAT] = "float",
-//     [TYPE_DOUBLE] = "double",
+var type_names: char const*[NUM_CMPL_TYPE_KINDS] = {
+    [CMPL_TYPE_VOID] = "void",
+    [CMPL_TYPE_BOOL] = "bool",
+    [CMPL_TYPE_CHAR] = "char",
+    [CMPL_TYPE_SCHAR] = "schar",
+    [CMPL_TYPE_UCHAR] = "uchar",
+    [CMPL_TYPE_SHORT] = "short",
+    [CMPL_TYPE_USHORT] = "ushort",
+    [CMPL_TYPE_INT] = "int",
+    [CMPL_TYPE_UINT] = "uint",
+    [CMPL_TYPE_LONG] = "long",
+    [CMPL_TYPE_ULONG] = "ulong",
+    [CMPL_TYPE_LLONG] = "llong",
+    [CMPL_TYPE_ULLONG] = "ullong",
+    [CMPL_TYPE_FLOAT] = "float",
+    [CMPL_TYPE_DOUBLE] = "double",
+};
+
+// var type_ranks: int[NUM_CMPL_TYPE_KINDS] = {
+//     [CMPL_TYPE_BOOL] = 1,
+//     [CMPL_TYPE_CHAR] = 2,
+//     [CMPL_TYPE_SCHAR] = 2,
+//     [CMPL_TYPE_UCHAR] = 2,
+//     [CMPL_TYPE_SHORT] = 3,
+//     [CMPL_TYPE_USHORT] = 3,
+//     [CMPL_TYPE_INT] = 4,
+//     [CMPL_TYPE_UINT] = 4,
+//     [CMPL_TYPE_LONG] = 5,
+//     [CMPL_TYPE_ULONG] = 5,
+//     [CMPL_TYPE_LLONG] = 6,
+//     [CMPL_TYPE_ULLONG] = 6,
 // };
 
-// int type_ranks[NUM_TYPE_KINDS] = {
-//     [TYPE_BOOL] = 1,
-//     [TYPE_CHAR] = 2,
-//     [TYPE_SCHAR] = 2,
-//     [TYPE_UCHAR] = 2,
-//     [TYPE_SHORT] = 3,
-//     [TYPE_USHORT] = 3,
-//     [TYPE_INT] = 4,
-//     [TYPE_UINT] = 4,
-//     [TYPE_LONG] = 5,
-//     [TYPE_ULONG] = 5,
-//     [TYPE_LLONG] = 6,
-//     [TYPE_ULLONG] = 6,
-// };
-
-// int type_rank(Type *type) {
-//     int rank = type_ranks[type->kind];
+// func type_rank(type: Type*): int {
+//     rank: int = type_ranks[type->kind];
 //     assert(rank != 0);
 //     return rank;
 // }
 
-// Type *unsigned_type(Type *type) {
+// func unsigned_type(type: Type*): Type* {
 //     switch (type->kind) {
-//     case TYPE_BOOL:
+//     case CMPL_TYPE_BOOL:
 //         return type_bool;
-//     case TYPE_CHAR:
-//     case TYPE_SCHAR:
-//     case TYPE_UCHAR:
+//     case CMPL_TYPE_CHAR:
+//     case CMPL_TYPE_SCHAR:
+//     case CMPL_TYPE_UCHAR:
 //         return type_uchar;
-//     case TYPE_SHORT:
-//     case TYPE_USHORT:
+//     case CMPL_TYPE_SHORT:
+//     case CMPL_TYPE_USHORT:
 //         return type_ushort;
-//     case TYPE_INT:
-//     case TYPE_UINT:
+//     case CMPL_TYPE_INT:
+//     case CMPL_TYPE_UINT:
 //         return type_uint;
-//     case TYPE_LONG:
-//     case TYPE_ULONG:
+//     case CMPL_TYPE_LONG:
+//     case CMPL_TYPE_ULONG:
 //         return type_ulong;
-//     case TYPE_LLONG:
-//     case TYPE_ULLONG:
+//     case CMPL_TYPE_LLONG:
+//     case CMPL_TYPE_ULLONG:
 //         return type_ullong;
 //     default:
 //         assert(0);
@@ -237,40 +234,40 @@
 //     }
 // }
 
-// size_t type_sizeof(Type *type) {
-//     assert(type->kind > TYPE_COMPLETING);
+// func type_sizeof(type: Type*): usize {
+//     assert(type->kind > CMPL_TYPE_COMPLETING);
 //     return type->size;
 // }
 
-// size_t type_alignof(Type *type) {
-//     assert(type->kind > TYPE_COMPLETING);
+// func type_alignof(type: Type*): usize {
+//     assert(type->kind > CMPL_TYPE_COMPLETING);
 //     return type->align;
 // }
 
-// Map cached_ptr_types;
+// var cached_ptr_types: Map;
 
-// Type *type_ptr(Type *base) {
-//     Type *type = map_get(&cached_ptr_types, base);
+// func type_ptr(base: Type*): Type* {
+//     type: Type* = map_get(&cached_ptr_types, base);
 //     if (!type) {
-//         type = type_alloc(TYPE_PTR);
-//         type->size = type_metrics[TYPE_PTR].size;
-//         type->align = type_metrics[TYPE_PTR].align;
+//         type = type_alloc(CMPL_TYPE_PTR);
+//         type->size = type_metrics[CMPL_TYPE_PTR].size;
+//         type->align = type_metrics[CMPL_TYPE_PTR].align;
 //         type->base = base;
 //         map_put(&cached_ptr_types, base, type);
 //     }
 //     return type;
 // }
 
-// Map cached_const_types;
+// var cached_const_types: Map;
 
-// Type *type_const(Type *base) {
-//     if (base->kind == TYPE_CONST) {
+// func type_const(base: Type*): Type* {
+//     if (base->kind == CMPL_TYPE_CONST) {
 //         return base;
 //     }
-//     Type *type = map_get(&cached_const_types, base);
+//     type: Type* = map_get(&cached_const_types, base);
 //     if (!type) {
 //         complete_type(base);
-//         type = type_alloc(TYPE_CONST);
+//         type = type_alloc(CMPL_TYPE_CONST);
 //         type->nonmodifiable = true;
 //         type->size = base->size;
 //         type->align = base->align;
@@ -280,8 +277,8 @@
 //     return type;
 // }
 
-// Type *unqualify_type(Type *type) {
-//     if (type->kind == TYPE_CONST) {
+// func unqualify_type(type: Type*): Type* {
+//     if (type->kind == CMPL_TYPE_CONST) {
 //         return type->base;
 //     } else {
 //         return type;
@@ -289,30 +286,30 @@
 // }
 
 // typedef struct CachedArrayType {
-//     Type *type;
+//     type: Type*;
 //     struct CachedArrayType *next;
 // } CachedArrayType;
 
-// Map cached_array_types;
+// var cached_array_types: Map;
 
-// Type *type_array(Type *base, size_t num_elems) {
-//     uint64_t hash = hash_mix(hash_ptr(base), hash_uint64(num_elems));
-//     uint64_t key = hash ? hash : 1;
-//     CachedArrayType *cached = map_get_from_uint64(&cached_array_types, key);
-//     for (CachedArrayType *it = cached; it; it = it->next) {
-//         Type *type = it->type;
+// func type_array(base: Type*, num_elems: usize): Type* {
+//     hash: uint64_t = hash_mix(hash_ptr(base), hash_uint64(num_elems));
+//     key: uint64_t = hash ? hash : 1;
+//     cached: CachedArrayType* = map_get_from_uint64(&cached_array_types, key);
+//     for (it: CachedArrayType* = cached; it; it = it->next) {
+//         type: Type* = it->type;
 //         if (type->base == base && type->num_elems == num_elems) {
 //             return type;
 //         }
 //     }
 //     complete_type(base);
-//     Type *type = type_alloc(TYPE_ARRAY);
+//     type: Type* = type_alloc(CMPL_TYPE_ARRAY);
 //     type->nonmodifiable = base->nonmodifiable;
 //     type->size = num_elems * type_sizeof(base);
 //     type->align = type_alignof(base);
 //     type->base = base;
 //     type->num_elems = num_elems;
-//     CachedArrayType *new_cached = xmalloc(sizeof(CachedArrayType));
+//     new_cached: CachedArrayType* = xmalloc(sizeof(CachedArrayType));
 //     new_cached->type = type;
 //     new_cached->next = cached;
 //     map_put_from_uint64(&cached_array_types, key, new_cached);
@@ -320,42 +317,42 @@
 // }
 
 // typedef struct CachedFuncType {
-//     Type *type;
+//     type: Type*;
 //     struct CachedFuncType *next;
 // } CachedFuncType;
 
-// Map cached_func_types;
+// var cached_func_types: Map;
 
-// Type *type_func(Type **params, size_t num_params, Type *ret, bool has_varargs) {
-//     size_t params_size = num_params * sizeof(*params);
-//     uint64_t hash = hash_mix(hash_bytes(params, params_size), hash_ptr(ret));
-//     uint64_t key = hash ? hash : 1;
-//     CachedFuncType *cached = map_get_from_uint64(&cached_func_types, key);
-//     for (CachedFuncType *it = cached; it; it = it->next) {
-//         Type *type = it->type;
+// func type_func(params: Type**, num_params: usize, ret: Type*, has_varargs: bool): Type* {
+//     params_size: usize = num_params * sizeof(*params);
+//     hash: uint64_t = hash_mix(hash_bytes(params, params_size), hash_ptr(ret));
+//     key: uint64_t = hash ? hash : 1;
+//     cached: CachedFuncType* = map_get_from_uint64(&cached_func_types, key);
+//     for (it: CachedFuncType* = cached; it; it = it->next) {
+//         type: Type* = it->type;
 //         if (type->func.num_params == num_params && type->func.ret == ret && type->func.has_varargs == has_varargs) {
 //             if (memcmp(type->func.params, params, params_size) == 0) {
 //                 return type;
 //             }
 //         }
 //     }
-//     Type *type = type_alloc(TYPE_FUNC);
-//     type->size = type_metrics[TYPE_PTR].size;
-//     type->align = type_metrics[TYPE_PTR].align;
+//     type: Type* = type_alloc(CMPL_TYPE_FUNC);
+//     type->size = type_metrics[CMPL_TYPE_PTR].size;
+//     type->align = type_metrics[CMPL_TYPE_PTR].align;
 //     type->func.params = memdup(params, params_size);
 //     type->func.num_params = num_params;
 //     type->func.has_varargs = has_varargs;
 //     type->func.ret = ret;
-//     CachedFuncType *new_cached = xmalloc(sizeof(CachedFuncType));
+//     new_cached: CachedFuncType* = xmalloc(sizeof(CachedFuncType));
 //     new_cached->type = type;
 //     new_cached->next = cached;
 //     map_put_from_uint64(&cached_func_types, key, new_cached);
 //     return type;
 // }
 
-// func has_duplicate_fields(TypeField *fields, size_t num_fields): bool {
-//     for (size_t i = 0; i < num_fields; i++) {
-//         for (size_t j = i+1; j < num_fields; j++) {
+// func has_duplicate_fields(fields: TypeField*, num_fields: usize): bool {
+//     for (i: usize = 0; i < num_fields; i++) {
+//         for (j: usize = i+1; j < num_fields; j++) {
 //             if (fields[i].name == fields[j].name) {
 //                 return true;
 //             }
@@ -364,13 +361,13 @@
 //     return false;
 // }
 
-// func type_complete_struct(Type *type, TypeField *fields, size_t num_fields) {
-//     assert(type->kind == TYPE_COMPLETING);
-//     type->kind = TYPE_STRUCT;
+// func type_complete_struct(type: Type*, fields: TypeField*, num_fields: usize) {
+//     assert(type->kind == CMPL_TYPE_COMPLETING);
+//     type->kind = CMPL_TYPE_STRUCT;
 //     type->size = 0;
 //     type->align = 0;
-//     bool nonmodifiable = false;
-//     for (TypeField *it = fields; it != fields + num_fields; it++) {
+//     nonmodifiable: bool = false;
+//     for (it: TypeField* = fields; it != fields + num_fields; it++) {
 //         assert(IS_POW2(type_alignof(it->type)));
 //         it->offset = type->size;
 //         type->size = type_sizeof(it->type) + ALIGN_UP(type->size, type_alignof(it->type));
@@ -382,14 +379,14 @@
 //     type->nonmodifiable = nonmodifiable;
 // }
 
-// func type_complete_union(Type *type, TypeField *fields, size_t num_fields) {
-//     assert(type->kind == TYPE_COMPLETING);
-//     type->kind = TYPE_UNION;
+// func type_complete_union(type: Type*, fields: TypeField*, num_fields: usize) {
+//     assert(type->kind == CMPL_TYPE_COMPLETING);
+//     type->kind = CMPL_TYPE_UNION;
 //     type->size = 0;
 //     type->align = 0;
-//     bool nonmodifiable = false;
-//     for (TypeField *it = fields; it != fields + num_fields; it++) {
-//         assert(it->type->kind > TYPE_COMPLETING);
+//     nonmodifiable: bool = false;
+//     for (it: TypeField* = fields; it != fields + num_fields; it++) {
+//         assert(it->type->kind > CMPL_TYPE_COMPLETING);
 //         it->offset = 0;
 //         type->size = MAX(type->size, type_sizeof(it->type));
 //         type->align = MAX(type->align, type_alignof(it->type));
@@ -400,14 +397,14 @@
 //     type->nonmodifiable = nonmodifiable;
 // }
 
-// Type *type_incomplete(Sym *sym) {
-//     Type *type = type_alloc(TYPE_INCOMPLETE);
+// func type_incomplete(sym: Sym*): Type* {
+//     type: Type* = type_alloc(CMPL_TYPE_INCOMPLETE);
 //     type->sym = sym;
 //     return type;
 // }
 
-// Type *type_enum(Sym *sym, Type *base) {
-//     Type *type = type_alloc(TYPE_ENUM);
+// func type_enum(sym: Sym*, base: Type*): Type* {
+//     type: Type* = type_alloc(CMPL_TYPE_ENUM);
 //     type->sym = sym;
 //     type->base = base;
 //     type->size = type_int->size;
@@ -415,7 +412,7 @@
 //     return type;
 // }
 
-// func init_builtin_type(Type *type) {
+// func init_builtin_type(type: Type*) {
 //     type->typeid = next_typeid++;
 //     register_typeid(type);
 //     type->size = type_metrics[type->kind].size;
@@ -440,9 +437,9 @@ func init_builtin_types() {
     // init_builtin_type(type_double);
 }
 
-// int aggregate_field_index(Type *type, name: char const*) {
+// func aggregate_field_index(Type *type, name: char const*): int {
 //     assert(is_aggregate_type(type));
-//     for (size_t i = 0; i < type->aggregate.num_fields; i++) {
+//     for (usize i = 0; i < type->aggregate.num_fields; i++) {
 //         if (type->aggregate.fields[i].name == name) {
 //             return (int)i;
 //         }
@@ -450,13 +447,13 @@ func init_builtin_types() {
 //     return -1;
 // }
 
-// Type *aggregate_field_type_from_index(Type *type, int index) {
+// func aggregate_field_type_from_index(Type *type, int index): Type* {
 //     assert(is_aggregate_type(type));
 //     assert(0 <= index && index < (int)type->aggregate.num_fields);
 //     return type->aggregate.fields[index].type;
 // }
 
-// Type *aggregate_field_type_from_name(Type *type, name: char const*) {
+// func aggregate_field_type_from_name(Type *type, name: char const*): Type* {
 //     assert(is_aggregate_type(type));
 //     int index = aggregate_field_index(type, name);
 //     if (index < 0) {
