@@ -1,451 +1,450 @@
 var ast_arena: Arena;
 
-// func ast_alloc(size_t size): void* {
-//     assert(size != 0);
-//     void *ptr = arena_alloc(&ast_arena, size);
-//     memset(ptr, 0, size);
-//     return ptr;
-// }
+func ast_alloc(size: usize): void* {
+    #assert(size != 0);
+    ptr := arena_alloc(&ast_arena, size);
+    memset(ptr, 0, size);
+    return ptr;
+}
 
-// func ast_dup(const void *src, size_t size): void* {
-//     if (size == 0) {
-//         return NULL;
-//     }
-//     void *ptr = arena_alloc(&ast_arena, size);
-//     memcpy(ptr, src, size);
-//     return ptr;
-// }
+func ast_dup(src: void const*, size: usize): void* {
+    if (size == 0) {
+        return NULL;
+    }
+    ptr := arena_alloc(&ast_arena, size);
+    memcpy(ptr, src, size);
+    return ptr;
+}
 
 // #define AST_DUP(x) ast_dup(x, num_##x * sizeof(*x))
 
-// Note new_note(SrcPos pos, name: char const*, NoteArg *args, size_t num_args) {
-//     return (Note){.pos = pos, .name = name, .args = AST_DUP(args), .num_args = num_args};
-// }
+func new_note(pos: SrcPos, name: char const*, args: NoteArg*, num_args: usize): Note {
+    return {pos = pos, name = name, args = ast_dup(args, num_args * sizeof(*args)), num_args = num_args};
+}
 
-// Notes new_notes(Note *notes, size_t num_notes) {
-//     return (Notes){AST_DUP(notes), num_notes};
-// }
+func new_notes(notes: Note*, num_notes: usize): Notes {
+    return {ast_dup(notes, num_notes * sizeof(*notes)), num_notes};
+}
 
-// StmtList new_stmt_list(SrcPos pos, Stmt **stmts, size_t num_stmts) {
-//     return (StmtList){pos, AST_DUP(stmts), num_stmts};
-// }
+func new_stmt_list(pos: SrcPos, stmts: Stmt**, num_stmts: usize): StmtList {
+    return {pos, ast_dup(stmts, num_stmts * sizeof(*stmts)), num_stmts};
+}
 
-// Typespec *new_typespec(TypespecKind kind, SrcPos pos) {
-//     Typespec *t = ast_alloc(sizeof(Typespec));
-//     t->kind = kind;
-//     t->pos = pos;
-//     return t;
-// }
+func new_typespec(kind: TypespecKind, pos: SrcPos): Typespec* {
+    t: Typespec* = ast_alloc(sizeof(Typespec));
+    t.kind = kind;
+    t.pos = pos;
+    return t;
+}
 
-// Typespec *new_typespec_name(SrcPos pos, name: char const*) {
-//     Typespec *t = new_typespec(TYPESPEC_NAME, pos);
-//     t->name = name;
-//     return t;
+func new_typespec_name(pos: SrcPos, name: char const*): Typespec* {
+    t := new_typespec(TYPESPEC_NAME, pos);
+    t.detail.name = name;
+    return t;
+}
 
-// }
+func new_typespec_ptr(pos: SrcPos, base: Typespec*): Typespec* {
+    t := new_typespec(TYPESPEC_PTR, pos);
+    t.base = base;
+    return t;
+}
 
-// Typespec *new_typespec_ptr(SrcPos pos, Typespec *base) {
-//     Typespec *t = new_typespec(TYPESPEC_PTR, pos);
-//     t->base = base;
-//     return t;
-// }
+func new_typespec_const(pos: SrcPos, base: Typespec*): Typespec* {
+    t := new_typespec(TYPESPEC_CONST, pos);
+    t.base = base;
+    return t;
+}
 
-// Typespec *new_typespec_const(SrcPos pos, Typespec *base) {
-//     Typespec *t = new_typespec(TYPESPEC_CONST, pos);
-//     t->base = base;
-//     return t;
-// }
+func new_typespec_array(pos: SrcPos, elem: Typespec*, size: Expr*): Typespec* {
+    t := new_typespec(TYPESPEC_ARRAY, pos);
+    t.base = elem;
+    t.detail.num_elems = size;
+    return t;
+}
 
-// Typespec *new_typespec_array(SrcPos pos, Typespec *elem, Expr *size) {
-//     Typespec *t = new_typespec(TYPESPEC_ARRAY, pos);
-//     t->base = elem;
-//     t->num_elems = size;
-//     return t;
-// }
+func new_typespec_func(pos: SrcPos, args: Typespec**, num_args: usize, ret: Typespec*, has_varargs: bool): Typespec* {
+    t := new_typespec(TYPESPEC_FUNC, pos);
+    t.detail.function.args = ast_dup(args, num_args * sizeof(*args));
+    t.detail.function.num_args = num_args;
+    t.detail.function.ret = ret;
+    t.detail.function.has_varargs = has_varargs;
+    return t;
+}
 
-// Typespec *new_typespec_func(SrcPos pos, Typespec **args, size_t num_args, Typespec *ret, bool has_varargs) {
-//     Typespec *t = new_typespec(TYPESPEC_FUNC, pos);
-//     t->func.args = AST_DUP(args);
-//     t->func.num_args = num_args;
-//     t->func.ret = ret;
-//     t->func.has_varargs = has_varargs;
-//     return t;
-// }
+func new_decls(decls: Decl**, num_decls: usize): Decls* {
+    d: Decls* = ast_alloc(sizeof(Decls));
+    d.decls = ast_dup(decls, num_decls * sizeof(*decls));
+    d.num_decls = num_decls;
+    return d;
+}
 
-// Decls *new_decls(Decl **decls, size_t num_decls) {
-//     Decls *d = ast_alloc(sizeof(Decls));
-//     d->decls = AST_DUP(decls);
-//     d->num_decls = num_decls;
-//     return d;
-// }
+func new_decl(kind: DeclKind, pos: SrcPos, name: char const*): Decl* {
+    d: Decl* = ast_alloc(sizeof(Decl));
+    d.kind = kind;
+    d.pos = pos;
+    d.name = name;
+    return d;
+}
 
-// Decl *new_decl(DeclKind kind, SrcPos pos, name: char const*) {
-//     Decl *d = ast_alloc(sizeof(Decl));
-//     d->kind = kind;
-//     d->pos = pos;
-//     d->name = name;
-//     return d;
-// }
+func get_decl_note(decl: Decl*, name: char const*): Note* {
+    for (i: usize = 0; i < decl.notes.num_notes; i++) {
+        note: Note* = decl.notes.notes + i;
+        if (note.name == name) {
+            return note;
+        }
+    }
+    return NULL;
+}
 
-// Note *get_decl_note(Decl *decl, name: char const*) {
-//     for (size_t i = 0; i < decl->notes.num_notes; i++) {
-//         Note *note = decl->notes.notes + i;
-//         if (note->name == name) {
-//             return note;
-//         }
-//     }
-//     return NULL;
-// }
+func is_decl_foreign(decl: Decl*): bool {
+    return get_decl_note(decl, foreign_name) != NULL;
+}
 
-// func is_decl_foreign(Decl *decl): bool {
-//     return get_decl_note(decl, foreign_name) != NULL;
-// }
+func new_decl_enum(pos: SrcPos, name: char const*, type: Typespec*, items: EnumItem*, num_items: usize): Decl* {
+    d := new_decl(DECL_ENUM, pos, name);
+    d.detail.enum_decl.type = type;
+    d.detail.enum_decl.items = ast_dup(items, num_items * sizeof(*items));
+    d.detail.enum_decl.num_items = num_items;
+    return d;
+}
 
-// Decl *new_decl_enum(SrcPos pos, name: char const*, Typespec *type, EnumItem *items, size_t num_items) {
-//     Decl *d = new_decl(DECL_ENUM, pos, name);
-//     d->enum_decl.type = type;
-//     d->enum_decl.items = AST_DUP(items);
-//     d->enum_decl.num_items = num_items;
-//     return d;
-// }
+func new_decl_aggregate(pos: SrcPos, kind: DeclKind, name: char const*, items: AggregateItem*, num_items: usize): Decl* {
+    #assert(kind == DECL_STRUCT || kind == DECL_UNION);
+    d := new_decl(kind, pos, name);
+    d.detail.aggregate.items = ast_dup(items, num_items * sizeof(*items));
+    d.detail.aggregate.num_items = num_items;
+    return d;
+}
 
-// Decl *new_decl_aggregate(SrcPos pos, DeclKind kind, name: char const*, AggregateItem *items, size_t num_items) {
-//     assert(kind == DECL_STRUCT || kind == DECL_UNION);
-//     Decl *d = new_decl(kind, pos, name);
-//     d->aggregate.items = AST_DUP(items);
-//     d->aggregate.num_items = num_items;
-//     return d;
-// }
+func new_decl_union(pos: SrcPos, name: char const*, items: AggregateItem*, num_items: usize): Decl* {
+    d := new_decl(DECL_UNION, pos, name);
+    d.detail.aggregate.items = ast_dup(items, num_items * sizeof(*items));
+    d.detail.aggregate.num_items = num_items;
+    return d;
+}
 
-// Decl *new_decl_union(SrcPos pos, name: char const*, AggregateItem *items, size_t num_items) {
-//     Decl *d = new_decl(DECL_UNION, pos, name);
-//     d->aggregate.items = AST_DUP(items);
-//     d->aggregate.num_items = num_items;
-//     return d;
-// }
+func new_decl_var(pos: SrcPos, name: char const*, type: Typespec*, expr: Expr*): Decl* {
+    d := new_decl(DECL_VAR, pos, name);
+    d.detail.var_decl.type = type;
+    d.detail.var_decl.expr = expr;
+    return d;
+}
 
-// Decl *new_decl_var(SrcPos pos, name: char const*, Typespec *type, Expr *expr) {
-//     Decl *d = new_decl(DECL_VAR, pos, name);
-//     d->var.type = type;
-//     d->var.expr = expr;
-//     return d;
-// }
+func new_decl_func(pos: SrcPos, name: char const*, params: FuncParam*, num_params: usize, ret_type: Typespec*, has_varargs: bool, block: StmtList): Decl* {
+    d := new_decl(DECL_FUNC, pos, name);
+    d.detail.function.params = ast_dup(params, num_params * sizeof(*params));
+    d.detail.function.num_params = num_params;
+    d.detail.function.ret_type = ret_type;
+    d.detail.function.has_varargs = has_varargs;
+    d.detail.function.block = block;
+    return d;
+}
 
-// Decl *new_decl_func(SrcPos pos, name: char const*, FuncParam *params, size_t num_params, Typespec *ret_type, bool has_varargs, StmtList block) {
-//     Decl *d = new_decl(DECL_FUNC, pos, name);
-//     d->func.params = AST_DUP(params);
-//     d->func.num_params = num_params;
-//     d->func.ret_type = ret_type;
-//     d->func.has_varargs = has_varargs;
-//     d->func.block = block;
-//     return d;
-// }
+func new_decl_const(pos: SrcPos, name: char const*, type: Typespec*, expr: Expr*): Decl* {
+    d := new_decl(DECL_CONST, pos, name);
+    d.detail.const_decl.type = type;
+    d.detail.const_decl.expr = expr;
+    return d;
+}
 
-// Decl *new_decl_const(SrcPos pos, name: char const*, Typespec *type, Expr *expr) {
-//     Decl *d = new_decl(DECL_CONST, pos, name);
-//     d->const_decl.type = type;
-//     d->const_decl.expr = expr;
-//     return d;
-// }
+func new_decl_typedef(pos: SrcPos, name: char const*, type: Typespec*): Decl* {
+    d := new_decl(DECL_TYPEDEF, pos, name);
+    d.detail.typedef_decl.type = type;
+    return d;
+}
 
-// Decl *new_decl_typedef(SrcPos pos, name: char const*, Typespec *type) {
-//     Decl *d = new_decl(DECL_TYPEDEF, pos, name);
-//     d->typedef_decl.type = type;
-//     return d;
-// }
+func new_decl_note(pos: SrcPos, note: Note): Decl* {
+    d := new_decl(DECL_NOTE, pos, NULL);
+    d.detail.note = note;
+    return d;
+}
 
-// Decl *new_decl_note(SrcPos pos, Note note) {
-//     Decl *d = new_decl(DECL_NOTE, pos, NULL);
-//     d->note = note;
-//     return d;
-// }
+func new_decl_import(pos: SrcPos, is_relative: bool, names: char const**, num_names: usize, import_all: bool, items: ImportItem*, num_items: usize): Decl* {
+    d := new_decl(DECL_IMPORT, pos, NULL);
+    d.detail.import_decl.is_relative = is_relative;
+    d.detail.import_decl.names = ast_dup(names, num_names * sizeof(*names));
+    d.detail.import_decl.num_names = num_names;
+    d.detail.import_decl.import_all = import_all;
+    d.detail.import_decl.items = ast_dup(items, num_items * sizeof(*items));
+    d.detail.import_decl.num_items = num_items;
+    return d;
+}
 
-// Decl *new_decl_import(SrcPos pos, bool is_relative, names: char const**, size_t num_names, bool import_all, ImportItem *items, size_t num_items) {
-//     Decl *d = new_decl(DECL_IMPORT, pos, NULL);
-//     d->import.is_relative = is_relative;
-//     d->import.names = AST_DUP(names);
-//     d->import.num_names = num_names;
-//     d->import.import_all = import_all;
-//     d->import.items = AST_DUP(items);
-//     d->import.num_items = num_items;
-//     return d;
-// }
+func new_expr(kind: ExprKind, pos: SrcPos): Expr* {
+    e: Expr* = ast_alloc(sizeof(Expr));
+    e.kind = kind;
+    e.pos = pos;
+    return e;
+}
 
-// Expr *new_expr(ExprKind kind, SrcPos pos) {
-//     Expr *e = ast_alloc(sizeof(Expr));
-//     e->kind = kind;
-//     e->pos = pos;
-//     return e;
-// }
+func new_expr_paren(pos: SrcPos, expr: Expr*): Expr* {
+    e := new_expr(EXPR_PAREN, pos);
+    e.detail.paren.expr = expr;
+    return e;
+}
 
-// Expr *new_expr_paren(SrcPos pos, Expr *expr) {
-//     Expr *e = new_expr(EXPR_PAREN, pos);
-//     e->paren.expr = expr;
-//     return e;
-// }
+func new_expr_sizeof_expr(pos: SrcPos, expr: Expr*): Expr* {
+    e := new_expr(EXPR_SIZEOF_EXPR, pos);
+    e.detail.sizeof_expr = expr;
+    return e;
+}
 
-// Expr *new_expr_sizeof_expr(SrcPos pos, Expr *expr) {
-//     Expr *e = new_expr(EXPR_SIZEOF_EXPR, pos);
-//     e->sizeof_expr = expr;
-//     return e;
-// }
+func new_expr_sizeof_type(pos: SrcPos, type: Typespec*): Expr* {
+    e := new_expr(EXPR_SIZEOF_TYPE, pos);
+    e.detail.sizeof_type = type;
+    return e;
+}
 
-// Expr *new_expr_sizeof_type(SrcPos pos, Typespec *type) {
-//     Expr *e = new_expr(EXPR_SIZEOF_TYPE, pos);
-//     e->sizeof_type = type;
-//     return e;
-// }
+func new_expr_typeof_expr(pos: SrcPos, expr: Expr*): Expr* {
+    e := new_expr(EXPR_TYPEOF_EXPR, pos);
+    e.detail.typeof_expr  = expr;
+    return e;
+}
 
-// Expr *new_expr_typeof_expr(SrcPos pos, Expr *expr) {
-//     Expr *e = new_expr(EXPR_TYPEOF_EXPR, pos);
-//     e->typeof_expr  = expr;
-//     return e;
-// }
+func new_expr_typeof_type(pos: SrcPos, type: Typespec*): Expr* {
+    e := new_expr(EXPR_TYPEOF_TYPE, pos);
+    e.detail.typeof_type = type;
+    return e;
+}
 
-// Expr *new_expr_typeof_type(SrcPos pos, Typespec *type) {
-//     Expr *e = new_expr(EXPR_TYPEOF_TYPE, pos);
-//     e->typeof_type = type;
-//     return e;
-// }
+func new_expr_alignof_expr(pos: SrcPos, expr: Expr*): Expr* {
+    e := new_expr(EXPR_ALIGNOF_EXPR, pos);
+    e.detail.alignof_expr = expr;
+    return e;
+}
 
-// Expr *new_expr_alignof_expr(SrcPos pos, Expr *expr) {
-//     Expr *e = new_expr(EXPR_ALIGNOF_EXPR, pos);
-//     e->alignof_expr = expr;
-//     return e;
-// }
+func new_expr_alignof_type(pos: SrcPos, type: Typespec*): Expr* {
+    e := new_expr(EXPR_ALIGNOF_TYPE, pos);
+    e.detail.alignof_type = type;
+    return e;
+}
 
-// Expr *new_expr_alignof_type(SrcPos pos, Typespec *type) {
-//     Expr *e = new_expr(EXPR_ALIGNOF_TYPE, pos);
-//     e->alignof_type = type;
-//     return e;
-// }
+func new_expr_offsetof(pos: SrcPos, type: Typespec*, name: char const*): Expr* {
+    e := new_expr(EXPR_OFFSETOF, pos);
+    e.detail.offsetof_field.type = type;
+    e.detail.offsetof_field.name = name;
+    return e;
+}
 
-// Expr *new_expr_offsetof(SrcPos pos, Typespec *type, name: char const*) {
-//     Expr *e = new_expr(EXPR_OFFSETOF, pos);
-//     e->offsetof_field.type = type;
-//     e->offsetof_field.name = name;
-//     return e;
-// }
+func new_expr_modify(pos: SrcPos, op: TokenKind, post: bool, expr: Expr*): Expr* {
+    e := new_expr(EXPR_MODIFY, pos);
+    e.detail.modify.op = op;
+    e.detail.modify.post = post;
+    e.detail.modify.expr = expr;
+    return e;
+}
 
-// Expr *new_expr_modify(SrcPos pos, TokenKind op, bool post, Expr *expr) {
-//     Expr *e = new_expr(EXPR_MODIFY, pos);
-//     e->modify.op = op;
-//     e->modify.post = post;
-//     e->modify.expr = expr;
-//     return e;
-// }
+func new_expr_int(pos: SrcPos, val: ullong, mod: TokenMod, suffix: TokenSuffix): Expr* {
+    e := new_expr(EXPR_INT, pos);
+    e.detail.int_lit.val = val;
+    e.detail.int_lit.mod = mod;
+    e.detail.int_lit.suffix = suffix;
+    return e;
+}
 
-// Expr *new_expr_int(SrcPos pos, ullong val, TokenMod mod, TokenSuffix suffix) {
-//     Expr *e = new_expr(EXPR_INT, pos);
-//     e->int_lit.val = val;
-//     e->int_lit.mod = mod;
-//     e->int_lit.suffix = suffix;
-//     return e;
-// }
+func new_expr_float(pos: SrcPos, val: double, suffix: TokenSuffix): Expr* {
+    e := new_expr(EXPR_FLOAT, pos);
+    e.detail.float_lit.val = val;
+    e.detail.float_lit.suffix = suffix;
+    return e;
+}
 
-// Expr *new_expr_float(SrcPos pos, double val, TokenSuffix suffix) {
-//     Expr *e = new_expr(EXPR_FLOAT, pos);
-//     e->float_lit.val = val;
-//     e->float_lit.suffix = suffix;
-//     return e;
-// }
+func new_expr_str(pos: SrcPos, val: char const*, mod: TokenMod): Expr* {
+    e := new_expr(EXPR_STR, pos);
+    e.detail.str_lit.val = val;
+    e.detail.str_lit.mod = mod;
+    return e;
+}
 
-// Expr *new_expr_str(SrcPos pos, val: char const*, TokenMod mod) {
-//     Expr *e = new_expr(EXPR_STR, pos);
-//     e->str_lit.val = val;
-//     e->str_lit.mod = mod;
-//     return e;
-// }
+func new_expr_name(pos: SrcPos, name: char const*): Expr* {
+    e := new_expr(EXPR_NAME, pos);
+    e.detail.name = name;
+    return e;
+}
 
-// Expr *new_expr_name(SrcPos pos, name: char const*) {
-//     Expr *e = new_expr(EXPR_NAME, pos);
-//     e->name = name;
-//     return e;
-// }
+func new_expr_compound(pos: SrcPos, type: Typespec*, fields: CompoundField*, num_fields: usize): Expr* {
+    e := new_expr(EXPR_COMPOUND, pos);
+    e.detail.compound.type = type;
+    e.detail.compound.fields = ast_dup(fields, num_fields * sizeof(*fields));
+    e.detail.compound.num_fields = num_fields;
+    return e;
+}
 
-// Expr *new_expr_compound(SrcPos pos, Typespec *type, CompoundField *fields, size_t num_fields) {
-//     Expr *e = new_expr(EXPR_COMPOUND, pos);
-//     e->compound.type = type;
-//     e->compound.fields = AST_DUP(fields);
-//     e->compound.num_fields = num_fields;
-//     return e;
-// }
+func new_expr_cast(pos: SrcPos, type: Typespec*, expr: Expr*): Expr* {
+    e := new_expr(EXPR_CAST, pos);
+    e.detail.cast.type = type;
+    e.detail.cast.expr = expr;
+    return e;
+}
 
-// Expr *new_expr_cast(SrcPos pos, Typespec *type, Expr *expr) {
-//     Expr *e = new_expr(EXPR_CAST, pos);
-//     e->cast.type = type;
-//     e->cast.expr = expr;
-//     return e;
-// }
+func new_expr_call(pos: SrcPos, expr: Expr*, args: Expr**, num_args: usize): Expr* {
+    e := new_expr(EXPR_CALL, pos);
+    e.detail.call.expr = expr;
+    e.detail.call.args = ast_dup(args, num_args * sizeof(*args));
+    e.detail.call.num_args = num_args;
+    return e;
+}
 
-// Expr *new_expr_call(SrcPos pos, Expr *expr, Expr **args, size_t num_args) {
-//     Expr *e = new_expr(EXPR_CALL, pos);
-//     e->call.expr = expr;
-//     e->call.args = AST_DUP(args);
-//     e->call.num_args = num_args;
-//     return e;
-// }
+func new_expr_index(pos: SrcPos, expr: Expr*, index: Expr*): Expr* {
+    e := new_expr(EXPR_INDEX, pos);
+    e.detail.index.expr = expr;
+    e.detail.index.index = index;
+    return e;
+}
 
-// Expr *new_expr_index(SrcPos pos, Expr *expr, Expr *index) {
-//     Expr *e = new_expr(EXPR_INDEX, pos);
-//     e->index.expr = expr;
-//     e->index.index = index;
-//     return e;
-// }
+func new_expr_field(pos: SrcPos, expr: Expr*, name: char const*): Expr* {
+    e := new_expr(EXPR_FIELD, pos);
+    e.detail.field.expr = expr;
+    e.detail.field.name = name;
+    return e;
+}
 
-// Expr *new_expr_field(SrcPos pos, Expr *expr, name: char const*) {
-//     Expr *e = new_expr(EXPR_FIELD, pos);
-//     e->field.expr = expr;
-//     e->field.name = name;
-//     return e;
-// }
+func new_expr_unary(pos: SrcPos, op: TokenKind, expr: Expr*): Expr* {
+    e := new_expr(EXPR_UNARY, pos);
+    e.detail.unary.op = op;
+    e.detail.unary.expr = expr;
+    return e;
+}
 
-// Expr *new_expr_unary(SrcPos pos, TokenKind op, Expr *expr) {
-//     Expr *e = new_expr(EXPR_UNARY, pos);
-//     e->unary.op = op;
-//     e->unary.expr = expr;
-//     return e;
-// }
+func new_expr_binary(pos: SrcPos, op: TokenKind, left: Expr*, right: Expr*): Expr* {
+    e := new_expr(EXPR_BINARY, pos);
+    e.detail.binary.op = op;
+    e.detail.binary.left = left;
+    e.detail.binary.right = right;
+    return e;
+}
 
-// Expr *new_expr_binary(SrcPos pos, TokenKind op, Expr *left, Expr *right) {
-//     Expr *e = new_expr(EXPR_BINARY, pos);
-//     e->binary.op = op;
-//     e->binary.left = left;
-//     e->binary.right = right;
-//     return e;
-// }
+func new_expr_ternary(pos: SrcPos, cond: Expr*, then_expr: Expr*, else_expr: Expr*): Expr* {
+    e := new_expr(EXPR_TERNARY, pos);
+    e.detail.ternary.cond = cond;
+    e.detail.ternary.then_expr = then_expr;
+    e.detail.ternary.else_expr = else_expr;
+    return e;
+}
 
-// Expr *new_expr_ternary(SrcPos pos, Expr *cond, Expr *then_expr, Expr *else_expr) {
-//     Expr *e = new_expr(EXPR_TERNARY, pos);
-//     e->ternary.cond = cond;
-//     e->ternary.then_expr = then_expr;
-//     e->ternary.else_expr = else_expr;
-//     return e;
-// }
+func get_stmt_note(stmt: Stmt*, name: char const*): Note* {
+    for (i: usize = 0; i < stmt.notes.num_notes; i++) {
+        note := stmt.notes.notes + i;
+        if (note.name == name) {
+            return note;
+        }
+    }
+    return NULL;
+}
 
-// Note *get_stmt_note(Stmt *stmt, name: char const*) {
-//     for (size_t i = 0; i < stmt->notes.num_notes; i++) {
-//         Note *note = stmt->notes.notes + i;
-//         if (note->name == name) {
-//             return note;
-//         }
-//     }
-//     return NULL;
-// }
+func new_stmt(kind: StmtKind, pos: SrcPos): Stmt* {
+    s: Stmt* = ast_alloc(sizeof(Stmt));
+    s.kind = kind;
+    s.pos = pos;
+    return s;
+}
 
-// Stmt *new_stmt(StmtKind kind, SrcPos pos) {
-//     Stmt *s = ast_alloc(sizeof(Stmt));
-//     s->kind = kind;
-//     s->pos = pos;
-//     return s;
-// }
+func new_stmt_label(pos: SrcPos, label: char const*): Stmt* {
+    s := new_stmt(STMT_LABEL, pos);
+    s.detail.label = label;
+    return s;
+}
 
-// Stmt *new_stmt_label(SrcPos pos, label: char const*) {
-//     Stmt *s = new_stmt(STMT_LABEL, pos);
-//     s->label = label;
-//     return s;
-// }
+func new_stmt_goto(pos: SrcPos, label: char const*): Stmt* {
+    s := new_stmt(STMT_GOTO, pos);
+    s.detail.label = label;
+    return s;
+}
 
-// Stmt *new_stmt_goto(SrcPos pos, label: char const*) {
-//     Stmt *s = new_stmt(STMT_GOTO, pos);
-//     s->label = label;
-//     return s;
-// }
+func new_stmt_note(pos: SrcPos, note: Note): Stmt* {
+    s := new_stmt(STMT_NOTE, pos);
+    s.detail.note = note;
+    return s;
+}
 
-// Stmt *new_stmt_note(SrcPos pos, Note note) {
-//     Stmt *s = new_stmt(STMT_NOTE, pos);
-//     s->note = note;
-//     return s;
-// }
+func new_stmt_decl(pos: SrcPos, decl: Decl*): Stmt* {
+    s := new_stmt(STMT_DECL, pos);
+    s.detail.decl = decl;
+    return s;
+}
 
-// Stmt *new_stmt_decl(SrcPos pos, Decl *decl) {
-//     Stmt *s = new_stmt(STMT_DECL, pos);
-//     s->decl = decl;
-//     return s;
-// }
+func new_stmt_return(pos: SrcPos, expr: Expr*): Stmt* {
+    s := new_stmt(STMT_RETURN, pos);
+    s.detail.expr = expr;
+    return s;
+}
 
-// Stmt *new_stmt_return(SrcPos pos, Expr *expr) {
-//     Stmt *s = new_stmt(STMT_RETURN, pos);
-//     s->expr = expr;
-//     return s;
-// }
+func new_stmt_break(pos: SrcPos): Stmt* {
+    return new_stmt(STMT_BREAK, pos);
+}
 
-// Stmt *new_stmt_break(SrcPos pos) {
-//     return new_stmt(STMT_BREAK, pos);
-// }
+func new_stmt_continue(pos: SrcPos): Stmt* {
+    return new_stmt(STMT_CONTINUE, pos);
+}
 
-// Stmt *new_stmt_continue(SrcPos pos) {
-//     return new_stmt(STMT_CONTINUE, pos);
-// }
+func new_stmt_block(pos: SrcPos, block: StmtList): Stmt* {
+    s := new_stmt(STMT_BLOCK, pos);
+    s.detail.block = block;
+    return s;
+}
 
-// Stmt *new_stmt_block(SrcPos pos, StmtList block) {
-//     Stmt *s = new_stmt(STMT_BLOCK, pos);
-//     s->block = block;
-//     return s;
-// }
+func new_stmt_if(pos: SrcPos, init: Stmt*, cond: Expr*, then_block: StmtList, elseifs: ElseIf*, num_elseifs: usize, else_block: StmtList): Stmt* {
+    s := new_stmt(STMT_IF, pos);
+    s.detail.if_stmt.init = init;
+    s.detail.if_stmt.cond = cond;
+    s.detail.if_stmt.then_block = then_block;
+    s.detail.if_stmt.elseifs = ast_dup(elseifs, num_elseifs * sizeof(*elseifs));
+    s.detail.if_stmt.num_elseifs = num_elseifs;
+    s.detail.if_stmt.else_block = else_block;
+    return s;
+}
 
-// Stmt *new_stmt_if(SrcPos pos, Stmt *init, Expr *cond, StmtList then_block, ElseIf *elseifs, size_t num_elseifs, StmtList else_block) {
-//     Stmt *s = new_stmt(STMT_IF, pos);
-//     s->if_stmt.init = init;
-//     s->if_stmt.cond = cond;
-//     s->if_stmt.then_block = then_block;
-//     s->if_stmt.elseifs = AST_DUP(elseifs);
-//     s->if_stmt.num_elseifs = num_elseifs;
-//     s->if_stmt.else_block = else_block;
-//     return s;
-// }
+func new_stmt_while(pos: SrcPos, cond: Expr*, block: StmtList): Stmt* {
+    s := new_stmt(STMT_WHILE, pos);
+    s.detail.while_stmt.cond = cond;
+    s.detail.while_stmt.block = block;
+    return s;
+}
 
-// Stmt *new_stmt_while(SrcPos pos, Expr *cond, StmtList block) {
-//     Stmt *s = new_stmt(STMT_WHILE, pos);
-//     s->while_stmt.cond = cond;
-//     s->while_stmt.block = block;
-//     return s;
-// }
+func new_stmt_do_while(pos: SrcPos, cond: Expr*, block: StmtList): Stmt* {
+    s := new_stmt(STMT_DO_WHILE, pos);
+    s.detail.while_stmt.cond = cond;
+    s.detail.while_stmt.block = block;
+    return s;
+}
 
-// Stmt *new_stmt_do_while(SrcPos pos, Expr *cond, StmtList block) {
-//     Stmt *s = new_stmt(STMT_DO_WHILE, pos);
-//     s->while_stmt.cond = cond;
-//     s->while_stmt.block = block;
-//     return s;
-// }
-   
-// Stmt *new_stmt_for(SrcPos pos, Stmt *init, Expr *cond, Stmt *next, StmtList block) {
-//     Stmt *s = new_stmt(STMT_FOR, pos);
-//     s->for_stmt.init = init;
-//     s->for_stmt.cond = cond;
-//     s->for_stmt.next = next;
-//     s->for_stmt.block = block;
-//     return s;
-// }
+func new_stmt_for(pos: SrcPos, init: Stmt*, cond: Expr*, next: Stmt*, block: StmtList): Stmt* {
+    s := new_stmt(STMT_FOR, pos);
+    s.detail.for_stmt.init = init;
+    s.detail.for_stmt.cond = cond;
+    s.detail.for_stmt.next = next;
+    s.detail.for_stmt.block = block;
+    return s;
+}
 
-// Stmt *new_stmt_switch(SrcPos pos, Expr *expr, SwitchCase *cases, size_t num_cases) {
-//     Stmt *s = new_stmt(STMT_SWITCH, pos);
-//     s->switch_stmt.expr = expr;
-//     s->switch_stmt.cases = AST_DUP(cases);
-//     s->switch_stmt.num_cases = num_cases;
-//     return s;
-// }
+func new_stmt_switch(pos: SrcPos, expr: Expr*, cases: SwitchCase*, num_cases: usize): Stmt* {
+    s := new_stmt(STMT_SWITCH, pos);
+    s.detail.switch_stmt.expr = expr;
+    s.detail.switch_stmt.cases = ast_dup(cases, num_cases * sizeof(*cases));
+    s.detail.switch_stmt.num_cases = num_cases;
+    return s;
+}
 
-// Stmt *new_stmt_assign(SrcPos pos, TokenKind op, Expr *left, Expr *right) {
-//     Stmt *s = new_stmt(STMT_ASSIGN, pos);
-//     s->assign.op = op;
-//     s->assign.left = left;
-//     s->assign.right = right;
-//     return s;
-// }
+func new_stmt_assign(pos: SrcPos, op: TokenKind, left: Expr*, right: Expr*): Stmt* {
+    s := new_stmt(STMT_ASSIGN, pos);
+    s.detail.assign.op = op;
+    s.detail.assign.left = left;
+    s.detail.assign.right = right;
+    return s;
+}
 
-// Stmt *new_stmt_init(SrcPos pos, name: char const*, Typespec *type, Expr *expr) {
-//     Stmt *s = new_stmt(STMT_INIT, pos);
-//     s->init.name = name;
-//     s->init.type = type;
-//     s->init.expr = expr;
-//     return s;
-// }
+func new_stmt_init(pos: SrcPos, name: char const*, type: Typespec*, expr: Expr*): Stmt* {
+    s := new_stmt(STMT_INIT, pos);
+    s.detail.init.name = name;
+    s.detail.init.type = type;
+    s.detail.init.expr = expr;
+    return s;
+}
 
-// Stmt *new_stmt_expr(SrcPos pos, Expr *expr) {
-//     Stmt *s = new_stmt(STMT_EXPR, pos);
-//     s->expr = expr;
-//     return s;
-// }
+func new_stmt_expr(pos: SrcPos, expr: Expr*): Stmt* {
+    s := new_stmt(STMT_EXPR, pos);
+    s.detail.expr = expr;
+    return s;
+}
 
 // #undef AST_DUP

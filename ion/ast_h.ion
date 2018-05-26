@@ -94,7 +94,7 @@ struct Decl {
     kind: DeclKind;
     pos: SrcPos;
     name: char const*;
-    notes: Note;
+    notes: Notes;
     is_incomplete: bool;
     detail: DeclDetail;
 }
@@ -258,7 +258,7 @@ struct ExprCompound {
 
 struct ExprCast {
     type: Typespec*;
-    expr: Expr*;            
+    expr: Expr*;
 }
 
 struct ExprModify {
@@ -287,7 +287,7 @@ struct ExprTernary {
 struct ExprCall {
     expr: Expr*;
     args: Expr**;
-    num_args: usize;            
+    num_args: usize;
 }
 
 struct ExprIndex {
@@ -364,7 +364,7 @@ struct StmtIf {
     then_block: StmtList;
     elseifs: ElseIf*;
     num_elseifs: usize;
-    else_block: StmtList;            
+    else_block: StmtList;
 }
 
 struct StmtWhile {
@@ -382,7 +382,7 @@ struct StmtFor {
 struct StmtSwitch {
     expr: Expr*;
     cases: SwitchCase*;
-    num_cases: usize;            
+    num_cases: usize;
 }
 
 struct StmtAssign {
