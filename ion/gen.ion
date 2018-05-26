@@ -253,16 +253,16 @@ var gen_name_map: Map;
 func get_gen_name_or_default(ptr: void const*, default_name: char const*): char const* {
     name: char const* = map_get(&gen_name_map, ptr);
     if (!name) {
-        sym: Sym* = get_resolved_sym(ptr);
+        sym := get_resolved_sym(ptr);
         if (sym) {
             if (sym.external_name) {
                 name = sym.external_name;
             } else if (sym.package.external_name) {
-                external_name: char const* = sym.package.external_name;
+                external_name := sym.package.external_name;
                 buf: char[256];
                 if (sym.kind == SYM_CONST) {
-                    ptr2: char* = buf;
-                    for (str: char const* = external_name; *str && ptr2 < buf + sizeof(buf) - 1; str++) {
+                    ptr2 := buf;
+                    for (str := external_name; *str && ptr2 < buf + sizeof(buf) - 1; str++) {
                         *ptr2 = toupper(*str);
                         ptr2++;
                     }
