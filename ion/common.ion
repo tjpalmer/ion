@@ -249,66 +249,67 @@ struct Arena {
     blocks: char**;
 }
 
-// #define ARENA_ALIGNMENT 8
-// #define ARENA_BLOCK_SIZE (1024 * 1024)
-// // #define ARENA_BLOCK_SIZE 1024
+const ARENA_ALIGNMENT = 8;
+const ARENA_BLOCK_SIZE = 1024 * 1024;
+// const ARENA_BLOCK_SIZE = 1024;
 
-// func arena_grow(Arena *arena, size_t min_size) {
-//     size_t size = ALIGN_UP(CLAMP_MIN(min_size, ARENA_BLOCK_SIZE), ARENA_ALIGNMENT);
-//     arena->ptr = xmalloc(size);
-//     assert(arena->ptr == ALIGN_DOWN_PTR(arena->ptr, ARENA_ALIGNMENT));
-//     arena->end = arena->ptr + size;
-//     buf_push(arena->blocks, arena->ptr);
-// }
+func arena_grow(arena: Arena*, min_size: usize) {
+    size := align_up(clamp_min(min_size, ARENA_BLOCK_SIZE), ARENA_ALIGNMENT);
+    arena.ptr = xmalloc(size);
+    #assert(arena.ptr == align_down_ptr(arena.ptr, ARENA_ALIGNMENT));
+    arena.end = arena.ptr + size;
+    buf_push((:void**)&arena.blocks, &arena.ptr, sizeof(arena.ptr));
+}
 
-// func arena_alloc(Arena *arena, size_t size): void* {
-//     if (size > (size_t)(arena->end - arena->ptr)) {
-//         arena_grow(arena, size);
-//         assert(size <= (size_t)(arena->end - arena->ptr));
-//     }
-//     void *ptr = arena->ptr;
-//     arena->ptr = ALIGN_UP_PTR(arena->ptr + size, ARENA_ALIGNMENT);
-//     assert(arena->ptr <= arena->end);
-//     assert(ptr == ALIGN_DOWN_PTR(ptr, ARENA_ALIGNMENT));
-//     return ptr;
-// }
+func arena_alloc(arena: Arena*, size: usize): void* {
+    if (size > (:usize)(arena.end - arena.ptr)) {
+        arena_grow(arena, size);
+        #assert(size <= (:usize)(arena.end - arena.ptr));
+    }
+    ptr := arena.ptr;
+    arena.ptr = align_up_ptr(arena.ptr + size, ARENA_ALIGNMENT);
+    #assert(arena.ptr <= arena.end);
+    #assert(ptr == align_down_ptr(ptr, ARENA_ALIGNMENT));
+    return ptr;
+}
 
-// func arena_free(Arena *arena) {
-//     for (it: char** = arena->blocks; it != buf_end(arena->blocks); it++) {
-//         free(*it);
-//     }
-//     buf_free(arena->blocks);
-// }
+func arena_free(arena: Arena*) {
+    end := buf_end(arena.blocks, sizeof(arena.ptr));
+    for (it: char** = arena.blocks; it != end; it++) {
+        free(*it);
+    }
+    buf_free((:void**)&arena.blocks);
+}
 
 // Hash map
 
-// uint64_t hash_uint64(uint64_t x) {
-//     x *= 0xff51afd7ed558ccd;
-//     x ^= x >> 32;
-//     return x;
-// }
+func hash_uint64(x: uint64): uint64 {
+    x *= 0xff51afd7ed558ccd;
+    x ^= x >> 32;
+    return x;
+}
 
-// uint64_t hash_ptr(const void *ptr) {
-//     return hash_uint64((uintptr_t)ptr);
-// }
+func hash_ptr(ptr: void const*): uint64 {
+    return hash_uint64((:uintptr)ptr);
+}
 
-// uint64_t hash_mix(uint64_t x, uint64_t y) {
-//     x ^= y;
-//     x *= 0xff51afd7ed558ccd;
-//     x ^= x >> 32;
-//     return x;
-// }
+func hash_mix(x: uint64, y: uint64): uint64 {
+    x ^= y;
+    x *= 0xff51afd7ed558ccd;
+    x ^= x >> 32;
+    return x;
+}
 
-// uint64_t hash_bytes(const void *ptr, size_t len) {
-//     uint64_t x = 0xcbf29ce484222325;
-//     buf: char const* = (const char *)ptr;
-//     for (size_t i = 0; i < len; i++) {
-//         x ^= buf[i];
-//         x *= 0x100000001b3;
-//         x ^= x >> 32;
-//     }
-//     return x;
-// }
+func hash_bytes(ptr: void const*, len: usize): uint64 {
+    x: uint64 = 0xcbf29ce484222325;
+    buf := (:char const*)ptr;
+    for (i: usize = 0; i < len; i++) {
+        x ^= buf[i];
+        x *= 0x100000001b3;
+        x ^= x >> 32;
+    }
+    return x;
+}
 
 struct Map {
     keys: uint64*;
@@ -317,93 +318,91 @@ struct Map {
     cap: usize;
 }
 
-// uint64_t map_get_uint64_from_uint64(Map *map, uint64_t key) {
-//     if (map->len == 0) {
-//         return 0;
-//     }
-//     assert(IS_POW2(map->cap));
-//     size_t i = (size_t)hash_uint64(key);
-//     assert(map->len < map->cap);
-//     for (;;) {
-//         i &= map->cap - 1;
-//         if (map->keys[i] == key) {
-//             return map->vals[i];
-//         } else if (!map->keys[i]) {
-//             return 0;
-//         }
-//         i++;
-//     }
-//     return 0;
-// }
-
-// func map_put_uint64_from_uint64(Map *map, uint64_t key, uint64_t val);
-
-// func map_grow(Map *map, size_t new_cap) {
-//     new_cap = CLAMP_MIN(new_cap, 16);
-//     Map new_map = {
-//         .keys = xcalloc(new_cap, sizeof(uint64_t)),
-//         .vals = xmalloc(new_cap * sizeof(uint64_t)),
-//         .cap = new_cap,
-//     };
-//     for (size_t i = 0; i < map->cap; i++) {
-//         if (map->keys[i]) {
-//             map_put_uint64_from_uint64(&new_map, map->keys[i], map->vals[i]);
-//         }
-//     }
-//     free((void *)map->keys);
-//     free(map->vals);
-//     *map = new_map;
-// }
-
-// func map_put_uint64_from_uint64(Map *map, uint64_t key, uint64_t val) {
-//     assert(key);
-//     if (!val) {
-//         return;
-//     }
-//     if (2*map->len >= map->cap) {
-//         map_grow(map, 2*map->cap);
-//     }
-//     assert(2*map->len < map->cap);
-//     assert(IS_POW2(map->cap));
-//     size_t i = (size_t)hash_uint64(key);
-//     for (;;) {
-//         i &= map->cap - 1;
-//         if (!map->keys[i]) {
-//             map->len++;
-//             map->keys[i] = key;
-//             map->vals[i] = val;
-//             return;
-//         } else if (map->keys[i] == key) {
-//             map->vals[i] = val;
-//             return;
-//         }
-//         i++;
-//     }
-// }
-
-// func map_get(Map *map, const void *key): void* {
-//     return (void *)(uintptr_t)map_get_uint64_from_uint64(map, (uint64_t)(uintptr_t)key);
-// }
-
-func map_put(map: Map*, key: void const*, val: void*) {
-    // map_put_uint64_from_uint64(map, (uint64_t)(uintptr_t)key, (uint64_t)(uintptr_t)val);
+func map_get_uint64_from_uint64(map: Map*, key: uint64): uint64 {
+    if (map.len == 0) {
+        return 0;
+    }
+    #assert(is_pow2(map.cap));
+    i := (:usize)hash_uint64(key);
+    #assert(map.len < map.cap);
+    for (;;) {
+        i &= map.cap - 1;
+        if (map.keys[i] == key) {
+            return map.vals[i];
+        } else if (!map.keys[i]) {
+            return 0;
+        }
+        i++;
+    }
+    return 0;
 }
 
-// func map_get_from_uint64(Map *map, uint64_t key): void* {
-//     return (void *)(uintptr_t)map_get_uint64_from_uint64(map, key);
-// }
+func map_grow(map: Map*, new_cap: usize) {
+    new_cap = clamp_min(new_cap, 16);
+    new_map := Map {
+        keys = xcalloc(new_cap, sizeof(:uint64)),
+        vals = xmalloc(new_cap * sizeof(:uint64)),
+        cap = new_cap,
+    };
+    for (i: usize = 0; i < map.cap; i++) {
+        if (map.keys[i]) {
+            map_put_uint64_from_uint64(&new_map, map.keys[i], map.vals[i]);
+        }
+    }
+    free((:void*)map.keys);
+    free(map.vals);
+    *map = new_map;
+}
 
-// func map_put_from_uint64(Map *map, uint64_t key, void *val) {
-//     map_put_uint64_from_uint64(map, key, (uint64_t)(uintptr_t)val);
-// }
+func map_put_uint64_from_uint64(map: Map*, key: uint64, val: uint64) {
+    #assert(key);
+    if (!val) {
+        return;
+    }
+    if (2*map.len >= map.cap) {
+        map_grow(map, 2*map.cap);
+    }
+    #assert(2*map.len < map.cap);
+    #assert(is_pow2(map.cap));
+    i := (:usize)hash_uint64(key);
+    for (;;) {
+        i &= map.cap - 1;
+        if (!map.keys[i]) {
+            map.len++;
+            map.keys[i] = key;
+            map.vals[i] = val;
+            return;
+        } else if (map.keys[i] == key) {
+            map.vals[i] = val;
+            return;
+        }
+        i++;
+    }
+}
 
-// uint64_t map_get_uint64(Map *map, void *key) {
-//     return map_get_uint64_from_uint64(map, (uint64_t)(uintptr_t)key);
-// }
+func map_get(map: Map*, key: void const*): void* {
+    return (:void*)(:uintptr)map_get_uint64_from_uint64(map, (:uint64)(:uintptr)key);
+}
 
-// func map_put_uint64(Map *map, void *key, uint64_t val) {
-//     map_put_uint64_from_uint64(map, (uint64_t)(uintptr_t)key, val);
-// }
+func map_put(map: Map*, key: void const*, val: void*) {
+    map_put_uint64_from_uint64(map, (:uint64)(:uintptr)key, (:uint64)(:uintptr)val);
+}
+
+func map_get_from_uint64(map: Map*, key: uint64): void* {
+    return (:void*)(:uintptr)map_get_uint64_from_uint64(map, key);
+}
+
+func map_put_from_uint64(map: Map*, key: uint64, val: void*) {
+    map_put_uint64_from_uint64(map, key, (:uint64)(:uintptr)val);
+}
+
+func map_get_uint64(map: Map*, key: void*): uint64 {
+    return map_get_uint64_from_uint64(map, (:uint64)(:uintptr)key);
+}
+
+func map_put_uint64(map: Map*, key: void*, val: uint64) {
+    map_put_uint64_from_uint64(map, (:uint64)(:uintptr)key, val);
+}
 
 // func map_test() {
 //     Map map = {0};
@@ -419,63 +418,62 @@ func map_put(map: Map*, key: void const*, val: void*) {
 
 // String interning
 
-// typedef struct Intern {
-//     size_t len;
-//     struct Intern *next;
-//     char str[];
-// } Intern;
+struct Intern {
+    len: usize;
+    next: Intern*;
+    str: char[1];
+}
 
 var intern_arena: Arena;
 var interns: Map;
 
 func str_intern_range(start: char const*, end: char const*): char const* {
-//     size_t len = end - start;
-//     uint64_t hash = hash_bytes(start, len);
-//     uint64_t key = hash ? hash : 1;
-//     Intern *intern = map_get_from_uint64(&interns, key);
-//     for (Intern *it = intern; it; it = it->next) {
-//         if (it->len == len && strncmp(it->str, start, len) == 0) {
-//             return it->str;
-//         }
-//     }
-//     Intern *new_intern = arena_alloc(&intern_arena, offsetof(Intern, str) + len + 1);
-//     new_intern->len = len;
-//     new_intern->next = intern;
-//     memcpy(new_intern->str, start, len);
-//     new_intern->str[len] = 0;
-//     map_put_from_uint64(&interns, key, new_intern);
-//     return new_intern->str;
-    return start;
+    len: usize = end - start;
+    hash := hash_bytes(start, len);
+    key: uint64 = hash ? hash : 1;
+    intern: Intern* = map_get_from_uint64(&interns, key);
+    for (it := intern; it; it = it.next) {
+        if (it.len == len && strncmp(it.str, start, len) == 0) {
+            return it.str;
+        }
+    }
+    new_intern: Intern* = arena_alloc(&intern_arena, offsetof(Intern, str) + len + 1);
+    new_intern.len = len;
+    new_intern.next = intern;
+    memcpy(new_intern.str, start, len);
+    new_intern.str[len] = 0;
+    map_put_from_uint64(&interns, key, new_intern);
+    return new_intern.str;
 }
 
 func str_intern(str: char const*): char const* {
     return str_intern_range(str, str + strlen(str));
 }
 
-// func str_islower(str: char const*): bool {
-//     while (*str) {
-//         if (isalpha(*str) && !islower(*str)) {
-//             return false;
-//         }
-//         str++;
-//     }
-//     return true;
-// }
+func str_islower(str: char const*): bool {
+    while (*str) {
+        if (isalpha(*str) && !islower(*str)) {
+            return false;
+        }
+        str++;
+    }
+    return true;
+}
 
 // Value union
 
-// typedef union Val {
-//     bool b;
-//     char c;
-//     unsigned char uc;
-//     signed char sc;
-//     short s;
-//     unsigned short us;
-//     int i;
-//     unsigned u;
-//     long l;
-//     unsigned long ul;
-//     long long ll;
-//     ullong ull;
-//     uintptr_t p;
-// } Val;
+union Val {
+    b: bool;
+    c: char;
+    uc: uchar;
+    sc: schar;
+    s: short;
+    us: ushort;
+    i: int;
+    u: uint;
+    l: long;
+    ul: ulong;
+    ll: llong;
+    ull: ullong;
+    p: uintptr;
+}
