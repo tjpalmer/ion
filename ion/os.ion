@@ -1,4 +1,4 @@
-// TODO: How to do this?
+// TODO: Move these to some c file.
 // #ifndef MAX_PATH
 // #if defined _MAX_PATH
 // #define MAX_PATH _MAX_PATH
@@ -8,6 +8,7 @@
 // #error "No suitable MAX_PATH surrogate"
 // #endif
 // #endif
+@foreign
 const MAX_PATH = 256;
 
 func path_normalize(path: char*) {
@@ -49,14 +50,14 @@ func path_file(path: char[MAX_PATH]): char* {
     return path;
 }
 
-// char *path_ext(path: char[MAX_PATH]) {
-//     for (ptr: char* = path + strlen(path); ptr != path; ptr--) {
-//         if (ptr[-1] == '.') {
-//             return ptr;
-//         }
-//     }
-//     return path;
-// }
+func path_ext(path: char[MAX_PATH]): char* {
+    for (ptr: char* = path + strlen(path); ptr != path; ptr--) {
+        if (ptr[-1] == '.') {
+            return ptr;
+        }
+    }
+    return path;
+}
 
 struct DirListIter {
     valid: bool;
@@ -80,6 +81,19 @@ struct DirListIter {
 // #else
 // #include "os_unix.c"
 // #endif
+
+@foreign
+func path_absolute(path: char[MAX_PATH]);
+
+@foreign
+func dir_list_free(iter: DirListIter*);
+
+@foreign
+func dir_list_next(iter: DirListIter*);
+
+@foreign
+func dir_list(iter: DirListIter*, path: char const*);
+
 func strdup(str: char const*): char* {
     return NULL;
 }
