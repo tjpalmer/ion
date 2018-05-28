@@ -49,7 +49,7 @@ func path_file(path: char[MAX_PATH]): char* {
     return path;
 }
 
-// char *path_ext(char path[MAX_PATH]) {
+// char *path_ext(path: char[MAX_PATH]) {
 //     for (ptr: char* = path + strlen(path); ptr != path; ptr--) {
 //         if (ptr[-1] == '.') {
 //             return ptr;
@@ -58,19 +58,19 @@ func path_file(path: char[MAX_PATH]): char* {
 //     return path;
 // }
 
-// typedef struct DirListIter {
-//     bool valid;
-//     bool error;
+struct DirListIter {
+    valid: bool;
+    error: bool;
 
-//     char base[MAX_PATH];
-//     char name[MAX_PATH];
-//     size_t size;
-//     bool is_dir;
+    base: char[MAX_PATH];
+    name: char[MAX_PATH];
+    size: usize;
+    is_dir: bool;
 
-//     void *handle;
-// } DirListIter;
+    handle: void*;
+}
 
-// func dir_excluded(DirListIter *iter): bool {
+// func dir_excluded(iter: DirListIter*): bool {
 //     return iter->valid && (strcmp(iter->name, ".") == 0 || strcmp(iter->name, "..") == 0);
 // }
 
@@ -84,11 +84,11 @@ func strdup(str: char const*): char* {
     return NULL;
 }
 
-// func dir_list_subdir(DirListIter *iter): bool {
+// func dir_list_subdir(iter: DirListIter*): bool {
 //     if (!iter->valid || !iter->is_dir) {
 //         return false;
 //     }
-//     DirListIter subdir_iter;
+//     subdir_iter: DirListIter;
 //     path_join(iter->base, iter->name);
 //     dir_list(&subdir_iter, iter->base);
 //     dir_list_free(iter);
@@ -98,7 +98,7 @@ func strdup(str: char const*): char* {
 
 // func dir_list_buf(filespec: char const*): char const** {
 //     buf: char const** = NULL;
-//     DirListIter iter;
+//     iter: DirListIter;
 //     for (dir_list(&iter, filespec); iter.valid; dir_list_next(&iter)) {
 //         name: char const* = strdup(iter.name);
 //         buf_push(buf, name);
