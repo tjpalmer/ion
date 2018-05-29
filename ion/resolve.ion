@@ -230,54 +230,54 @@ func sym_global_decl(decl: Decl*): Sym* {
     return sym;
 }
 
-// func put_type_name(buf: char**, type: Type*) {
-//     type_name: char const* = type_names[type.kind];
-//     if (type_name) {
-//         buf_printf(*buf, "%s", type_name);
-//     } else {
-//         switch (type.kind) {
-//         case CMPL_TYPE_STRUCT:
-//         case CMPL_TYPE_UNION:
-//         case CMPL_TYPE_ENUM:
-//         case CMPL_TYPE_INCOMPLETE:
-//             #assert(type.sym);
-//             buf_printf(*buf, "%s", type.sym.name);
-//         case CMPL_TYPE_CONST:
-//             put_type_name(buf, type.base);
-//             buf_printf(*buf, " const");
-//         case CMPL_TYPE_PTR:
-//             put_type_name(buf, type.base);
-//             buf_printf(*buf, "*");
-//         case CMPL_TYPE_ARRAY:
-//             put_type_name(buf, type.base);
-//             buf_printf(*buf, "[%zu]", type.num_elems);
-//         case CMPL_TYPE_FUNC:
-//             buf_printf(*buf, "func(");
-//             for (i: usize = 0; i < type.function.num_params; i++) {
-//                 if (i != 0) {
-//                     buf_printf(*buf, ", ");
-//                 }
-//                 put_type_name(buf, type.function.params[i]);
-//             }
-//             if (type.function.has_varargs) {
-//                 buf_printf(*buf, "...");
-//             }
-//             buf_printf(*buf, ")");
-//             if (type.function.ret != type_void) {
-//                 buf_printf(*buf, ": ");
-//                 put_type_name(buf, type.function.ret);
-//             }
-//         default:
-//             #assert(0);
-//         }
-//     }
-// }
+func put_type_name(buf: char**, type: Type*) {
+    type_name := type_names[type.kind];
+    if (type_name) {
+        buf_printf(buf, "%s", type_name);
+    } else {
+        switch (type.kind) {
+        case CMPL_TYPE_STRUCT:
+        case CMPL_TYPE_UNION:
+        case CMPL_TYPE_ENUM:
+        case CMPL_TYPE_INCOMPLETE:
+            #assert(type.sym);
+            buf_printf(buf, "%s", type.sym.name);
+        case CMPL_TYPE_CONST:
+            put_type_name(buf, type.base);
+            buf_printf(buf, " const");
+        case CMPL_TYPE_PTR:
+            put_type_name(buf, type.base);
+            buf_printf(buf, "*");
+        case CMPL_TYPE_ARRAY:
+            put_type_name(buf, type.base);
+            buf_printf(buf, "[%zu]", type.detail.num_elems);
+        case CMPL_TYPE_FUNC:
+            buf_printf(buf, "func(");
+            for (i: usize = 0; i < type.detail.function.num_params; i++) {
+                if (i != 0) {
+                    buf_printf(buf, ", ");
+                }
+                put_type_name(buf, type.detail.function.params[i]);
+            }
+            if (type.detail.function.has_varargs) {
+                buf_printf(buf, "...");
+            }
+            buf_printf(buf, ")");
+            if (type.detail.function.ret != type_void) {
+                buf_printf(buf, ": ");
+                put_type_name(buf, type.detail.function.ret);
+            }
+        default:
+            #assert(0);
+        }
+    }
+}
 
-// func get_type_name(type: Type*): char* {
-//     buf: char* = NULL;
-//     put_type_name(&buf, type);
-//     return buf;
-// }
+func get_type_name(type: Type*): char* {
+    buf: char* = NULL;
+    put_type_name(&buf, type);
+    return buf;
+}
 
 struct Operand {
     type: Type*;
@@ -309,21 +309,19 @@ func operand_const(type: Type*, val: Val): Operand {
     };
 }
 
-// func type_decay(type: Type*): Type* {
-//     type = unqualify_type(type);
-//     if (type.kind == CMPL_TYPE_ARRAY) {
-//         type = type_ptr(type.base);
-//     }
-//     return type;
-// }
+func type_decay(type: Type*): Type* {
+    type = unqualify_type(type);
+    if (type.kind == CMPL_TYPE_ARRAY) {
+        type = type_ptr(type.base);
+    }
+    return type;
+}
 
-// func operand_decay(operand: Operand): Operand {
-//     operand.type = type_decay(operand.type);
-//     operand.is_lvalue = false;
-//     return operand;
-// }
-
-// func is_null_ptr(operand: Operand): bool;
+func operand_decay(operand: Operand): Operand {
+    operand.type = type_decay(operand.type);
+    operand.is_lvalue = false;
+    return operand;
+}
 
 // #define CASE(k, t) \
 //     case k: \
@@ -363,32 +361,32 @@ func operand_const(type: Type*, val: Val): Operand {
 //         } \
 //         break;
 
-// func is_convertible(operand: Operand*, dest: Type*): bool {
-//     dest = unqualify_type(dest);
-//     src := unqualify_type(operand.type);
-//     if (dest == src) {
-//         return true;
-//     } else if (is_arithmetic_type(dest) && is_arithmetic_type(src)) {
-//         return true;
-//     } else if (is_ptr_like_type(dest) && is_null_ptr(*operand)) {
-//         return true;
-//     } else if (is_ptr_type(dest) && is_ptr_type(src)) {
-//         if (is_const_type(dest.base) && is_const_type(src.base)) {
-//             return dest.base.base == src.base.base || dest.base.base == type_void || src.base.base == type_void;
-//         } else {
-//             unqual_dest_base := unqualify_type(dest.base);
-//             if (unqual_dest_base == src.base) {
-//                 return true;
-//             } else if (unqual_dest_base == type_void) {
-//                 return is_const_type(dest.base) || !is_const_type(src.base);
-//             } else {
-//                 return src.base == type_void;
-//             }
-//         }
-//     } else {
-//         return false;
-//     }
-// }
+func is_convertible(operand: Operand*, dest: Type*): bool {
+    dest = unqualify_type(dest);
+    src := unqualify_type(operand.type);
+    if (dest == src) {
+        return true;
+    } else if (is_arithmetic_type(dest) && is_arithmetic_type(src)) {
+        return true;
+    } else if (is_ptr_like_type(dest) && is_null_ptr(*operand)) {
+        return true;
+    } else if (is_ptr_type(dest) && is_ptr_type(src)) {
+        if (is_const_type(dest.base) && is_const_type(src.base)) {
+            return dest.base.base == src.base.base || dest.base.base == type_void || src.base.base == type_void;
+        } else {
+            unqual_dest_base := unqualify_type(dest.base);
+            if (unqual_dest_base == src.base) {
+                return true;
+            } else if (unqual_dest_base == type_void) {
+                return is_const_type(dest.base) || !is_const_type(src.base);
+            } else {
+                return src.base == type_void;
+            }
+        }
+    } else {
+        return false;
+    }
+}
 
 func is_castable(operand: Operand*, dest: Type*): bool {
     src := operand.type;
@@ -420,7 +418,7 @@ func cast_operand(operand: Operand*, type: Type*): bool {
                 if (type.kind == CMPL_TYPE_ENUM) {
                     type = type.base;
                 }
-                operand_type: Type* = operand.type;
+                operand_type := operand.type;
                 if (operand_type.kind == CMPL_TYPE_ENUM) {
                     operand_type = operand_type.base;
                 }
@@ -448,85 +446,85 @@ func cast_operand(operand: Operand*, type: Type*): bool {
     return true;
 }
 
-// func convert_operand(operand: Operand*, type: Type*): bool {
-//     if (is_convertible(operand, type)) {
-//         cast_operand(operand, type);
-//         operand.type = unqualify_type(operand.type);
-//         operand.is_lvalue = false;
-//         return true;
-//     }
-//     return false;
-// }
+func convert_operand(operand: Operand*, type: Type*): bool {
+    if (is_convertible(operand, type)) {
+        cast_operand(operand, type);
+        operand.type = unqualify_type(operand.type);
+        operand.is_lvalue = false;
+        return true;
+    }
+    return false;
+}
 
 // #undef CASE
 
-// func is_null_ptr(operand: Operand): bool {
-//     if (operand.is_const && (is_ptr_type(operand.type) || is_integer_type(operand.type))) {
-//         cast_operand(&operand, type_ullong);
-//         return operand.val.ull == 0;
-//     } else {
-//         return false;
-//     }
-// }
+func is_null_ptr(operand: Operand): bool {
+    if (operand.is_const && (is_ptr_type(operand.type) || is_integer_type(operand.type))) {
+        cast_operand(&operand, type_ullong);
+        return operand.val.ull == 0;
+    } else {
+        return false;
+    }
+}
 
-// func promote_operand(operand: Operand*) {
-//     switch (operand.type.kind) {
-//     case CMPL_TYPE_BOOL:
-//     case CMPL_TYPE_CHAR:
-//     case CMPL_TYPE_SCHAR:
-//     case CMPL_TYPE_UCHAR:
-//     case CMPL_TYPE_SHORT:
-//     case CMPL_TYPE_USHORT:
-//     case CMPL_TYPE_ENUM:
-//         cast_operand(operand, type_int);
-//     default:
-//         // Do nothing
-//     }
-// }
+func promote_operand(operand: Operand*) {
+    switch (operand.type.kind) {
+    case CMPL_TYPE_BOOL:
+    case CMPL_TYPE_CHAR:
+    case CMPL_TYPE_SCHAR:
+    case CMPL_TYPE_UCHAR:
+    case CMPL_TYPE_SHORT:
+    case CMPL_TYPE_USHORT:
+    case CMPL_TYPE_ENUM:
+        cast_operand(operand, type_int);
+    default:
+        // Do nothing
+    }
+}
 
-// func unify_arithmetic_operands(left: Operand*, right: Operand*) {
-//     if (left.type == type_double) {
-//         cast_operand(right, type_double);
-//     } else if (right.type == type_double) {
-//         cast_operand(left, type_double);
-//     } else if (left.type == type_float) {
-//         cast_operand(right, type_float);
-//     } else if (right.type == type_float) {
-//         cast_operand(left, type_float);
-//     } else {
-//         #assert(is_integer_type(left.type));
-//         #assert(is_integer_type(right.type));
-//         promote_operand(left);
-//         promote_operand(right);
-//         if (left.type != right.type) {
-//             if (is_signed_type(left.type) == is_signed_type(right.type)) {
-//                 if (type_rank(left.type) <= type_rank(right.type)) {
-//                     cast_operand(left, right.type);
-//                 } else {
-//                     cast_operand(right, left.type);
-//                 }
-//             } else if (is_signed_type(left.type) && type_rank(right.type) >= type_rank(left.type)) {
-//                 cast_operand(left, right.type);
-//             } else if (is_signed_type(right.type) && type_rank(left.type) >= type_rank(right.type)) {
-//                 cast_operand(right, left.type);
-//             } else if (is_signed_type(left.type) && type_sizeof(left.type) > type_sizeof(right.type)) {
-//                 cast_operand(right, left.type);
-//             } else if (is_signed_type(right.type) && type_sizeof(right.type) > type_sizeof(left.type)) {
-//                 cast_operand(left, right.type);
-//             } else {
-//                 type: Type* = unsigned_type(is_signed_type(left.type) ? left.type : right.type);
-//                 cast_operand(left, type);
-//                 cast_operand(right, type);
-//             }
-//         }
-//     }
-//     #assert(left.type == right.type);
-// }
+func unify_arithmetic_operands(left: Operand*, right: Operand*) {
+    if (left.type == type_double) {
+        cast_operand(right, type_double);
+    } else if (right.type == type_double) {
+        cast_operand(left, type_double);
+    } else if (left.type == type_float) {
+        cast_operand(right, type_float);
+    } else if (right.type == type_float) {
+        cast_operand(left, type_float);
+    } else {
+        #assert(is_integer_type(left.type));
+        #assert(is_integer_type(right.type));
+        promote_operand(left);
+        promote_operand(right);
+        if (left.type != right.type) {
+            if (is_signed_type(left.type) == is_signed_type(right.type)) {
+                if (type_rank(left.type) <= type_rank(right.type)) {
+                    cast_operand(left, right.type);
+                } else {
+                    cast_operand(right, left.type);
+                }
+            } else if (is_signed_type(left.type) && type_rank(right.type) >= type_rank(left.type)) {
+                cast_operand(left, right.type);
+            } else if (is_signed_type(right.type) && type_rank(left.type) >= type_rank(right.type)) {
+                cast_operand(right, left.type);
+            } else if (is_signed_type(left.type) && type_sizeof(left.type) > type_sizeof(right.type)) {
+                cast_operand(right, left.type);
+            } else if (is_signed_type(right.type) && type_sizeof(right.type) > type_sizeof(left.type)) {
+                cast_operand(left, right.type);
+            } else {
+                type: Type* = unsigned_type(is_signed_type(left.type) ? left.type : right.type);
+                cast_operand(left, type);
+                cast_operand(right, type);
+            }
+        }
+    }
+    #assert(left.type == right.type);
+}
 
 var resolved_val_map: Map;
 
 func get_resolved_val(ptr: void*): Val {
-    u64: uint64_t = map_get_uint64(&resolved_val_map, ptr);
+    u64: uint64 = map_get_uint64(&resolved_val_map, ptr);
     val: Val;
     #assert(sizeof(val) == sizeof(u64));
     memcpy(&val, &u64, sizeof(u64));
@@ -534,7 +532,7 @@ func get_resolved_val(ptr: void*): Val {
 }
 
 func set_resolved_val(ptr: void*, val: Val) {
-    u64: uint64_t;
+    u64: uint64;
     #assert(sizeof(val) == sizeof(u64));
     memcpy(&u64, &val, sizeof(val));
     map_put_uint64(&resolved_val_map, ptr, u64);
@@ -650,134 +648,135 @@ func resolve_typespec(typespec: Typespec*): Type* {
 }
 
 func complete_type(type: Type*) {
-//     if (type.kind == CMPL_TYPE_COMPLETING) {
-//         fatal_error(type.sym.decl.pos, "Type completion cycle");
-//         return;
-//     } else if (type.kind != CMPL_TYPE_INCOMPLETE) {
-//         return;
-//     }
-//     sym: Sym* = type.sym;
-//     old_package := enter_package(sym.package);
-//     decl := sym.decl;
-//     if (decl.is_incomplete) {
-//         fatal_error(decl.pos, "Trying to use incomplete type as complete type");
-//     }
-//     type.kind = CMPL_TYPE_COMPLETING;
-//     #assert(decl.kind == DECL_STRUCT || decl.kind == DECL_UNION);
-//     fields: TypeField* = NULL;
-//     for (i: usize = 0; i < decl.aggregate.num_items; i++) {
-//         item: AggregateItem = decl.aggregate.items[i];
-//         item_type := resolve_typespec(item.type);
-//         complete_type(item_type);
-//         if (type_sizeof(item_type) == 0) {
-//             fatal_error(item.pos, "Field type of size 0 is not allowed");
-//         }
-//         for (j: usize = 0; j < item.num_names; j++) {
-//             buf_push((:void**)&fields, (TypeField){item.names[j], item_type});
-//         }
-//     }
-//     if (buf_len(fields) == 0) {
-//         fatal_error(decl.pos, "No fields");
-//     }
-//     if (has_duplicate_fields(fields, buf_len(fields))) {
-//         fatal_error(decl.pos, "Duplicate fields");
-//     }
-//     if (decl.kind == DECL_STRUCT) {
-//         type_complete_struct(type, fields, buf_len(fields));
-//     } else {
-//         #assert(decl.kind == DECL_UNION);
-//         type_complete_union(type, fields, buf_len(fields));
-//     }
-//     buf_push((:void**)&sorted_syms, type.sym);
-//     leave_package(old_package);
+    if (type.kind == CMPL_TYPE_COMPLETING) {
+        fatal_error(type.sym.decl.pos, "Type completion cycle");
+        return;
+    } else if (type.kind != CMPL_TYPE_INCOMPLETE) {
+        return;
+    }
+    sym: Sym* = type.sym;
+    old_package := enter_package(sym.package);
+    decl := sym.decl;
+    if (decl.is_incomplete) {
+        fatal_error(decl.pos, "Trying to use incomplete type as complete type");
+    }
+    type.kind = CMPL_TYPE_COMPLETING;
+    #assert(decl.kind == DECL_STRUCT || decl.kind == DECL_UNION);
+    fields: TypeField* = NULL;
+    for (i: usize = 0; i < decl.detail.aggregate.num_items; i++) {
+        item: AggregateItem = decl.detail.aggregate.items[i];
+        item_type := resolve_typespec(item.type);
+        complete_type(item_type);
+        if (type_sizeof(item_type) == 0) {
+            fatal_error(item.pos, "Field type of size 0 is not allowed");
+        }
+        for (j: usize = 0; j < item.num_names; j++) {
+            field := TypeField {item.names[j], item_type};
+            buf_push((:void**)&fields, &field, sizeof(field));
+        }
+    }
+    if (buf_len(fields) == 0) {
+        fatal_error(decl.pos, "No fields");
+    }
+    if (has_duplicate_fields(fields, buf_len(fields))) {
+        fatal_error(decl.pos, "Duplicate fields");
+    }
+    if (decl.kind == DECL_STRUCT) {
+        type_complete_struct(type, fields, buf_len(fields));
+    } else {
+        #assert(decl.kind == DECL_UNION);
+        type_complete_union(type, fields, buf_len(fields));
+    }
+    buf_push((:void**)&sorted_syms, &type.sym, sizeof(type.sym));
+    leave_package(old_package);
 }
 
-// func resolve_typed_init(pos: SrcPos, type: Type*, expr: Expr*): Type* {
-//     expected_type := unqualify_type(type);
-//     operand: Operand = resolve_expected_expr(expr, expected_type);
-//     if (is_incomplete_array_type(type) && is_array_type(operand.type) && type.base == operand.type.base) {
-//         // Incomplete array size, so infer the size from the initializer expression's type.
-//     } else {
-//         if (type && is_ptr_type(type)) {
-//             operand = operand_decay(operand);
-//         }
-//         if (!convert_operand(&operand, expected_type)) {
-//             return NULL;
-//         }
-//     }
-//     set_resolved_expected_type(expr, operand.type);
-//     return operand.type;
-// }
+func resolve_typed_init(pos: SrcPos, type: Type*, expr: Expr*): Type* {
+    expected_type := unqualify_type(type);
+    operand: Operand = resolve_expected_expr(expr, expected_type);
+    if (is_incomplete_array_type(type) && is_array_type(operand.type) && type.base == operand.type.base) {
+        // Incomplete array size, so infer the size from the initializer expression's type.
+    } else {
+        if (type && is_ptr_type(type)) {
+            operand = operand_decay(operand);
+        }
+        if (!convert_operand(&operand, expected_type)) {
+            return NULL;
+        }
+    }
+    set_resolved_expected_type(expr, operand.type);
+    return operand.type;
+}
 
-// func resolve_init(pos: SrcPos, typespec: Typespec*, expr: Expr*): Type* {
-//     type: Type*;
-//     if (typespec) {
-//         declared_type := resolve_typespec(typespec);
-//         type = declared_type;
-//         if (expr) {
-//             type = resolve_typed_init(pos, declared_type, expr);
-//             if (!type) {
-//                 fatal_error(pos, "Invalid type in initialization. Expected %s", get_type_name(declared_type));
-//             }
-//         }
-//     } else {
-//         #assert(expr);
-//         type = unqualify_type(resolve_expr(expr).type);
-//         if (is_array_type(type) && expr.kind != EXPR_COMPOUND) {
-//             type = type_decay(type);
-//             set_resolved_type(expr, type);
-//         }
-//         set_resolved_expected_type(expr, type);
-//     }
-//     complete_type(type);
-//     if (type.size == 0) {
-//         fatal_error(pos, "Cannot declare variable of size 0");
-//     }
-//     return type;
-// }
+func resolve_init(pos: SrcPos, typespec: Typespec*, expr: Expr*): Type* {
+    type: Type*;
+    if (typespec) {
+        declared_type := resolve_typespec(typespec);
+        type = declared_type;
+        if (expr) {
+            type = resolve_typed_init(pos, declared_type, expr);
+            if (!type) {
+                fatal_error(pos, "Invalid type in initialization. Expected %s", get_type_name(declared_type));
+            }
+        }
+    } else {
+        #assert(expr);
+        type = unqualify_type(resolve_expr(expr).type);
+        if (is_array_type(type) && expr.kind != EXPR_COMPOUND) {
+            type = type_decay(type);
+            set_resolved_type(expr, type);
+        }
+        set_resolved_expected_type(expr, type);
+    }
+    complete_type(type);
+    if (type.size == 0) {
+        fatal_error(pos, "Cannot declare variable of size 0");
+    }
+    return type;
+}
 
-// func resolve_decl_var(decl: Decl*): Type* {
-//     #assert(decl.kind == DECL_VAR);
-//     return resolve_init(decl.pos, decl.var.type, decl.var.expr);
-// }
+func resolve_decl_var(decl: Decl*): Type* {
+    #assert(decl.kind == DECL_VAR);
+    return resolve_init(decl.pos, decl.var_decl.type, decl.var_decl.expr);
+}
 
-// func resolve_decl_const(decl: Decl*, val: Val*): Type* {
-//     #assert(decl.kind == DECL_CONST);
-//     result := resolve_const_expr(decl.const_decl.expr);
-//     if (!is_scalar_type(result.type)) {
-//         fatal_error(decl.pos, "Const declarations must have scalar type");
-//     }
-//     if (decl.const_decl.type) {
-//         type := resolve_typespec(decl.const_decl.type);
-//         if (!convert_operand(&result, type)) {
-//             fatal_error(decl.pos, "Invalid type in constant declaration. Expected %s, got %s", get_type_name(type), get_type_name(result.type));
-//         }
-//     }
-//     *val = result.val;
-//     return result.type;
-// }
+func resolve_decl_const(decl: Decl*, val: Val*): Type* {
+    #assert(decl.kind == DECL_CONST);
+    result := resolve_const_expr(decl.const_decl.expr);
+    if (!is_scalar_type(result.type)) {
+        fatal_error(decl.pos, "Const declarations must have scalar type");
+    }
+    if (decl.const_decl.type) {
+        type := resolve_typespec(decl.const_decl.type);
+        if (!convert_operand(&result, type)) {
+            fatal_error(decl.pos, "Invalid type in constant declaration. Expected %s, got %s", get_type_name(type), get_type_name(result.type));
+        }
+    }
+    *val = result.val;
+    return result.type;
+}
 
-// func resolve_decl_func(decl: Decl*): Type* {
-//     #assert(decl.kind == DECL_FUNC);
-//     params: Type** = NULL;
-//     for (i: usize = 0; i < decl.detail.function.num_params; i++) {
-//         param := resolve_typespec(decl.detail.function.params[i].type);
-//         complete_type(param);
-//         if (param == type_void) {
-//             fatal_error(decl.pos, "Function parameter type cannot be void");
-//         }
-//         buf_push((:void**)&params, param);
-//     }
-//     ret_type: Type* = type_void;
-//     if (decl.detail.function.ret_type) {
-//         ret_type = resolve_typespec(decl.detail.function.ret_type);
-//         complete_type(ret_type);
-//     }
-//     if (is_array_type(ret_type)) {
-//         fatal_error(decl.pos, "Function return type cannot be array");
-//     }
-//     return type_func(params, buf_len(params), ret_type, decl.detail.function.has_varargs);
-// }
+func resolve_decl_func(decl: Decl*): Type* {
+    #assert(decl.kind == DECL_FUNC);
+    params: Type** = NULL;
+    for (i: usize = 0; i < decl.detail.function.num_params; i++) {
+        param := resolve_typespec(decl.detail.function.params[i].type);
+        complete_type(param);
+        if (param == type_void) {
+            fatal_error(decl.pos, "Function parameter type cannot be void");
+        }
+        buf_push((:void**)&params, param);
+    }
+    ret_type: Type* = type_void;
+    if (decl.detail.function.ret_type) {
+        ret_type = resolve_typespec(decl.detail.function.ret_type);
+        complete_type(ret_type);
+    }
+    if (is_array_type(ret_type)) {
+        fatal_error(decl.pos, "Function return type cannot be array");
+    }
+    return type_func(params, buf_len(params), ret_type, decl.detail.function.has_varargs);
+}
 
 struct StmtCtx {
     is_break_legal: bool;
@@ -796,33 +795,33 @@ const MAX_LABELS = 256;
 var labels: Label[MAX_LABELS];
 var labels_end: Label* = labels;
 
-// func get_label(pos: SrcPos, name: char const*): Label* {
-//     label: Label*;
-//     for (label = labels; label != labels_end; label++) {
-//         if (label.name == name) {
-//             return label;
-//         }
-//     }
-//     if (label == labels + MAX_LABELS) {
-//         fatal_error(pos, "Too many labels");
-//     }
-//     *label = (Label){.name = name, .pos = pos};
-//     labels_end++;
-//     return label;
-// }
+func get_label(pos: SrcPos, name: char const*): Label* {
+    label: Label*;
+    for (label = labels; label != labels_end; label++) {
+        if (label.name == name) {
+            return label;
+        }
+    }
+    if (label == labels + MAX_LABELS) {
+        fatal_error(pos, "Too many labels");
+    }
+    *label = Label {name = name, pos = pos};
+    labels_end++;
+    return label;
+}
 
-// func reference_label(pos: SrcPos, name: char const*) {
-//     label: Label* = get_label(pos, name);
-//     label.referenced = true;
-// }
+func reference_label(pos: SrcPos, name: char const*) {
+    label := get_label(pos, name);
+    label.referenced = true;
+}
 
-// func define_label(pos: SrcPos, name: char const*) {
-//     label: Label* = get_label(pos, name);
-//     if (label.defined) {
-//         fatal_error(pos, "Multiple definitions of label '%s'", name);
-//     }
-//     label.defined = true;
-// }
+func define_label(pos: SrcPos, name: char const*) {
+    label := get_label(pos, name);
+    if (label.defined) {
+        fatal_error(pos, "Multiple definitions of label '%s'", name);
+    }
+    label.defined = true;
+}
 
 func resolve_labels() {
     for (label := labels; label != labels_end; label++) {
@@ -836,19 +835,17 @@ func resolve_labels() {
     labels_end = labels;
 }
 
-// func resolve_stmt(stmt: Stmt*, ret_type: Type*, ctx: StmtCtx): bool;
+func is_cond_operand(operand: Operand): bool {
+    operand = operand_decay(operand);
+    return is_scalar_type(operand.type);
+}
 
-// func is_cond_operand(operand: Operand): bool {
-//     operand = operand_decay(operand);
-//     return is_scalar_type(operand.type);
-// }
-
-// func resolve_cond_expr(expr: Expr*) {
-//     cond := resolve_expr_rvalue(expr);
-//     if (!is_cond_operand(cond)) {
-//         fatal_error(expr.pos, "Conditional expression must have scalar type");
-//     }
-// }
+func resolve_cond_expr(expr: Expr*) {
+    cond := resolve_expr_rvalue(expr);
+    if (!is_cond_operand(cond)) {
+        fatal_error(expr.pos, "Conditional expression must have scalar type");
+    }
+}
 
 func resolve_stmt_block(block: StmtList, ret_type: Type*, ctx: StmtCtx): bool {
     scope := sym_enter();
@@ -860,47 +857,47 @@ func resolve_stmt_block(block: StmtList, ret_type: Type*, ctx: StmtCtx): bool {
     return returns;
 }
 
-// func resolve_stmt_assign(stmt: Stmt*) {
-//     #assert(stmt.kind == STMT_ASSIGN);
-//     left := resolve_expr(stmt.assign.left);
-//     if (!left.is_lvalue) {
-//         fatal_error(stmt.pos, "Cannot assign to non-lvalue");
-//     }
-//     if (is_array_type(left.type)) {
-//         fatal_error(stmt.pos, "Cannot assign to array");
-//     }
-//     if (left.type.nonmodifiable) {
-//         fatal_error(stmt.pos, "Left-hand side of assignment has non-modifiable type");
-//     }
-//     assign_op_name: char const* = token_kind_name(stmt.assign.op);
-//     binary_op: TokenKind = assign_token_to_binary_token[stmt.assign.op];
-//     right: Operand = resolve_expected_expr_rvalue(stmt.assign.right, left.type);
-//     result: Operand;
-//     if (stmt.assign.op == TOKEN_ASSIGN) {
-//         result = right;
-//     } else if (stmt.assign.op == TOKEN_ADD_ASSIGN || stmt.assign.op == TOKEN_SUB_ASSIGN) {
-//         if (left.type.kind == CMPL_TYPE_PTR && is_integer_type(right.type)) {
-//             result = operand_rvalue(left.type);
-//         } else if (is_arithmetic_type(left.type) && is_arithmetic_type(right.type)) {
-//             result = resolve_expr_binary_op(binary_op, assign_op_name, stmt.pos, left, right);
-//         } else {
-//             fatal_error(stmt.pos, "Invalid operand types for %s", assign_op_name);
-//         }
-//     } else {
-//         result = resolve_expr_binary_op(binary_op, assign_op_name, stmt.pos, left, right);
-//     }
-//     if (!convert_operand(&result, left.type)) {
-//         fatal_error(stmt.pos, "Invalid type in assignment. Expected %s, got %s", get_type_name(left.type), get_type_name(result.type));
-//     }
-// }
+func resolve_stmt_assign(stmt: Stmt*) {
+    #assert(stmt.kind == STMT_ASSIGN);
+    left := resolve_expr(stmt.detail.assign.left);
+    if (!left.is_lvalue) {
+        fatal_error(stmt.pos, "Cannot assign to non-lvalue");
+    }
+    if (is_array_type(left.type)) {
+        fatal_error(stmt.pos, "Cannot assign to array");
+    }
+    if (left.type.nonmodifiable) {
+        fatal_error(stmt.pos, "Left-hand side of assignment has non-modifiable type");
+    }
+    assign_op_name := token_kind_name(stmt.detail.assign.op);
+    binary_op := assign_token_to_binary_token[stmt.detail.assign.op];
+    right := resolve_expected_expr_rvalue(stmt.detail.assign.right, left.type);
+    result: Operand;
+    if (stmt.detail.assign.op == TOKEN_ASSIGN) {
+        result = right;
+    } else if (stmt.detail.assign.op == TOKEN_ADD_ASSIGN || stmt.detail.assign.op == TOKEN_SUB_ASSIGN) {
+        if (left.type.kind == CMPL_TYPE_PTR && is_integer_type(right.type)) {
+            result = operand_rvalue(left.type);
+        } else if (is_arithmetic_type(left.type) && is_arithmetic_type(right.type)) {
+            result = resolve_expr_binary_op(binary_op, assign_op_name, stmt.pos, left, right);
+        } else {
+            fatal_error(stmt.pos, "Invalid operand types for %s", assign_op_name);
+        }
+    } else {
+        result = resolve_expr_binary_op(binary_op, assign_op_name, stmt.pos, left, right);
+    }
+    if (!convert_operand(&result, left.type)) {
+        fatal_error(stmt.pos, "Invalid type in assignment. Expected %s, got %s", get_type_name(left.type), get_type_name(result.type));
+    }
+}
 
-// func resolve_stmt_init(stmt: Stmt*) {
-//     #assert(stmt.kind == STMT_INIT);
-//     type: Type* = resolve_init(stmt.pos, stmt.init.type, stmt.init.expr);
-//     if (!sym_push_var(stmt.init.name, type)) {
-//         fatal_error(stmt.pos, "Shadowed definition of local symbol");
-//     }
-// }
+func resolve_stmt_init(stmt: Stmt*) {
+    #assert(stmt.kind == STMT_INIT);
+    type := resolve_init(stmt.pos, stmt.detail.init.type, stmt.detail.init.expr);
+    if (!sym_push_var(stmt.detail.init.name, type)) {
+        fatal_error(stmt.pos, "Shadowed definition of local symbol");
+    }
+}
 
 func resolve_static_assert(note: Note) {
     if (note.num_args != 1) {
@@ -915,8 +912,8 @@ func resolve_static_assert(note: Note) {
 func resolve_stmt(stmt: Stmt*, ret_type: Type*, ctx: StmtCtx): bool {
     switch (stmt.kind) {
     case STMT_RETURN:
-        if (stmt.expr) {
-            operand := resolve_expected_expr_rvalue(stmt.expr, ret_type);
+        if (stmt.detail.expr) {
+            operand := resolve_expected_expr_rvalue(stmt.detail.expr, ret_type);
             if (!convert_operand(&operand, ret_type)) {
                 fatal_error(stmt.pos, "Invalid type in return expression. Expected %s, got %s", get_type_name(ret_type), get_type_name(operand.type));
             }
@@ -935,37 +932,37 @@ func resolve_stmt(stmt: Stmt*, ret_type: Type*, ctx: StmtCtx): bool {
         }
         return false;
     case STMT_BLOCK:
-        return resolve_stmt_block(stmt.block, ret_type, ctx);
+        return resolve_stmt_block(stmt.detail.block, ret_type, ctx);
     case STMT_NOTE:
-        if (stmt.note.name == assert_name) {
-            if (stmt.note.num_args != 1) {
+        if (stmt.detail.note.name == assert_name) {
+            if (stmt.detail.note.num_args != 1) {
                 fatal_error(stmt.pos, "#assert takes 1 argument");
             }
-            resolve_cond_expr(stmt.note.args[0].expr);
-        } else if (stmt.note.name == static_assert_name) {
-            resolve_static_assert(stmt.note);
+            resolve_cond_expr(stmt.detail.note.args[0].expr);
+        } else if (stmt.detail.note.name == static_assert_name) {
+            resolve_static_assert(stmt.detail.note);
         } else {
-            warning(stmt.pos, "Unknown statement #directive '%s'", stmt.note.name);
+            warning(stmt.pos, "Unknown statement #directive '%s'", stmt.detail.note.name);
         }
         return false;
     case STMT_IF: {
         scope := sym_enter();
-        if (stmt.if_stmt.init) {
-            resolve_stmt_init(stmt.if_stmt.init);
+        if (stmt.detail.if_stmt.init) {
+            resolve_stmt_init(stmt.detail.if_stmt.init);
         }
-        if (stmt.if_stmt.cond) {
-            resolve_cond_expr(stmt.if_stmt.cond);
-        } else if (!is_cond_operand(resolve_name_operand(stmt.pos, stmt.if_stmt.init.init.name))) {
+        if (stmt.detail.if_stmt.cond) {
+            resolve_cond_expr(stmt.detail.if_stmt.cond);
+        } else if (!is_cond_operand(resolve_name_operand(stmt.pos, stmt.detail.if_stmt.init.detail.init.name))) {
             fatal_error(stmt.pos, "Conditional expression must have scalar type");
         }
-        returns: bool = resolve_stmt_block(stmt.if_stmt.then_block, ret_type, ctx);
-        for (i: usize = 0; i < stmt.if_stmt.num_elseifs; i++) {
-            elseif: ElseIf = stmt.if_stmt.elseifs[i];
+        returns: bool = resolve_stmt_block(stmt.detail.if_stmt.then_block, ret_type, ctx);
+        for (i: usize = 0; i < stmt.detail.if_stmt.num_elseifs; i++) {
+            elseif: ElseIf = stmt.detail.if_stmt.elseifs[i];
             resolve_cond_expr(elseif.cond);
             returns = resolve_stmt_block(elseif.block, ret_type, ctx) && returns;
         }
-        if (stmt.if_stmt.else_block.stmts) {
-            returns = resolve_stmt_block(stmt.if_stmt.else_block, ret_type, ctx) && returns;
+        if (stmt.detail.if_stmt.else_block.stmts) {
+            returns = resolve_stmt_block(stmt.detail.if_stmt.else_block, ret_type, ctx) && returns;
         } else {
             returns = false;
         }
@@ -974,38 +971,38 @@ func resolve_stmt(stmt: Stmt*, ret_type: Type*, ctx: StmtCtx): bool {
     }
     case STMT_WHILE:
     case STMT_DO_WHILE:
-        resolve_cond_expr(stmt.while_stmt.cond);
+        resolve_cond_expr(stmt.detail.while_stmt.cond);
         ctx.is_break_legal = true;
         ctx.is_continue_legal = true;
-        resolve_stmt_block(stmt.while_stmt.block, ret_type, ctx);
+        resolve_stmt_block(stmt.detail.while_stmt.block, ret_type, ctx);
         return false;
     case STMT_FOR: {
         scope := sym_enter();
-        if (stmt.for_stmt.init) {
-            resolve_stmt(stmt.for_stmt.init, ret_type, ctx);
+        if (stmt.detail.for_stmt.init) {
+            resolve_stmt(stmt.detail.for_stmt.init, ret_type, ctx);
         }
-        if (stmt.for_stmt.cond) {
-            resolve_cond_expr(stmt.for_stmt.cond);
+        if (stmt.detail.for_stmt.cond) {
+            resolve_cond_expr(stmt.detail.for_stmt.cond);
         }
-        if (stmt.for_stmt.next) {
-            resolve_stmt(stmt.for_stmt.next, ret_type, ctx);
+        if (stmt.detail.for_stmt.next) {
+            resolve_stmt(stmt.detail.for_stmt.next, ret_type, ctx);
         }
         ctx.is_break_legal = true;
         ctx.is_continue_legal = true;
-        resolve_stmt_block(stmt.for_stmt.block, ret_type, ctx);
+        resolve_stmt_block(stmt.detail.for_stmt.block, ret_type, ctx);
         sym_leave(scope);
         return false;
     }
     case STMT_SWITCH: {
-        operand := resolve_expr_rvalue(stmt.switch_stmt.expr);
+        operand := resolve_expr_rvalue(stmt.detail.switch_stmt.expr);
         if (!is_integer_type(operand.type)) {
             fatal_error(stmt.pos, "Switch expression must have integer type");
         }
         ctx.is_break_legal = true;
         returns := true;
         has_default := false;
-        for (i: usize = 0; i < stmt.switch_stmt.num_cases; i++) {
-            switch_case: SwitchCase = stmt.switch_stmt.cases[i];
+        for (i: usize = 0; i < stmt.detail.switch_stmt.num_cases; i++) {
+            switch_case: SwitchCase = stmt.detail.switch_stmt.cases[i];
             for (j: usize = 0; j < switch_case.num_patterns; j++) {
                 pattern: SwitchCasePattern = switch_case.patterns[j];
                 start_expr: Expr* = pattern.start;
@@ -1054,13 +1051,13 @@ func resolve_stmt(stmt: Stmt*, ret_type: Type*, ctx: StmtCtx): bool {
         resolve_stmt_init(stmt);
         return false;
     case STMT_EXPR:
-        resolve_expr(stmt.expr);
+        resolve_expr(stmt.detail.expr);
         return false;
     case STMT_LABEL:
-        define_label(stmt.pos, stmt.label);
+        define_label(stmt.pos, stmt.detail.label);
         return false;
     case STMT_GOTO:
-        reference_label(stmt.pos, stmt.label);
+        reference_label(stmt.pos, stmt.detail.label);
         return false;
     default:
         #assert(0);
@@ -1168,7 +1165,7 @@ func resolve_name(name: char const*): Sym* {
 
 func resolve_expr_field(expr: Expr*): Operand {
     #assert(expr.kind == EXPR_FIELD);
-    operand := resolve_expr(expr.field.expr);
+    operand := resolve_expr(expr.detail.field.expr);
     was_const_type := is_const_type(operand.type);
     type := unqualify_type(operand.type);
     complete_type(type);
@@ -1182,9 +1179,9 @@ func resolve_expr_field(expr: Expr*): Operand {
         fatal_error(expr.pos, "Can only access fields on aggregates or pointers to aggregates");
         return operand_null;
     }
-    for (i: usize = 0; i < type.aggregate.num_fields; i++) {
-        field := type.aggregate.fields[i];
-        if (field.name == expr.field.name) {
+    for (i: usize = 0; i < type.detail.aggregate.num_fields; i++) {
+        field := type.detail.aggregate.fields[i];
+        if (field.name == expr.detail.field.name) {
             field_operand := operand.is_lvalue ? operand_lvalue(field.type) : operand_rvalue(field.type);
             if (was_const_type) {
                 field_operand.type = type_const(field_operand.type);
@@ -1192,7 +1189,7 @@ func resolve_expr_field(expr: Expr*): Operand {
             return field_operand;
         }
     }
-    fatal_error(expr.pos, "No field named '%s'", expr.field.name);
+    fatal_error(expr.pos, "No field named '%s'", expr.detail.field.name);
     return operand_null;
 }
 
@@ -1372,216 +1369,216 @@ func resolve_expr_name(expr: Expr*): Operand {
     return resolve_name_operand(expr.pos, expr.detail.name);
 }
 
-// func resolve_unary_op(op: TokenKind, operand: Operand): Operand {
-//     promote_operand(&operand);
-//     if (operand.is_const) {
-//         return operand_const(operand.type, eval_unary_op(op, operand.type, operand.val));
-//     } else {
-//         return operand;
-//     }
-// }
+func resolve_unary_op(op: TokenKind, operand: Operand): Operand {
+    promote_operand(&operand);
+    if (operand.is_const) {
+        return operand_const(operand.type, eval_unary_op(op, operand.type, operand.val));
+    } else {
+        return operand;
+    }
+}
 
-// func resolve_expr_unary(expr: Expr*): Operand {
-//     operand := resolve_expr_rvalue(expr.detail.unary.expr);
-//     type: Type* = operand.type;
-//     switch (expr.detail.unary.op) {
-//     case TOKEN_MUL:
-//         if (!is_ptr_type(type)) {
-//             fatal_error(expr.pos, "Cannot deref non-ptr type");
-//         }
-//         return operand_lvalue(type.base);
-//     case TOKEN_ADD:
-//     case TOKEN_SUB:
-//         if (!is_arithmetic_type(type)) {
-//             fatal_error(expr.pos, "Can only use unary %s with arithmetic types", token_kind_name(expr.detail.unary.op));
-//         }
-//         return resolve_unary_op(expr.detail.unary.op, operand);
-//     case TOKEN_NEG:
-//         if (!is_integer_type(type)) {
-//             fatal_error(expr.pos, "Can only use ~ with integer types");
-//         }
-//         return resolve_unary_op(expr.detail.unary.op, operand);
-//     case TOKEN_NOT:
-//         if (!is_scalar_type(type)) {
-//             fatal_error(expr.pos," Can only use ! with scalar types");
-//         }
-//         return resolve_unary_op(expr.detail.unary.op, operand);
-//     default:
-//         #assert(0);
-//     }
-//     return (Operand){0};
-// }
+func resolve_expr_unary(expr: Expr*): Operand {
+    operand := resolve_expr_rvalue(expr.detail.unary.expr);
+    type := operand.type;
+    switch (expr.detail.unary.op) {
+    case TOKEN_MUL:
+        if (!is_ptr_type(type)) {
+            fatal_error(expr.pos, "Cannot deref non-ptr type");
+        }
+        return operand_lvalue(type.base);
+    case TOKEN_ADD:
+    case TOKEN_SUB:
+        if (!is_arithmetic_type(type)) {
+            fatal_error(expr.pos, "Can only use unary %s with arithmetic types", token_kind_name(expr.detail.unary.op));
+        }
+        return resolve_unary_op(expr.detail.unary.op, operand);
+    case TOKEN_NEG:
+        if (!is_integer_type(type)) {
+            fatal_error(expr.pos, "Can only use ~ with integer types");
+        }
+        return resolve_unary_op(expr.detail.unary.op, operand);
+    case TOKEN_NOT:
+        if (!is_scalar_type(type)) {
+            fatal_error(expr.pos," Can only use ! with scalar types");
+        }
+        return resolve_unary_op(expr.detail.unary.op, operand);
+    default:
+        #assert(0);
+    }
+    return Operand {0};
+}
 
-// func resolve_binary_op(op: TokenKind, left: Operand, right: Operand): Operand {
-//     if (left.is_const && right.is_const) {
-//         return operand_const(left.type, eval_binary_op(op, left.type, left.val, right.val));
-//     } else {
-//         return operand_rvalue(left.type);
-//     }
-// }
+func resolve_binary_op(op: TokenKind, left: Operand, right: Operand): Operand {
+    if (left.is_const && right.is_const) {
+        return operand_const(left.type, eval_binary_op(op, left.type, left.val, right.val));
+    } else {
+        return operand_rvalue(left.type);
+    }
+}
 
-// func resolve_binary_arithmetic_op(op: TokenKind, left: Operand, right: Operand): Operand {
-//     unify_arithmetic_operands(&left, &right);
-//     return resolve_binary_op(op, left, right);
-// }
+func resolve_binary_arithmetic_op(op: TokenKind, left: Operand, right: Operand): Operand {
+    unify_arithmetic_operands(&left, &right);
+    return resolve_binary_op(op, left, right);
+}
 
-// func resolve_expr_binary_op(op: TokenKind, op_name: char const*, pos: SrcPos, left: Operand, right: Operand): Operand {
-//     switch (op) {
-//     case TOKEN_MUL:
-//     case TOKEN_DIV:
-//         if (!is_arithmetic_type(left.type)) {
-//             fatal_error(pos, "Left operand of %s must have arithmetic type", op_name);
-//         }
-//         if (!is_arithmetic_type(right.type)) {
-//             fatal_error(pos, "Right operand of %s must have arithmetic type", op_name);
-//         }
-//         return resolve_binary_arithmetic_op(op, left, right);
-//     case TOKEN_MOD:
-//         if (!is_integer_type(left.type)) {
-//             fatal_error(pos, "Left operand of %% must have integer type");
-//         }
-//         if (!is_integer_type(right.type)) {
-//             fatal_error(pos, "Right operand of %% must have integer type");
-//         }
-//         return resolve_binary_arithmetic_op(op, left, right);
-//     case TOKEN_ADD:
-//         if (is_arithmetic_type(left.type) && is_arithmetic_type(right.type)) {
-//             return resolve_binary_arithmetic_op(op, left, right);
-//         } else if (is_ptr_type(left.type) && is_integer_type(right.type)) {
-//             complete_type(left.type.base);
-//             if (type_sizeof(left.type.base) == 0) {
-//                 fatal_error(pos, "Cannot do pointer arithmetic with size 0 base type");
-//             }
-//             return operand_rvalue(left.type);
-//         } else if (is_ptr_type(right.type) && is_integer_type(left.type)) {
-//             complete_type(right.type.base);
-//             if (type_sizeof(right.type.base) == 0) {
-//                 fatal_error(pos, "Cannot do pointer arithmetic with size 0 base type");
-//             }
-//             return operand_rvalue(right.type);
-//         } else {
-//             fatal_error(pos, "Operands of + must both have arithmetic type, or pointer and integer type");
-//         }
-//     case TOKEN_SUB:
-//         if (is_arithmetic_type(left.type) && is_arithmetic_type(right.type)) {
-//             return resolve_binary_arithmetic_op(op, left, right);
-//         } else if (is_ptr_type(left.type) && is_integer_type(right.type)) {
-//             return operand_rvalue(left.type);
-//         } else if (is_ptr_type(left.type) && is_ptr_type(right.type)) {
-//             if (left.type.base != right.type.base) {
-//                 fatal_error(pos, "Cannot subtract pointers to different types");
-//             }
-//             return operand_rvalue(type_ssize);
-//         } else {
-//             fatal_error(pos, "Operands of - must both have arithmetic type, pointer and integer type, or compatible pointer types");
-//         }
-//     case TOKEN_LSHIFT:
-//     case TOKEN_RSHIFT:
-//         if (is_integer_type(left.type) && is_integer_type(right.type)) {
-//             promote_operand(&left);
-//             promote_operand(&right);
-//             result_type: Type* = left.type;
-//             result: Operand;
-//             if (is_signed_type(left.type)) {
-//                 cast_operand(&left, type_llong);
-//                 cast_operand(&right, type_llong);
-//             } else {
-//                 cast_operand(&left, type_ullong);
-//                 cast_operand(&right, type_ullong);
-//             }
-//             result = resolve_binary_op(op, left, right);
-//             cast_operand(&result, result_type);
-//             return result;
-//         } else {
-//             fatal_error(pos, "Operands of %s must both have integer type", op_name);
-//         }
-//     case TOKEN_EQ:
-//     case TOKEN_NOTEQ:
-//         if (is_arithmetic_type(left.type) && is_arithmetic_type(right.type)) {
-//             result: Operand = resolve_binary_arithmetic_op(op, left, right);
-//             cast_operand(&result, type_int);
-//             return result;
-//         } else if (is_ptr_type(left.type) && is_ptr_type(right.type)) {
-//             unqual_left_base := unqualify_type(left.type.base);
-//             unqual_right_base := unqualify_type(right.type.base);
-//             if (unqual_left_base != unqual_right_base && unqual_left_base != type_void && unqual_right_base != type_void) {
-//                 fatal_error(pos, "Cannot compare pointers to different types");
-//             }
-//             return operand_rvalue(type_int);
-//         } else if ((is_null_ptr(left) && is_ptr_type(right.type)) || (is_null_ptr(right) && is_ptr_type(left.type))) {
-//             return operand_rvalue(type_int);
-//         } else {
-//             fatal_error(pos, "Operands of %s must be arithmetic types or compatible pointer types", op_name);
-//         }
-//     case TOKEN_LT:
-//     case TOKEN_LTEQ:
-//     case TOKEN_GT:
-//     case TOKEN_GTEQ:
-//         if (is_arithmetic_type(left.type) && is_arithmetic_type(right.type)) {
-//             result: Operand = resolve_binary_arithmetic_op(op, left, right);
-//             cast_operand(&result, type_int);
-//             return result;
-//         } else if (is_ptr_type(left.type) && is_ptr_type(right.type)) {
-//             if (unqualify_type(left.type.base) != unqualify_type(right.type.base)) {
-//                 fatal_error(pos, "Cannot compare pointers to different types");
-//             }
-//             return operand_rvalue(type_int);
-//         } else if ((is_null_ptr(left) && is_ptr_type(right.type)) || (is_null_ptr(right) && is_ptr_type(left.type))) {
-//             return operand_rvalue(type_int);
-//         } else {
-//             fatal_error(pos, "Operands of %s must be arithmetic types or compatible pointer types", op_name);
-//         }
-//     case TOKEN_AND:
-//     case TOKEN_XOR:
-//     case TOKEN_OR:
-//         if (is_integer_type(left.type) && is_integer_type(right.type)) {
-//             return resolve_binary_arithmetic_op(op, left, right);
-//         } else {
-//             fatal_error(pos, "Operands of %s must have arithmetic types", op_name);
-//         }
-//     case TOKEN_AND_AND:
-//     case TOKEN_OR_OR:
-//         if (is_scalar_type(left.type) && is_scalar_type(right.type)) {
-//             if (left.is_const && right.is_const) {
-//                 cast_operand(&left, type_bool);
-//                 cast_operand(&right, type_bool);
-//                 i: int;
-//                 if (op == TOKEN_AND_AND) {
-//                     i = left.val.b && right.val.b;
-//                 } else {
-//                     #assert(op == TOKEN_OR_OR);
-//                     i = left.val.b || right.val.b;
-//                 }
-//                 return operand_const(type_int, Val {i = i});
-//             } else {
-//                 return operand_rvalue(type_int);
-//             }
-//         } else {
-//             fatal_error(pos, "Operands of %s must have scalar types", op_name);
-//         }
-//     default:
-//         #assert(0);
-//     }
-//     return (Operand){0};
-// }
+func resolve_expr_binary_op(op: TokenKind, op_name: char const*, pos: SrcPos, left: Operand, right: Operand): Operand {
+    switch (op) {
+    case TOKEN_MUL:
+    case TOKEN_DIV:
+        if (!is_arithmetic_type(left.type)) {
+            fatal_error(pos, "Left operand of %s must have arithmetic type", op_name);
+        }
+        if (!is_arithmetic_type(right.type)) {
+            fatal_error(pos, "Right operand of %s must have arithmetic type", op_name);
+        }
+        return resolve_binary_arithmetic_op(op, left, right);
+    case TOKEN_MOD:
+        if (!is_integer_type(left.type)) {
+            fatal_error(pos, "Left operand of %% must have integer type");
+        }
+        if (!is_integer_type(right.type)) {
+            fatal_error(pos, "Right operand of %% must have integer type");
+        }
+        return resolve_binary_arithmetic_op(op, left, right);
+    case TOKEN_ADD:
+        if (is_arithmetic_type(left.type) && is_arithmetic_type(right.type)) {
+            return resolve_binary_arithmetic_op(op, left, right);
+        } else if (is_ptr_type(left.type) && is_integer_type(right.type)) {
+            complete_type(left.type.base);
+            if (type_sizeof(left.type.base) == 0) {
+                fatal_error(pos, "Cannot do pointer arithmetic with size 0 base type");
+            }
+            return operand_rvalue(left.type);
+        } else if (is_ptr_type(right.type) && is_integer_type(left.type)) {
+            complete_type(right.type.base);
+            if (type_sizeof(right.type.base) == 0) {
+                fatal_error(pos, "Cannot do pointer arithmetic with size 0 base type");
+            }
+            return operand_rvalue(right.type);
+        } else {
+            fatal_error(pos, "Operands of + must both have arithmetic type, or pointer and integer type");
+        }
+    case TOKEN_SUB:
+        if (is_arithmetic_type(left.type) && is_arithmetic_type(right.type)) {
+            return resolve_binary_arithmetic_op(op, left, right);
+        } else if (is_ptr_type(left.type) && is_integer_type(right.type)) {
+            return operand_rvalue(left.type);
+        } else if (is_ptr_type(left.type) && is_ptr_type(right.type)) {
+            if (left.type.base != right.type.base) {
+                fatal_error(pos, "Cannot subtract pointers to different types");
+            }
+            return operand_rvalue(type_ssize);
+        } else {
+            fatal_error(pos, "Operands of - must both have arithmetic type, pointer and integer type, or compatible pointer types");
+        }
+    case TOKEN_LSHIFT:
+    case TOKEN_RSHIFT:
+        if (is_integer_type(left.type) && is_integer_type(right.type)) {
+            promote_operand(&left);
+            promote_operand(&right);
+            result_type := left.type;
+            result: Operand;
+            if (is_signed_type(left.type)) {
+                cast_operand(&left, type_llong);
+                cast_operand(&right, type_llong);
+            } else {
+                cast_operand(&left, type_ullong);
+                cast_operand(&right, type_ullong);
+            }
+            result = resolve_binary_op(op, left, right);
+            cast_operand(&result, result_type);
+            return result;
+        } else {
+            fatal_error(pos, "Operands of %s must both have integer type", op_name);
+        }
+    case TOKEN_EQ:
+    case TOKEN_NOTEQ:
+        if (is_arithmetic_type(left.type) && is_arithmetic_type(right.type)) {
+            result := resolve_binary_arithmetic_op(op, left, right);
+            cast_operand(&result, type_int);
+            return result;
+        } else if (is_ptr_type(left.type) && is_ptr_type(right.type)) {
+            unqual_left_base := unqualify_type(left.type.base);
+            unqual_right_base := unqualify_type(right.type.base);
+            if (unqual_left_base != unqual_right_base && unqual_left_base != type_void && unqual_right_base != type_void) {
+                fatal_error(pos, "Cannot compare pointers to different types");
+            }
+            return operand_rvalue(type_int);
+        } else if ((is_null_ptr(left) && is_ptr_type(right.type)) || (is_null_ptr(right) && is_ptr_type(left.type))) {
+            return operand_rvalue(type_int);
+        } else {
+            fatal_error(pos, "Operands of %s must be arithmetic types or compatible pointer types", op_name);
+        }
+    case TOKEN_LT:
+    case TOKEN_LTEQ:
+    case TOKEN_GT:
+    case TOKEN_GTEQ:
+        if (is_arithmetic_type(left.type) && is_arithmetic_type(right.type)) {
+            result := resolve_binary_arithmetic_op(op, left, right);
+            cast_operand(&result, type_int);
+            return result;
+        } else if (is_ptr_type(left.type) && is_ptr_type(right.type)) {
+            if (unqualify_type(left.type.base) != unqualify_type(right.type.base)) {
+                fatal_error(pos, "Cannot compare pointers to different types");
+            }
+            return operand_rvalue(type_int);
+        } else if ((is_null_ptr(left) && is_ptr_type(right.type)) || (is_null_ptr(right) && is_ptr_type(left.type))) {
+            return operand_rvalue(type_int);
+        } else {
+            fatal_error(pos, "Operands of %s must be arithmetic types or compatible pointer types", op_name);
+        }
+    case TOKEN_AND:
+    case TOKEN_XOR:
+    case TOKEN_OR:
+        if (is_integer_type(left.type) && is_integer_type(right.type)) {
+            return resolve_binary_arithmetic_op(op, left, right);
+        } else {
+            fatal_error(pos, "Operands of %s must have arithmetic types", op_name);
+        }
+    case TOKEN_AND_AND:
+    case TOKEN_OR_OR:
+        if (is_scalar_type(left.type) && is_scalar_type(right.type)) {
+            if (left.is_const && right.is_const) {
+                cast_operand(&left, type_bool);
+                cast_operand(&right, type_bool);
+                i: int;
+                if (op == TOKEN_AND_AND) {
+                    i = left.val.b && right.val.b;
+                } else {
+                    #assert(op == TOKEN_OR_OR);
+                    i = left.val.b || right.val.b;
+                }
+                return operand_const(type_int, Val {i = i});
+            } else {
+                return operand_rvalue(type_int);
+            }
+        } else {
+            fatal_error(pos, "Operands of %s must have scalar types", op_name);
+        }
+    default:
+        #assert(0);
+    }
+    return Operand {0};
+}
 
-// func resolve_expr_binary(expr: Expr*): Operand {
-//     #assert(expr.kind == EXPR_BINARY);
-//     left := resolve_expr_rvalue(expr.binary.left);
-//     right := resolve_expr_rvalue(expr.binary.right);
-//     op: TokenKind = expr.binary.op;
-//     op_name: char const* = token_kind_name(op);
-//     return resolve_expr_binary_op(op, op_name, expr.pos, left, right);
-// }
+func resolve_expr_binary(expr: Expr*): Operand {
+    #assert(expr.kind == EXPR_BINARY);
+    left := resolve_expr_rvalue(expr.detail.binary.left);
+    right := resolve_expr_rvalue(expr.detail.binary.right);
+    op: TokenKind = expr.detail.binary.op;
+    op_name := token_kind_name(op);
+    return resolve_expr_binary_op(op, op_name, expr.pos, left, right);
+}
 
 func resolve_expr_compound(expr: Expr*, expected_type: Type*): Operand {
     #assert(expr.kind == EXPR_COMPOUND);
-    if (!expected_type && !expr.compound.type) {
+    if (!expected_type && !expr.detail.compound.type) {
         fatal_error(expr.pos, "Implicitly typed compound literals used in context without expected type");
     }
     type: Type* = NULL;
-    if (expr.compound.type) {
-        type = resolve_typespec(expr.compound.type);
+    if (expr.detail.compound.type) {
+        type = resolve_typespec(expr.detail.compound.type);
     } else {
         type = expected_type;
     }
@@ -1590,20 +1587,20 @@ func resolve_expr_compound(expr: Expr*, expected_type: Type*): Operand {
     type = unqualify_type(type);
     if (type.kind == CMPL_TYPE_STRUCT || type.kind == CMPL_TYPE_UNION) {
         index := 0;
-        for (i: usize = 0; i < expr.compound.num_fields; i++) {
-            field: CompoundField = expr.compound.fields[i];
+        for (i: usize = 0; i < expr.detail.compound.num_fields; i++) {
+            field: CompoundField = expr.detail.compound.fields[i];
             if (field.kind == FIELD_INDEX) {
                 fatal_error(field.pos, "Index field initializer not allowed for struct/union compound literal");
             } else if (field.kind == FIELD_NAME) {
-                index = aggregate_field_index(type, field.name);
+                index = aggregate_field_index(type, field.key.name);
                 if (index == -1) {
                     fatal_error(field.pos, "Named field in compound literal does not exist");
                 }
             }
-            if (index >= (:int)type.aggregate.num_fields) {
+            if (index >= (:int)type.detail.aggregate.num_fields) {
                 fatal_error(field.pos, "Field initializer in struct/union compound literal out of range");
             }
-            field_type := type.aggregate.fields[index].type;
+            field_type := type.detail.aggregate.fields[index].type;
             if (!resolve_typed_init(field.pos, field_type, field.init)) {
                 fatal_error(field.pos, "Invalid type in compound literal initializer for aggregate type. Expected %s", get_type_name(field_type));
             }
@@ -1613,12 +1610,12 @@ func resolve_expr_compound(expr: Expr*, expected_type: Type*): Operand {
         // These were int, but can't be negative below.
         index: usize = 0;
         max_index: usize = 0;
-        for (i: usize = 0; i < expr.compound.num_fields; i++) {
-            field := expr.compound.fields[i];
+        for (i: usize = 0; i < expr.detail.compound.num_fields; i++) {
+            field := expr.detail.compound.fields[i];
             if (field.kind == FIELD_NAME) {
                 fatal_error(field.pos, "Named field initializer not allowed for array compound literals");
             } else if (field.kind == FIELD_INDEX) {
-                operand := resolve_const_expr(field.index);
+                operand := resolve_const_expr(field.key.index);
                 if (!is_integer_type(operand.type)) {
                     fatal_error(field.pos, "Field initializer index expression must have type int");
                 }
@@ -1630,25 +1627,25 @@ func resolve_expr_compound(expr: Expr*, expected_type: Type*): Operand {
                 }
                 index = operand.val.i;
             }
-            if (type.num_elems && index >= (:int)type.num_elems) {
+            if (type.detail.num_elems && index >= (:int)type.detail.num_elems) {
                 fatal_error(field.pos, "Field initializer in array compound literal out of range");
             }
             if (!resolve_typed_init(field.pos, type.base, field.init)) {
                 fatal_error(field.pos, "Invalid type in compound literal initializer for array type. Expected %s", get_type_name(type.base));
             }
-            max_index = MAX(max_index, index);
+            max_index = max(max_index, index);
             index++;
         }
-        if (type.num_elems == 0) {
+        if (type.detail.num_elems == 0) {
             type = type_array(type.base, max_index + 1);
         }
     } else {
         #assert(is_scalar_type(type));
-        if (expr.compound.num_fields > 1) {
+        if (expr.detail.compound.num_fields > 1) {
             fatal_error(expr.pos, "Compound literal for scalar type cannot have more than one operand");
         }
-        if (expr.compound.num_fields == 1) {
-            field := expr.compound.fields[0];
+        if (expr.detail.compound.num_fields == 1) {
+            field := expr.detail.compound.fields[0];
             init := resolve_expected_expr_rvalue(field.init, type);
             if (!convert_operand(&init, type)) {
                 fatal_error(field.pos, "Invalid type in compound literal initializer. Expected %s, got %s", get_type_name(type), get_type_name(init.type));
@@ -1660,80 +1657,83 @@ func resolve_expr_compound(expr: Expr*, expected_type: Type*): Operand {
 
 func resolve_expr_call(expr: Expr*): Operand {
     #assert(expr.kind == EXPR_CALL);
-    if (expr.call.expr.kind == EXPR_NAME) {
-        sym := resolve_name(expr.call.expr.detail.name);
+    if (expr.detail.call.expr.kind == EXPR_NAME) {
+        sym := resolve_name(expr.detail.call.expr.detail.name);
         if (sym && sym.kind == SYM_TYPE) {
-            if (expr.call.num_args != 1) {
+            if (expr.detail.call.num_args != 1) {
                 fatal_error(expr.pos, "Type conversion operator takes 1 argument");
             }
-            operand := resolve_expr_rvalue(expr.call.args[0]);
+            operand := resolve_expr_rvalue(expr.detail.call.args[0]);
             if (!cast_operand(&operand, sym.type)) {
                 fatal_error(expr.pos, "Invalid type cast from %s to %s", get_type_name(operand.type), get_type_name(sym.type));
             }
-            set_resolved_sym(expr.call.expr, sym);
+            set_resolved_sym(expr.detail.call.expr, sym);
             return operand;
         }
     }
-    function := resolve_expr_rvalue(expr.call.expr);
+    function := resolve_expr_rvalue(expr.detail.call.expr);
     if (function.type.kind != CMPL_TYPE_FUNC) {
         fatal_error(expr.pos, "Cannot call non-function value");
     }
-    num_params: usize = function.type.function.num_params;
-    if (expr.call.num_args < num_params) {
+    num_params: usize = function.type.detail.function.num_params;
+    if (expr.detail.call.num_args < num_params) {
         fatal_error(expr.pos, "Function call with too few arguments");
     }
-    if (expr.call.num_args > num_params && !function.type.function.has_varargs) {
+    if (expr.detail.call.num_args > num_params && !function.type.detail.function.has_varargs) {
         fatal_error(expr.pos, "Function call with too many arguments");
     }
     for (i: usize = 0; i < num_params; i++) {
-        param_type: Type* = function.type.function.params[i];
-        arg: Operand = resolve_expected_expr_rvalue(expr.call.args[i], param_type);
+        param_type: Type* = function.type.detail.function.params[i];
+        arg := resolve_expected_expr_rvalue(expr.detail.call.args[i], param_type);
         if (is_array_type(param_type)) {
             param_type = type_ptr(param_type.base);
         }
         if (!convert_operand(&arg, param_type)) {
-            fatal_error(expr.call.args[i].pos, "Invalid type in function call argument. Expected %s, got %s", get_type_name(param_type), get_type_name(arg.type));
+            fatal_error(expr.detail.call.args[i].pos, "Invalid type in function call argument. Expected %s, got %s", get_type_name(param_type), get_type_name(arg.type));
         }
     }
-    for (i: usize = num_params; i < expr.call.num_args; i++) {
-        resolve_expr_rvalue(expr.call.args[i]);
+    for (i: usize = num_params; i < expr.detail.call.num_args; i++) {
+        resolve_expr_rvalue(expr.detail.call.args[i]);
     }
-    return operand_rvalue(function.type.function.ret);
+    return operand_rvalue(function.type.detail.function.ret);
 }
 
-// func resolve_expr_ternary(expr: Expr*, expected_type: Type*): Operand {
-//     #assert(expr.kind == EXPR_TERNARY);
-//     cond := resolve_expr_rvalue(expr.ternary.cond);
-//     if (!is_scalar_type(cond.type)) {
-//         fatal_error(expr.pos, "Ternary conditional must have scalar type");
-//     }
-//     left: Operand = resolve_expected_expr_rvalue(expr.ternary.then_expr, expected_type);
-//     right: Operand = resolve_expected_expr_rvalue(expr.ternary.else_expr, expected_type);
-//     if (left.type == right.type) {
-//         return operand_rvalue(left.type);
-//     } else if (is_arithmetic_type(left.type) && is_arithmetic_type(right.type)) {
-//         unify_arithmetic_operands(&left, &right);
-//         if (cond.is_const && left.is_const && right.is_const) {
-//             return operand_const(left.type, cond.val.i ? left.val : right.val);
-//         } else {
-//             return operand_rvalue(left.type);
-//         }
-//     } else if (is_ptr_type(left.type) && is_null_ptr(right)) {
-//         return operand_rvalue(left.type);
-//     } else if (is_ptr_type(right.type) && is_null_ptr(left)) {
-//         return operand_rvalue(right.type);
-//     } else {
-//         fatal_error(expr.pos, "Left and right operands of ternary expression must have arithmetic types or identical types");
-//     }
-// }
+func resolve_expr_ternary(expr: Expr*, expected_type: Type*): Operand {
+    #assert(expr.kind == EXPR_TERNARY);
+    cond := resolve_expr_rvalue(expr.detail.ternary.cond);
+    if (!is_scalar_type(cond.type)) {
+        fatal_error(expr.pos, "Ternary conditional must have scalar type");
+    }
+    left := resolve_expected_expr_rvalue(expr.detail.ternary.then_expr, expected_type);
+    right := resolve_expected_expr_rvalue(expr.detail.ternary.else_expr, expected_type);
+    if (left.type == right.type) {
+        return operand_rvalue(left.type);
+    } else if (is_arithmetic_type(left.type) && is_arithmetic_type(right.type)) {
+        unify_arithmetic_operands(&left, &right);
+        if (cond.is_const && left.is_const && right.is_const) {
+            return operand_const(left.type, cond.val.i ? left.val : right.val);
+        } else {
+            return operand_rvalue(left.type);
+        }
+    } else if (is_ptr_type(left.type) && is_null_ptr(right)) {
+        return operand_rvalue(left.type);
+    } else if (is_ptr_type(right.type) && is_null_ptr(left)) {
+        return operand_rvalue(right.type);
+    } else {
+        fatal_error(expr.pos, "Left and right operands of ternary expression must have arithmetic types or identical types");
+    }
+    // This is actually unreachable, but we need to make the compiler happy.
+    // TODO: How to assert convince compiler that fatal_error doesn't return?
+    return Operand {};
+}
 
 func resolve_expr_index(expr: Expr*): Operand {
     #assert(expr.kind == EXPR_INDEX);
-    operand := resolve_expr_rvalue(expr.index.expr);
+    operand := resolve_expr_rvalue(expr.detail.index.expr);
     if (!is_ptr_type(operand.type)) {
         fatal_error(expr.pos, "Can only index arrays and pointers");
     }
-    index := resolve_expr_rvalue(expr.index.index);
+    index := resolve_expr_rvalue(expr.detail.index.index);
     if (!is_integer_type(index.type)) {
         fatal_error(expr.pos, "Index must have integer type");
     }
@@ -1742,8 +1742,8 @@ func resolve_expr_index(expr: Expr*): Operand {
 
 func resolve_expr_cast(expr: Expr*): Operand {
     #assert(expr.kind == EXPR_CAST);
-    type := resolve_typespec(expr.cast.type);
-    operand := resolve_expr_rvalue(expr.cast.expr);
+    type := resolve_typespec(expr.detail.cast.type);
+    operand := resolve_expr_rvalue(expr.detail.cast.expr);
     if (!cast_operand(&operand, type)) {
         fatal_error(expr.pos, "Invalid type cast from %s to %s", get_type_name(operand.type), get_type_name(type));
     }
@@ -1757,12 +1757,12 @@ func resolve_expr_int(expr: Expr*): Operand {
     long_max: ullong = type_metrics[CMPL_TYPE_LONG].max;
     ulong_max: ullong = type_metrics[CMPL_TYPE_ULONG].max;
     llong_max: ullong = type_metrics[CMPL_TYPE_LLONG].max;
-    val: ullong = expr.int_lit.val;
+    val: ullong = expr.detail.int_lit.val;
     operand := operand_const(type_ullong, Val {ull = val});
     type := type_ullong;
-    if (expr.int_lit.mod == MOD_NONE) {
+    if (expr.detail.int_lit.mod == MOD_NONE) {
         overflow := false;
-        switch (expr.int_lit.suffix) {
+        switch (expr.detail.int_lit.suffix) {
         case SUFFIX_NONE:
             type = type_int;
             if (val > int_max) {
@@ -1803,7 +1803,7 @@ func resolve_expr_int(expr: Expr*): Operand {
             fatal_error(expr.pos, "Integer literal overflow");
         }
     } else {
-        switch (expr.int_lit.suffix) {
+        switch (expr.detail.int_lit.suffix) {
         case SUFFIX_NONE:
             type = type_int;
             if (val > int_max) {
@@ -1860,21 +1860,21 @@ func resolve_expr_int(expr: Expr*): Operand {
     return operand;
 }
 
-// func resolve_expr_modify(expr: Expr*): Operand {
-//     operand := resolve_expr(expr.modify.expr);
-//     type: Type* = operand.type;
-//     complete_type(type);
-//     if (!operand.is_lvalue) {
-//         fatal_error(expr.pos, "Cannot modify non-lvalue");
-//     }
-//     if (type.nonmodifiable) {
-//         fatal_error(expr.pos, "Cannot modify non-modifiable type");
-//     }
-//     if (!(is_integer_type(type) || type.kind == CMPL_TYPE_PTR)) {
-//         fatal_error(expr.pos, "%s only valid for integer and pointer types", token_kind_name(expr.modify.op));
-//     }
-//     return operand_rvalue(type);
-// }
+func resolve_expr_modify(expr: Expr*): Operand {
+    operand := resolve_expr(expr.detail.modify.expr);
+    type := operand.type;
+    complete_type(type);
+    if (!operand.is_lvalue) {
+        fatal_error(expr.pos, "Cannot modify non-lvalue");
+    }
+    if (type.nonmodifiable) {
+        fatal_error(expr.pos, "Cannot modify non-modifiable type");
+    }
+    if (!(is_integer_type(type) || type.kind == CMPL_TYPE_PTR)) {
+        fatal_error(expr.pos, "%s only valid for integer and pointer types", token_kind_name(expr.detail.modify.op));
+    }
+    return operand_rvalue(type);
+}
 
 func resolve_expected_expr(expr: Expr*, expected_type: Type*): Operand {
     result: Operand;
@@ -1920,73 +1920,73 @@ func resolve_expected_expr(expr: Expr*, expected_type: Type*): Operand {
     case EXPR_TERNARY:
         result = resolve_expr_ternary(expr, expected_type);
     case EXPR_SIZEOF_EXPR: {
-        if (expr.sizeof_expr.kind == EXPR_NAME) {
-            sym := resolve_name(expr.sizeof_expr.detail.name);
+        if (expr.detail.sizeof_expr.kind == EXPR_NAME) {
+            sym := resolve_name(expr.detail.sizeof_expr.detail.name);
             if (sym && sym.kind == SYM_TYPE) {
                 complete_type(sym.type);
                 result = operand_const(type_usize, Val {ull = type_sizeof(sym.type)});
-                set_resolved_type(expr.sizeof_expr, sym.type);
-                set_resolved_sym(expr.sizeof_expr, sym);
+                set_resolved_type(expr.detail.sizeof_expr, sym.type);
+                set_resolved_sym(expr.detail.sizeof_expr, sym);
                 break;
             }
         }
-        type: Type* = resolve_expr(expr.sizeof_expr).type;
+        type: Type* = resolve_expr(expr.detail.sizeof_expr).type;
         complete_type(type);
         result = operand_const(type_usize, Val {ull = type_sizeof(type)});
     }
     case EXPR_SIZEOF_TYPE: {
-        type := resolve_typespec(expr.sizeof_type);
+        type := resolve_typespec(expr.detail.sizeof_type);
         complete_type(type);
         result = operand_const(type_usize, Val {ull = type_sizeof(type)});
     }
     case EXPR_ALIGNOF_EXPR: {
-        if (expr.sizeof_expr.kind == EXPR_NAME) {
-            sym := resolve_name(expr.alignof_expr.detail.name);
+        if (expr.detail.sizeof_expr.kind == EXPR_NAME) {
+            sym := resolve_name(expr.detail.alignof_expr.detail.name);
             if (sym && sym.kind == SYM_TYPE) {
                 complete_type(sym.type);
                 result = operand_const(type_usize, Val {ull = type_alignof(sym.type)});
-                set_resolved_type(expr.alignof_expr, sym.type);
-                set_resolved_sym(expr.alignof_expr, sym);
+                set_resolved_type(expr.detail.alignof_expr, sym.type);
+                set_resolved_sym(expr.detail.alignof_expr, sym);
                 break;
             }
         }
-        type: Type* = resolve_expr(expr.alignof_expr).type;
+        type: Type* = resolve_expr(expr.detail.alignof_expr).type;
         complete_type(type);
         result = operand_const(type_usize, Val {ull = type_alignof(type)});
     }
     case EXPR_ALIGNOF_TYPE: {
-        type := resolve_typespec(expr.alignof_type);
+        type := resolve_typespec(expr.detail.alignof_type);
         complete_type(type);
         result = operand_const(type_usize, Val {ull = type_alignof(type)});
     }
     case EXPR_TYPEOF_TYPE: {
-        type := resolve_typespec(expr.typeof_type);
+        type := resolve_typespec(expr.detail.typeof_type);
         result = operand_const(type_ullong, Val {ull = type.typeid});
     }
     case EXPR_TYPEOF_EXPR: {
-        if (expr.typeof_expr.kind == EXPR_NAME) {
-            sym := resolve_name(expr.typeof_expr.detail.name);
+        if (expr.detail.typeof_expr.kind == EXPR_NAME) {
+            sym := resolve_name(expr.detail.typeof_expr.detail.name);
             if (sym && sym.kind == SYM_TYPE) {
                 result = operand_const(type_ullong, Val {ull = sym.type.typeid});
-                set_resolved_type(expr.typeof_expr, sym.type);
-                set_resolved_sym(expr.typeof_expr, sym);
+                set_resolved_type(expr.detail.typeof_expr, sym.type);
+                set_resolved_sym(expr.detail.typeof_expr, sym);
                 break;
             }
         }
-        type: Type* = resolve_expr(expr.typeof_expr).type;
+        type: Type* = resolve_expr(expr.detail.typeof_expr).type;
         result = operand_const(type_ullong, Val {ull = type.typeid});
     }
     case EXPR_OFFSETOF: {
-        type := resolve_typespec(expr.offsetof_field.type);
+        type := resolve_typespec(expr.detail.offsetof_field.type);
         complete_type(type);
         if (type.kind != CMPL_TYPE_STRUCT && type.kind != CMPL_TYPE_UNION) {
             fatal_error(expr.pos, "offsetof can only be used with struct/union types");
         }
-        field := aggregate_field_index(type, expr.offsetof_field.name);
+        field := aggregate_field_index(type, expr.detail.offsetof_field.name);
         if (field < 0) {
-            fatal_error(expr.pos, "No field '%s' in type", expr.offsetof_field.name);
+            fatal_error(expr.pos, "No field '%s' in type", expr.detail.offsetof_field.name);
         }
-        result = operand_const(type_usize, Val {ull = type.aggregate.fields[field].offset});
+        result = operand_const(type_usize, Val {ull = type.detail.aggregate.fields[field].offset});
     }
     case EXPR_MODIFY:
         result = resolve_expr_modify(expr);
