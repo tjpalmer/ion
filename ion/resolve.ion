@@ -385,7 +385,7 @@ func operand_const(type: Type*, val: Val): Operand {
 
 // func is_convertible(operand: Operand*, dest: Type*): bool {
 //     dest = unqualify_type(dest);
-//     src: Type* = unqualify_type(operand.type);
+//     src := unqualify_type(operand.type);
 //     if (dest == src) {
 //         return true;
 //     } else if (is_arithmetic_type(dest) && is_arithmetic_type(src)) {
@@ -396,7 +396,7 @@ func operand_const(type: Type*, val: Val): Operand {
 //         if (is_const_type(dest.base) && is_const_type(src.base)) {
 //             return dest.base.base == src.base.base || dest.base.base == type_void || src.base.base == type_void;
 //         } else {
-//             unqual_dest_base: Type* = unqualify_type(dest.base);
+//             unqual_dest_base := unqualify_type(dest.base);
 //             if (unqual_dest_base == src.base) {
 //                 return true;
 //             } else if (unqual_dest_base == type_void) {
@@ -686,7 +686,7 @@ func complete_type(type: Type*) {
 //     }
 //     sym: Sym* = type.sym;
 //     old_package := enter_package(sym.package);
-//     decl: Decl* = sym.decl;
+//     decl := sym.decl;
 //     if (decl.is_incomplete) {
 //         fatal_error(decl.pos, "Trying to use incomplete type as complete type");
 //     }
@@ -721,7 +721,7 @@ func complete_type(type: Type*) {
 }
 
 // func resolve_typed_init(pos: SrcPos, type: Type*, expr: Expr*): Type* {
-//     expected_type: Type* = unqualify_type(type);
+//     expected_type := unqualify_type(type);
 //     operand: Operand = resolve_expected_expr(expr, expected_type);
 //     if (is_incomplete_array_type(type) && is_array_type(operand.type) && type.base == operand.type.base) {
 //         // Incomplete array size, so infer the size from the initializer expression's type.
@@ -1099,33 +1099,33 @@ func resolve_static_assert(note: Note) {
 //     }
 // }
 
-// func resolve_func_body(sym: Sym*) {
-//     decl: Decl* = sym.decl;
-//     #assert(decl.kind == DECL_FUNC);
-//     #assert(sym.state == SYM_RESOLVED);
-//     if (decl.is_incomplete) {
-//         return;
-//     }
-//     old_package := enter_package(sym.package);
-//     scope: Sym* = sym_enter();
-//     for (i: usize = 0; i < decl.function.num_params; i++) {
-//         param: FuncParam = decl.function.params[i];
-//         param_type := resolve_typespec(param.type);
-//         if (is_array_type(param_type)) {
-//             param_type = type_ptr(param_type.base);
-//         }
-//         sym_push_var(param.name, param_type);
-//     }
-//     ret_type := resolve_typespec(decl.function.ret_type);
-//     #assert(!is_array_type(ret_type));
-//     returns: bool = resolve_stmt_block(decl.function.block, ret_type, (StmtCtx){0});
-//     resolve_labels();
-//     sym_leave(scope);
-//     if (ret_type != type_void && !returns) {
-//         fatal_error(decl.pos, "Not all control paths return values");
-//     }
-//     leave_package(old_package);
-// }
+func resolve_func_body(sym: Sym*) {
+    decl := sym.decl;
+    #assert(decl.kind == DECL_FUNC);
+    #assert(sym.state == SYM_RESOLVED);
+    if (decl.is_incomplete) {
+        return;
+    }
+    old_package := enter_package(sym.package);
+    scope: Sym* = sym_enter();
+    for (i: usize = 0; i < decl.function.num_params; i++) {
+        param := decl.function.params[i];
+        param_type := resolve_typespec(param.type);
+        if (is_array_type(param_type)) {
+            param_type = type_ptr(param_type.base);
+        }
+        sym_push_var(param.name, param_type);
+    }
+    ret_type := resolve_typespec(decl.function.ret_type);
+    #assert(!is_array_type(ret_type));
+    returns := resolve_stmt_block(decl.function.block, ret_type, StmtCtx {0});
+    resolve_labels();
+    sym_leave(scope);
+    if (ret_type != type_void && !returns) {
+        fatal_error(decl.pos, "Not all control paths return values");
+    }
+    leave_package(old_package);
+}
 
 func resolve_sym(sym: Sym*) {
     // if (sym.state == SYM_RESOLVED) {
@@ -1141,7 +1141,7 @@ func resolve_sym(sym: Sym*) {
     //     sym.reachable = reachable_phase;
     // }
     // sym.state = SYM_RESOLVING;
-    // decl: Decl* = sym.decl;
+    // decl := sym.decl;
     // old_package := enter_package(sym.package);
     // switch (sym.kind) {
     // case SYM_TYPE:
@@ -1177,16 +1177,16 @@ func resolve_sym(sym: Sym*) {
     // }
 }
 
-// func finalize_sym(sym: Sym*) {
-//     #assert(sym.state == SYM_RESOLVED);
-//     if (sym.decl && !is_decl_foreign(sym.decl) && !sym.decl.is_incomplete) {
-//         if (sym.kind == SYM_TYPE) {
-//             complete_type(sym.type);
-//         } else if (sym.kind == SYM_FUNC) {
-//             resolve_func_body(sym);
-//         }
-//     }
-// }
+func finalize_sym(sym: Sym*) {
+    #assert(sym.state == SYM_RESOLVED);
+    if (sym.decl && !is_decl_foreign(sym.decl) && !sym.decl.is_incomplete) {
+        if (sym.kind == SYM_TYPE) {
+            complete_type(sym.type);
+        } else if (sym.kind == SYM_FUNC) {
+            resolve_func_body(sym);
+        }
+    }
+}
 
 func resolve_name(name: char const*): Sym* {
     sym := sym_get(name);
@@ -1197,35 +1197,35 @@ func resolve_name(name: char const*): Sym* {
     return sym;
 }
 
-// func resolve_expr_field(expr: Expr*): Operand {
-//     #assert(expr.kind == EXPR_FIELD);
-//     operand := resolve_expr(expr.field.expr);
-//     was_const_type: bool = is_const_type(operand.type);
-//     type: Type* = unqualify_type(operand.type);
-//     complete_type(type);
-//     if (is_ptr_type(type)) {
-//         operand = operand_lvalue(type.base);
-//         was_const_type = is_const_type(operand.type);
-//         type = unqualify_type(operand.type);
-//         complete_type(type);
-//     }
-//     if (type.kind != CMPL_TYPE_STRUCT && type.kind != CMPL_TYPE_UNION) {
-//         fatal_error(expr.pos, "Can only access fields on aggregates or pointers to aggregates");
-//         return operand_null;
-//     }
-//     for (i: usize = 0; i < type.aggregate.num_fields; i++) {
-//         field: TypeField = type.aggregate.fields[i];
-//         if (field.name == expr.field.name) {
-//             field_operand: Operand = operand.is_lvalue ? operand_lvalue(field.type) : operand_rvalue(field.type);
-//             if (was_const_type) {
-//                 field_operand.type = type_const(field_operand.type);
-//             }
-//             return field_operand;
-//         }
-//     }
-//     fatal_error(expr.pos, "No field named '%s'", expr.field.name);
-//     return operand_null;
-// }
+func resolve_expr_field(expr: Expr*): Operand {
+    #assert(expr.kind == EXPR_FIELD);
+    operand := resolve_expr(expr.field.expr);
+    was_const_type := is_const_type(operand.type);
+    type := unqualify_type(operand.type);
+    complete_type(type);
+    if (is_ptr_type(type)) {
+        operand = operand_lvalue(type.base);
+        was_const_type = is_const_type(operand.type);
+        type = unqualify_type(operand.type);
+        complete_type(type);
+    }
+    if (type.kind != CMPL_TYPE_STRUCT && type.kind != CMPL_TYPE_UNION) {
+        fatal_error(expr.pos, "Can only access fields on aggregates or pointers to aggregates");
+        return operand_null;
+    }
+    for (i: usize = 0; i < type.aggregate.num_fields; i++) {
+        field := type.aggregate.fields[i];
+        if (field.name == expr.field.name) {
+            field_operand := operand.is_lvalue ? operand_lvalue(field.type) : operand_rvalue(field.type);
+            if (was_const_type) {
+                field_operand.type = type_const(field_operand.type);
+            }
+            return field_operand;
+        }
+    }
+    fatal_error(expr.pos, "No field named '%s'", expr.field.name);
+    return operand_null;
+}
 
 // func eval_unary_op_ll(op: TokenKind, long val: long): llong {
 //     switch (op) {
@@ -1417,9 +1417,9 @@ func resolve_expr_name(expr: Expr*): Operand {
 // }
 
 // func resolve_expr_unary(expr: Expr*): Operand {
-//     operand := resolve_expr_rvalue(expr.unary.expr);
+//     operand := resolve_expr_rvalue(expr.detail.unary.expr);
 //     type: Type* = operand.type;
-//     switch (expr.unary.op) {
+//     switch (expr.detail.unary.op) {
 //     case TOKEN_MUL:
 //         if (!is_ptr_type(type)) {
 //             fatal_error(expr.pos, "Cannot deref non-ptr type");
@@ -1428,19 +1428,19 @@ func resolve_expr_name(expr: Expr*): Operand {
 //     case TOKEN_ADD:
 //     case TOKEN_SUB:
 //         if (!is_arithmetic_type(type)) {
-//             fatal_error(expr.pos, "Can only use unary %s with arithmetic types", token_kind_name(expr.unary.op));
+//             fatal_error(expr.pos, "Can only use unary %s with arithmetic types", token_kind_name(expr.detail.unary.op));
 //         }
-//         return resolve_unary_op(expr.unary.op, operand);
+//         return resolve_unary_op(expr.detail.unary.op, operand);
 //     case TOKEN_NEG:
 //         if (!is_integer_type(type)) {
 //             fatal_error(expr.pos, "Can only use ~ with integer types");
 //         }
-//         return resolve_unary_op(expr.unary.op, operand);
+//         return resolve_unary_op(expr.detail.unary.op, operand);
 //     case TOKEN_NOT:
 //         if (!is_scalar_type(type)) {
 //             fatal_error(expr.pos," Can only use ! with scalar types");
 //         }
-//         return resolve_unary_op(expr.unary.op, operand);
+//         return resolve_unary_op(expr.detail.unary.op, operand);
 //     default:
 //         #assert(0);
 //         break;
@@ -1541,8 +1541,8 @@ func resolve_expr_name(expr: Expr*): Operand {
 //             cast_operand(&result, type_int);
 //             return result;
 //         } else if (is_ptr_type(left.type) && is_ptr_type(right.type)) {
-//             unqual_left_base: Type* = unqualify_type(left.type.base);
-//             unqual_right_base: Type* = unqualify_type(right.type.base);
+//             unqual_left_base := unqualify_type(left.type.base);
+//             unqual_right_base := unqualify_type(right.type.base);
 //             if (unqual_left_base != unqual_right_base && unqual_left_base != type_void && unqual_right_base != type_void) {
 //                 fatal_error(pos, "Cannot compare pointers to different types");
 //             }
@@ -1618,87 +1618,89 @@ func resolve_expr_name(expr: Expr*): Operand {
 //     return resolve_expr_binary_op(op, op_name, expr.pos, left, right);
 // }
 
-// func resolve_expr_compound(expr: Expr*, expected_type: Type*): Operand {
-//     #assert(expr.kind == EXPR_COMPOUND);
-//     if (!expected_type && !expr.compound.type) {
-//         fatal_error(expr.pos, "Implicitly typed compound literals used in context without expected type");
-//     }
-//     type: Type* = NULL;
-//     if (expr.compound.type) {
-//         type = resolve_typespec(expr.compound.type);
-//     } else {
-//         type = expected_type;
-//     }
-//     complete_type(type);
-//     is_const: bool = is_const_type(type);
-//     type = unqualify_type(type);
-//     if (type.kind == CMPL_TYPE_STRUCT || type.kind == CMPL_TYPE_UNION) {
-//         index := 0;
-//         for (i: usize = 0; i < expr.compound.num_fields; i++) {
-//             field: CompoundField = expr.compound.fields[i];
-//             if (field.kind == FIELD_INDEX) {
-//                 fatal_error(field.pos, "Index field initializer not allowed for struct/union compound literal");
-//             } else if (field.kind == FIELD_NAME) {
-//                 index = aggregate_field_index(type, field.name);
-//                 if (index == -1) {
-//                     fatal_error(field.pos, "Named field in compound literal does not exist");
-//                 }
-//             }
-//             if (index >= (int)type.aggregate.num_fields) {
-//                 fatal_error(field.pos, "Field initializer in struct/union compound literal out of range");
-//             }
-//             field_type: Type* = type.aggregate.fields[index].type;
-//             if (!resolve_typed_init(field.pos, field_type, field.init)) {
-//                 fatal_error(field.pos, "Invalid type in compound literal initializer for aggregate type. Expected %s", get_type_name(field_type));
-//             }
-//             index++;
-//         }
-//     } else if (type.kind == CMPL_TYPE_ARRAY) {
-//         index: usize = 0, max_index: usize = 0;  // were int, but can't be negative below.
-//         for (i: usize = 0; i < expr.compound.num_fields; i++) {
-//             field: CompoundField = expr.compound.fields[i];
-//             if (field.kind == FIELD_NAME) {
-//                 fatal_error(field.pos, "Named field initializer not allowed for array compound literals");
-//             } else if (field.kind == FIELD_INDEX) {
-//                 operand := resolve_const_expr(field.index);
-//                 if (!is_integer_type(operand.type)) {
-//                     fatal_error(field.pos, "Field initializer index expression must have type int");
-//                 }
-//                 if (!cast_operand(&operand, type_int)) {
-//                     fatal_error(field.pos, "Invalid type in field initializer index. Expected integer type");
-//                 }
-//                 if (operand.val.i < 0) {
-//                     fatal_error(field.pos, "Field initializer index cannot be negative");
-//                 }
-//                 index = operand.val.i;
-//             }
-//             if (type.num_elems && index >= (int)type.num_elems) {
-//                 fatal_error(field.pos, "Field initializer in array compound literal out of range");
-//             }
-//             if (!resolve_typed_init(field.pos, type.base, field.init)) {
-//                 fatal_error(field.pos, "Invalid type in compound literal initializer for array type. Expected %s", get_type_name(type.base));
-//             }
-//             max_index = MAX(max_index, index);
-//             index++;
-//         }
-//         if (type.num_elems == 0) {
-//             type = type_array(type.base, max_index + 1);
-//         }
-//     } else {
-//         #assert(is_scalar_type(type));
-//         if (expr.compound.num_fields > 1) {
-//             fatal_error(expr.pos, "Compound literal for scalar type cannot have more than one operand");
-//         }
-//         if (expr.compound.num_fields == 1) {
-//             field: CompoundField = expr.compound.fields[0];
-//             init: Operand = resolve_expected_expr_rvalue(field.init, type);
-//             if (!convert_operand(&init, type)) {
-//                 fatal_error(field.pos, "Invalid type in compound literal initializer. Expected %s, got %s", get_type_name(type), get_type_name(init.type));
-//             }
-//         }
-//     }
-//     return operand_lvalue(is_const ? type_const(type) : type);
-// }
+func resolve_expr_compound(expr: Expr*, expected_type: Type*): Operand {
+    #assert(expr.kind == EXPR_COMPOUND);
+    if (!expected_type && !expr.compound.type) {
+        fatal_error(expr.pos, "Implicitly typed compound literals used in context without expected type");
+    }
+    type: Type* = NULL;
+    if (expr.compound.type) {
+        type = resolve_typespec(expr.compound.type);
+    } else {
+        type = expected_type;
+    }
+    complete_type(type);
+    is_const := is_const_type(type);
+    type = unqualify_type(type);
+    if (type.kind == CMPL_TYPE_STRUCT || type.kind == CMPL_TYPE_UNION) {
+        index := 0;
+        for (i: usize = 0; i < expr.compound.num_fields; i++) {
+            field: CompoundField = expr.compound.fields[i];
+            if (field.kind == FIELD_INDEX) {
+                fatal_error(field.pos, "Index field initializer not allowed for struct/union compound literal");
+            } else if (field.kind == FIELD_NAME) {
+                index = aggregate_field_index(type, field.name);
+                if (index == -1) {
+                    fatal_error(field.pos, "Named field in compound literal does not exist");
+                }
+            }
+            if (index >= (:int)type.aggregate.num_fields) {
+                fatal_error(field.pos, "Field initializer in struct/union compound literal out of range");
+            }
+            field_type := type.aggregate.fields[index].type;
+            if (!resolve_typed_init(field.pos, field_type, field.init)) {
+                fatal_error(field.pos, "Invalid type in compound literal initializer for aggregate type. Expected %s", get_type_name(field_type));
+            }
+            index++;
+        }
+    } else if (type.kind == CMPL_TYPE_ARRAY) {
+        // These were int, but can't be negative below.
+        index: usize = 0;
+        max_index: usize = 0;
+        for (i: usize = 0; i < expr.compound.num_fields; i++) {
+            field := expr.compound.fields[i];
+            if (field.kind == FIELD_NAME) {
+                fatal_error(field.pos, "Named field initializer not allowed for array compound literals");
+            } else if (field.kind == FIELD_INDEX) {
+                operand := resolve_const_expr(field.index);
+                if (!is_integer_type(operand.type)) {
+                    fatal_error(field.pos, "Field initializer index expression must have type int");
+                }
+                if (!cast_operand(&operand, type_int)) {
+                    fatal_error(field.pos, "Invalid type in field initializer index. Expected integer type");
+                }
+                if (operand.val.i < 0) {
+                    fatal_error(field.pos, "Field initializer index cannot be negative");
+                }
+                index = operand.val.i;
+            }
+            if (type.num_elems && index >= (:int)type.num_elems) {
+                fatal_error(field.pos, "Field initializer in array compound literal out of range");
+            }
+            if (!resolve_typed_init(field.pos, type.base, field.init)) {
+                fatal_error(field.pos, "Invalid type in compound literal initializer for array type. Expected %s", get_type_name(type.base));
+            }
+            max_index = MAX(max_index, index);
+            index++;
+        }
+        if (type.num_elems == 0) {
+            type = type_array(type.base, max_index + 1);
+        }
+    } else {
+        #assert(is_scalar_type(type));
+        if (expr.compound.num_fields > 1) {
+            fatal_error(expr.pos, "Compound literal for scalar type cannot have more than one operand");
+        }
+        if (expr.compound.num_fields == 1) {
+            field := expr.compound.fields[0];
+            init := resolve_expected_expr_rvalue(field.init, type);
+            if (!convert_operand(&init, type)) {
+                fatal_error(field.pos, "Invalid type in compound literal initializer. Expected %s, got %s", get_type_name(type), get_type_name(init.type));
+            }
+        }
+    }
+    return operand_lvalue(is_const ? type_const(type) : type);
+}
 
 func resolve_expr_call(expr: Expr*): Operand {
     #assert(expr.kind == EXPR_CALL);
@@ -1769,18 +1771,18 @@ func resolve_expr_call(expr: Expr*): Operand {
 //     }
 // }
 
-// func resolve_expr_index(expr: Expr*): Operand {
-//     #assert(expr.kind == EXPR_INDEX);
-//     operand := resolve_expr_rvalue(expr.index.expr);
-//     if (!is_ptr_type(operand.type)) {
-//         fatal_error(expr.pos, "Can only index arrays and pointers");
-//     }
-//     index := resolve_expr_rvalue(expr.index.index);
-//     if (!is_integer_type(index.type)) {
-//         fatal_error(expr.pos, "Index must have integer type");
-//     }
-//     return operand_lvalue(operand.type.base);
-// }
+func resolve_expr_index(expr: Expr*): Operand {
+    #assert(expr.kind == EXPR_INDEX);
+    operand := resolve_expr_rvalue(expr.index.expr);
+    if (!is_ptr_type(operand.type)) {
+        fatal_error(expr.pos, "Can only index arrays and pointers");
+    }
+    index := resolve_expr_rvalue(expr.index.index);
+    if (!is_integer_type(index.type)) {
+        fatal_error(expr.pos, "Index must have integer type");
+    }
+    return operand_lvalue(operand.type.base);
+}
 
 func resolve_expr_cast(expr: Expr*): Operand {
     #assert(expr.kind == EXPR_CAST);
@@ -1943,12 +1945,12 @@ func resolve_expected_expr(expr: Expr*, expected_type: Type*): Operand {
     case EXPR_COMPOUND:
         result = resolve_expr_compound(expr, expected_type);
     case EXPR_UNARY:
-        if (expr.unary.op == TOKEN_AND) {
+        if (expr.detail.unary.op == TOKEN_AND) {
             operand: Operand;
             if (expected_type && is_ptr_type(expected_type)) {
-                operand = resolve_expected_expr(expr.unary.expr, expected_type.base);
+                operand = resolve_expected_expr(expr.detail.unary.expr, expected_type.base);
             } else {
-                operand = resolve_expr(expr.unary.expr);
+                operand = resolve_expr(expr.detail.unary.expr);
             }
             if (!operand.is_lvalue) {
                 fatal_error(expr.pos, "Cannot take address of non-lvalue");
@@ -2266,23 +2268,23 @@ func resolve_package_syms(package: Package*) {
 }
 
 func finalize_reachable_syms() {
-    // if (flag_verbose) {
-    //     printf("Finalizing reachable symbols\n");
-    // }
-    // prev_num_reachable: usize = 0;
-    // num_reachable: usize = buf_len(reachable_syms);
-    // for (i: usize = 0; i < num_reachable; i++) {
-    //     finalize_sym(reachable_syms[i]);
-    //     if (i == num_reachable - 1) {
-    //         if (flag_verbose) {
-    //             printf("New reachable symbols:");
-    //             for (k: usize = prev_num_reachable; k < num_reachable; k++) {
-    //                 printf(" %s/%s", reachable_syms[k].package.path, reachable_syms[k].name);
-    //             }
-    //             printf("\n");
-    //         }
-    //         prev_num_reachable = num_reachable;
-    //         num_reachable = buf_len(reachable_syms);
-    //     }
-    // }
+    if (flag_verbose) {
+        printf("Finalizing reachable symbols\n");
+    }
+    prev_num_reachable: usize = 0;
+    num_reachable := buf_len(reachable_syms);
+    for (i: usize = 0; i < num_reachable; i++) {
+        finalize_sym(reachable_syms[i]);
+        if (i == num_reachable - 1) {
+            if (flag_verbose) {
+                printf("New reachable symbols:");
+                for (k: usize = prev_num_reachable; k < num_reachable; k++) {
+                    printf(" %s/%s", reachable_syms[k].package.path, reachable_syms[k].name);
+                }
+                printf("\n");
+            }
+            prev_num_reachable = num_reachable;
+            num_reachable = buf_len(reachable_syms);
+        }
+    }
 }
