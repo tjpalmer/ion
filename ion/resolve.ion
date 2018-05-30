@@ -737,17 +737,17 @@ func resolve_init(pos: SrcPos, typespec: Typespec*, expr: Expr*): Type* {
 
 func resolve_decl_var(decl: Decl*): Type* {
     #assert(decl.kind == DECL_VAR);
-    return resolve_init(decl.pos, decl.var_decl.type, decl.var_decl.expr);
+    return resolve_init(decl.pos, decl.detail.var_decl.type, decl.detail.var_decl.expr);
 }
 
 func resolve_decl_const(decl: Decl*, val: Val*): Type* {
     #assert(decl.kind == DECL_CONST);
-    result := resolve_const_expr(decl.const_decl.expr);
+    result := resolve_const_expr(decl.detail.const_decl.expr);
     if (!is_scalar_type(result.type)) {
         fatal_error(decl.pos, "Const declarations must have scalar type");
     }
-    if (decl.const_decl.type) {
-        type := resolve_typespec(decl.const_decl.type);
+    if (decl.detail.const_decl.type) {
+        type := resolve_typespec(decl.detail.const_decl.type);
         if (!convert_operand(&result, type)) {
             fatal_error(decl.pos, "Invalid type in constant declaration. Expected %s, got %s", get_type_name(type), get_type_name(result.type));
         }
@@ -765,7 +765,7 @@ func resolve_decl_func(decl: Decl*): Type* {
         if (param == type_void) {
             fatal_error(decl.pos, "Function parameter type cannot be void");
         }
-        buf_push((:void**)&params, param);
+        buf_push((:void**)&params, &param, sizeof(param));
     }
     ret_type: Type* = type_void;
     if (decl.detail.function.ret_type) {
@@ -1094,53 +1094,48 @@ func resolve_func_body(sym: Sym*) {
 }
 
 func resolve_sym(sym: Sym*) {
-    // if (sym.state == SYM_RESOLVED) {
-    //     return;
-    // } else if (sym.state == SYM_RESOLVING) {
-    //     fatal_error(sym.decl.pos, "Cyclic dependency");
-    //     return;
-    // }
-    // #assert(sym.state == SYM_UNRESOLVED);
-    // #assert(!sym.reachable);
-    // if (!is_local_sym(sym)) {
-    //     buf_push((:void**)&reachable_syms, sym);
-    //     sym.reachable = reachable_phase;
-    // }
-    // sym.state = SYM_RESOLVING;
-    // decl := sym.decl;
-    // old_package := enter_package(sym.package);
-    // switch (sym.kind) {
-    // case SYM_TYPE:
-    //     if (decl && decl.kind == DECL_TYPEDEF) {
-    //         sym.type = resolve_typespec(decl.typedef_decl.type);
-    //     } else if (decl.kind == DECL_ENUM) {
-    //         base: Type* = decl.detail.enum_decl.type ? resolve_typespec(decl.detail.enum_decl.type) : type_int;
-    //         if (!is_integer_type(base)) {
-    //             fatal_error(decl.pos, "Base type of enum must be integer type");
-    //         }
-    //         sym.type = type_enum(sym, base);
-    //     } else {
-    //         sym.type = type_incomplete(sym);
-    //     }
-    //     break;
-    // case SYM_VAR:
-    //     sym.type = resolve_decl_var(decl);
-    //     break;
-    // case SYM_CONST:
-    //     sym.type = resolve_decl_const(decl, &sym.val);
-    //     break;
-    // case SYM_FUNC:
-    //     sym.type = resolve_decl_func(decl);
-    //     break;
-    // default:
-    //     #assert(0);
-    //     break;
-    // }
-    // leave_package(old_package);
-    // sym.state = SYM_RESOLVED;
-    // if (decl.is_incomplete || (decl.kind != DECL_STRUCT && decl.kind != DECL_UNION)) {
-    //     buf_push((:void**)&sorted_syms, sym);
-    // }
+    if (sym.state == SYM_RESOLVED) {
+        return;
+    } else if (sym.state == SYM_RESOLVING) {
+        fatal_error(sym.decl.pos, "Cyclic dependency");
+        return;
+    }
+    #assert(sym.state == SYM_UNRESOLVED);
+    #assert(!sym.reachable);
+    if (!is_local_sym(sym)) {
+        buf_push((:void**)&reachable_syms, &sym, sizeof(sym));
+        sym.reachable = reachable_phase;
+    }
+    sym.state = SYM_RESOLVING;
+    decl := sym.decl;
+    old_package := enter_package(sym.package);
+    switch (sym.kind) {
+    case SYM_TYPE:
+        if (decl && decl.kind == DECL_TYPEDEF) {
+            sym.type = resolve_typespec(decl.detail.typedef_decl.type);
+        } else if (decl.kind == DECL_ENUM) {
+            base: Type* = decl.detail.enum_decl.type ? resolve_typespec(decl.detail.enum_decl.type) : type_int;
+            if (!is_integer_type(base)) {
+                fatal_error(decl.pos, "Base type of enum must be integer type");
+            }
+            sym.type = type_enum(sym, base);
+        } else {
+            sym.type = type_incomplete(sym);
+        }
+    case SYM_VAR:
+        sym.type = resolve_decl_var(decl);
+    case SYM_CONST:
+        sym.type = resolve_decl_const(decl, &sym.val);
+    case SYM_FUNC:
+        sym.type = resolve_decl_func(decl);
+    default:
+        #assert(0);
+    }
+    leave_package(old_package);
+    sym.state = SYM_RESOLVED;
+    if (decl.is_incomplete || (decl.kind != DECL_STRUCT && decl.kind != DECL_UNION)) {
+        buf_push((:void**)&sorted_syms, &sym, sizeof(sym));
+    }
 }
 
 func finalize_sym(sym: Sym*) {
@@ -1193,155 +1188,155 @@ func resolve_expr_field(expr: Expr*): Operand {
     return operand_null;
 }
 
-// func eval_unary_op_ll(op: TokenKind, long val: long): llong {
-//     switch (op) {
-//     case TOKEN_ADD:
-//         return +val;
-//     case TOKEN_SUB:
-//         return -val;
-//     case TOKEN_NEG:
-//         return ~val;
-//     case TOKEN_NOT:
-//         return !val;
-//     default:
-//         #assert(0);
-//     }
-//     return 0;
-// }
+func eval_unary_op_ll(op: TokenKind, val: llong): llong {
+    switch (op) {
+    case TOKEN_ADD:
+        return +val;
+    case TOKEN_SUB:
+        return -val;
+    case TOKEN_NEG:
+        return ~val;
+    case TOKEN_NOT:
+        return !val;
+    default:
+        #assert(0);
+    }
+    return 0;
+}
 
-// func eval_unary_op_ull(op: TokenKind, val: ullong): ullong {
-//     switch (op) {
-//     case TOKEN_ADD:
-//         return +val;
-//     case TOKEN_SUB:
-//         return 0ull - val;
-//     case TOKEN_NEG:
-//         return ~val;
-//     case TOKEN_NOT:
-//         return !val;
-//     default:
-//         #assert(0);
-//     }
-//     return 0;
-// }
+func eval_unary_op_ull(op: TokenKind, val: ullong): ullong {
+    switch (op) {
+    case TOKEN_ADD:
+        return +val;
+    case TOKEN_SUB:
+        return 0ull - val;
+    case TOKEN_NEG:
+        return ~val;
+    case TOKEN_NOT:
+        return !val;
+    default:
+        #assert(0);
+    }
+    return 0;
+}
 
-// func eval_binary_op_ll(op: TokenKind, long left: long, long right: long): llong {
-//     switch (op) {
-//     case TOKEN_MUL:
-//         return left * right;
-//     case TOKEN_DIV:
-//         return right != 0 ? left / right : 0;
-//     case TOKEN_MOD:
-//         return right != 0 ? left % right : 0;
-//     case TOKEN_AND:
-//         return left & right;
-//     case TOKEN_LSHIFT:
-//         return left << right;
-//     case TOKEN_RSHIFT:
-//         return left >> right;
-//     case TOKEN_ADD:
-//         return left + right;
-//     case TOKEN_SUB:
-//         return left - right;
-//     case TOKEN_OR:
-//         return left | right;
-//     case TOKEN_XOR:
-//         return left ^ right;
-//     case TOKEN_EQ:
-//         return left == right;
-//     case TOKEN_NOTEQ:
-//         return left != right;
-//     case TOKEN_LT:
-//         return left < right;
-//     case TOKEN_LTEQ:
-//         return left <= right;
-//     case TOKEN_GT:
-//         return left > right;
-//     case TOKEN_GTEQ:
-//         return left >= right;
-//     default:
-//         #assert(0);
-//     }
-//     return 0;
-// }
+func eval_binary_op_ll(op: TokenKind, left: llong, right: llong): llong {
+    switch (op) {
+    case TOKEN_MUL:
+        return left * right;
+    case TOKEN_DIV:
+        return right != 0 ? left / right : 0;
+    case TOKEN_MOD:
+        return right != 0 ? left % right : 0;
+    case TOKEN_AND:
+        return left & right;
+    case TOKEN_LSHIFT:
+        return left << right;
+    case TOKEN_RSHIFT:
+        return left >> right;
+    case TOKEN_ADD:
+        return left + right;
+    case TOKEN_SUB:
+        return left - right;
+    case TOKEN_OR:
+        return left | right;
+    case TOKEN_XOR:
+        return left ^ right;
+    case TOKEN_EQ:
+        return left == right;
+    case TOKEN_NOTEQ:
+        return left != right;
+    case TOKEN_LT:
+        return left < right;
+    case TOKEN_LTEQ:
+        return left <= right;
+    case TOKEN_GT:
+        return left > right;
+    case TOKEN_GTEQ:
+        return left >= right;
+    default:
+        #assert(0);
+    }
+    return 0;
+}
 
-// func eval_binary_op_ull(op: TokenKind, left: ullong, right: ullong): ullong {
-//     switch (op) {
-//     case TOKEN_MUL:
-//         return left * right;
-//     case TOKEN_DIV:
-//         return right != 0 ? left / right : 0;
-//     case TOKEN_MOD:
-//         return right != 0 ? left % right : 0;
-//     case TOKEN_AND:
-//         return left & right;
-//     case TOKEN_LSHIFT:
-//         return left << right;
-//     case TOKEN_RSHIFT:
-//         return left >> right;
-//     case TOKEN_ADD:
-//         return left + right;
-//     case TOKEN_SUB:
-//         return left - right;
-//     case TOKEN_OR:
-//         return left | right;
-//     case TOKEN_XOR:
-//         return left ^ right;
-//     case TOKEN_EQ:
-//         return left == right;
-//     case TOKEN_NOTEQ:
-//         return left != right;
-//     case TOKEN_LT:
-//         return left < right;
-//     case TOKEN_LTEQ:
-//         return left <= right;
-//     case TOKEN_GT:
-//         return left > right;
-//     case TOKEN_GTEQ:
-//         return left >= right;
-//     default:
-//         #assert(0);
-//     }
-//     return 0;
-// }
+func eval_binary_op_ull(op: TokenKind, left: ullong, right: ullong): ullong {
+    switch (op) {
+    case TOKEN_MUL:
+        return left * right;
+    case TOKEN_DIV:
+        return right != 0 ? left / right : 0;
+    case TOKEN_MOD:
+        return right != 0 ? left % right : 0;
+    case TOKEN_AND:
+        return left & right;
+    case TOKEN_LSHIFT:
+        return left << right;
+    case TOKEN_RSHIFT:
+        return left >> right;
+    case TOKEN_ADD:
+        return left + right;
+    case TOKEN_SUB:
+        return left - right;
+    case TOKEN_OR:
+        return left | right;
+    case TOKEN_XOR:
+        return left ^ right;
+    case TOKEN_EQ:
+        return left == right;
+    case TOKEN_NOTEQ:
+        return left != right;
+    case TOKEN_LT:
+        return left < right;
+    case TOKEN_LTEQ:
+        return left <= right;
+    case TOKEN_GT:
+        return left > right;
+    case TOKEN_GTEQ:
+        return left >= right;
+    default:
+        #assert(0);
+    }
+    return 0;
+}
 
-// func eval_unary_op(op: TokenKind, type: Type*, val: Val): Val {
-//     if (is_integer_type(type)) {
-//         operand := operand_const(type, val);
-//         if (is_signed_type(type)) {
-//             cast_operand(&operand, type_llong);
-//             operand.val.ll = eval_unary_op_ll(op, operand.val.ll);
-//         } else {
-//             cast_operand(&operand, type_ullong);
-//             operand.val.ll = eval_unary_op_ull(op, operand.val.ull);
-//         }
-//         cast_operand(&operand, type);
-//         return operand.val;
-//     } else {
-//         return (Val){0};
-//     }
-// }
+func eval_unary_op(op: TokenKind, type: Type*, val: Val): Val {
+    if (is_integer_type(type)) {
+        operand := operand_const(type, val);
+        if (is_signed_type(type)) {
+            cast_operand(&operand, type_llong);
+            operand.val.ll = eval_unary_op_ll(op, operand.val.ll);
+        } else {
+            cast_operand(&operand, type_ullong);
+            operand.val.ll = eval_unary_op_ull(op, operand.val.ull);
+        }
+        cast_operand(&operand, type);
+        return operand.val;
+    } else {
+        return Val {0};
+    }
+}
 
-// func eval_binary_op(op: TokenKind, type: Type*, left: Val, right: Val): Val {
-//     if (is_integer_type(type)) {
-//         left_operand := operand_const(type, left);
-//         right_operand := operand_const(type, right);
-//         result_operand: Operand;
-//         if (is_signed_type(type)) {
-//             cast_operand(&left_operand, type_llong);
-//             cast_operand(&right_operand, type_llong);
-//             result_operand = operand_const(type_llong, Val {ll = eval_binary_op_ll(op, left_operand.val.ll, right_operand.val.ll)});
-//         } else {
-//             cast_operand(&left_operand, type_ullong);
-//             cast_operand(&right_operand, type_ullong);
-//             result_operand = operand_const(type_ullong, Val {ull = eval_binary_op_ull(op, left_operand.val.ull, right_operand.val.ull)});
-//         }
-//         cast_operand(&result_operand, type);
-//         return result_operand.val;
-//     } else {
-//         return (Val){0};
-//     }
-// }
+func eval_binary_op(op: TokenKind, type: Type*, left: Val, right: Val): Val {
+    if (is_integer_type(type)) {
+        left_operand := operand_const(type, left);
+        right_operand := operand_const(type, right);
+        result_operand: Operand;
+        if (is_signed_type(type)) {
+            cast_operand(&left_operand, type_llong);
+            cast_operand(&right_operand, type_llong);
+            result_operand = operand_const(type_llong, Val {ll = eval_binary_op_ll(op, left_operand.val.ll, right_operand.val.ll)});
+        } else {
+            cast_operand(&left_operand, type_ullong);
+            cast_operand(&right_operand, type_ullong);
+            result_operand = operand_const(type_ullong, Val {ull = eval_binary_op_ull(op, left_operand.val.ull, right_operand.val.ull)});
+        }
+        cast_operand(&result_operand, type);
+        return result_operand.val;
+    } else {
+        return Val {0};
+    }
+}
 
 func resolve_name_operand(pos: SrcPos, name: char const*): Operand {
     sym := resolve_name(name);
@@ -2056,11 +2051,6 @@ func add_package_decls(package: Package*) {
         }
     }
 }
-
-// func compile_package(package: Package*): bool;
-
-// extern package_search_paths: char const**;
-// extern num_package_search_paths: int;
 
 func is_package_dir(search_path: char const*, package_path: char const*): bool {
     path: char[MAX_PATH];
