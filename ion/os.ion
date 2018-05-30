@@ -71,9 +71,9 @@ struct DirListIter {
     handle: void*;
 }
 
-// func dir_excluded(iter: DirListIter*): bool {
-//     return iter->valid && (strcmp(iter->name, ".") == 0 || strcmp(iter->name, "..") == 0);
-// }
+func dir_excluded(iter: DirListIter*): bool {
+    return iter.valid && (strcmp(iter.name, ".") == 0 || strcmp(iter.name, "..") == 0);
+}
 
 // #ifdef _WIN32
 // #include "os_win32.c"
@@ -98,27 +98,27 @@ func strdup(str: char const*): char* {
     return NULL;
 }
 
-// func dir_list_subdir(iter: DirListIter*): bool {
-//     if (!iter->valid || !iter->is_dir) {
-//         return false;
-//     }
-//     subdir_iter: DirListIter;
-//     path_join(iter->base, iter->name);
-//     dir_list(&subdir_iter, iter->base);
-//     dir_list_free(iter);
-//     *iter = subdir_iter;
-//     return true;
-// }
+func dir_list_subdir(iter: DirListIter*): bool {
+    if (!iter.valid || !iter.is_dir) {
+        return false;
+    }
+    subdir_iter: DirListIter;
+    path_join(iter.base, iter.name);
+    dir_list(&subdir_iter, iter.base);
+    dir_list_free(iter);
+    *iter = subdir_iter;
+    return true;
+}
 
-// func dir_list_buf(filespec: char const*): char const** {
-//     buf: char const** = NULL;
-//     iter: DirListIter;
-//     for (dir_list(&iter, filespec); iter.valid; dir_list_next(&iter)) {
-//         name: char const* = strdup(iter.name);
-//         buf_push(buf, name);
-//     }
-//     return buf;
-// }
+func dir_list_buf(filespec: char const*): char const** {
+    buf: char const** = NULL;
+    iter: DirListIter;
+    for (dir_list(&iter, filespec); iter.valid; dir_list_next(&iter)) {
+        name: char const* = strdup(iter.name);
+        buf_push((:void**)&buf, &name, sizeof(name));
+    }
+    return buf;
+}
 
 // Command line flag parsing
 
