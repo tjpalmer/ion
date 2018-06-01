@@ -323,43 +323,7 @@ func operand_decay(operand: Operand): Operand {
     return operand;
 }
 
-// #define CASE(k, t) \
-//     case k: \
-//         switch (type.kind) { \
-//         case CMPL_TYPE_BOOL: \
-//             operand.val.b = (:bool)operand.val.t; \
-//         case CMPL_TYPE_CHAR: \
-//             operand.val.c = (:char)operand.val.t; \
-//         case CMPL_TYPE_UCHAR: \
-//             operand.val.uc = (:uchar)operand.val.t; \
-//         case CMPL_TYPE_SCHAR: \
-//             operand.val.sc = (:schar)operand.val.t; \
-//         case CMPL_TYPE_SHORT: \
-//             operand.val.s = (:short)operand.val.t; \
-//         case CMPL_TYPE_USHORT: \
-//             operand.val.us = (:ushort)operand.val.t; \
-//         case CMPL_TYPE_INT: \
-//         case CMPL_TYPE_ENUM: \
-//             operand.val.i = (:int)operand.val.t; \
-//         case CMPL_TYPE_UINT: \
-//             operand.val.u = (:unsigned)operand.val.t; \
-//         case CMPL_TYPE_LONG: \
-//             operand.val.l = (:long)operand.val.t; \
-//         case CMPL_TYPE_ULONG: \
-//             operand.val.ul = (:ulong)operand.val.t; \
-//         case CMPL_TYPE_LLONG: \
-//             operand.val.ll = (:llong)operand.val.t; \
-//         case CMPL_TYPE_ULLONG: \
-//             operand.val.ull = (:ullong)operand.val.t; \
-//         case CMPL_TYPE_PTR: \
-//             operand.val.p = (:uintptr_t)operand.val.t; \
-//         case CMPL_TYPE_FLOAT: \
-//         case CMPL_TYPE_DOUBLE: \
-//             break; \
-//         default: \
-//             operand.is_const = false; \
-//         } \
-//         break;
+// #define CASE(k, t)
 
 func is_convertible(operand: Operand*, dest: Type*): bool {
     dest = unqualify_type(dest);
@@ -403,48 +367,8 @@ func is_castable(operand: Operand*, dest: Type*): bool {
     }
 }
 
-func cast_operand(operand: Operand*, type: Type*): bool {
-    qual_type := type;
-    type = unqualify_type(type);
-    operand.type = unqualify_type(operand.type);
-    if (operand.type != type) {
-        if (!is_castable(operand, type)) {
-            return false;
-        }
-        if (operand.is_const) {
-            if (is_floating_type(operand.type)) {
-                operand.is_const = !is_integer_type(type);
-            } else {
-                if (type.kind == CMPL_TYPE_ENUM) {
-                    type = type.base;
-                }
-                operand_type := operand.type;
-                if (operand_type.kind == CMPL_TYPE_ENUM) {
-                    operand_type = operand_type.base;
-                }
-                switch (operand_type.kind) {
-                // CASE(CMPL_TYPE_BOOL, b)
-                // CASE(CMPL_TYPE_CHAR, c)
-                // CASE(CMPL_TYPE_UCHAR, uc)
-                // CASE(CMPL_TYPE_SCHAR, sc)
-                // CASE(CMPL_TYPE_SHORT, s)
-                // CASE(CMPL_TYPE_USHORT, us)
-                // CASE(CMPL_TYPE_INT, i)
-                // CASE(CMPL_TYPE_UINT, u)
-                // CASE(CMPL_TYPE_LONG, l)
-                // CASE(CMPL_TYPE_ULONG, ul)
-                // CASE(CMPL_TYPE_LLONG, ll)
-                // CASE(CMPL_TYPE_ULLONG, ull)
-                // CASE(CMPL_TYPE_PTR, p)
-                default:
-                    operand.is_const = false;
-                }
-            }
-        }
-    }
-    operand.type = qual_type;
-    return true;
-}
+@foreign
+func cast_operand(operand: Operand*, type: Type*): bool;
 
 func convert_operand(operand: Operand*, type: Type*): bool {
     if (is_convertible(operand, type)) {
