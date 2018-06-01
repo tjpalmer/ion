@@ -43,101 +43,91 @@ func get_arch(name: char const*): int {
     return -1;
 }
 
-// #define DEFAULT_TYPE_METRICS \
-//     [CMPL_TYPE_BOOL] = {.size = 1, .align = 1}, \
-//     [CMPL_TYPE_CHAR] = {.size = 1, .align = 1, .max = 0x7f, .sign = true}, \
-//     [CMPL_TYPE_SCHAR] = {.size = 1, .align = 1, .max = 0x7f, .sign = true}, \
-//     [CMPL_TYPE_UCHAR] = {.size = 1, .align = 1, .max = 0xff}, \
-//     [CMPL_TYPE_SHORT] = {.size = 2, .align = 2, .max = 0x7fff, .sign = true}, \
-//     [CMPL_TYPE_USHORT] = {.size = 2, .align = 2, .max = 0xffff}, \
-//     [CMPL_TYPE_INT] = {.size = 4, .align = 4, .max = 0x7fffffff, .sign = true}, \
-//     [CMPL_TYPE_UINT] = {.size = 4, .align = 4, .max = 0xffffffff}, \
-//     [CMPL_TYPE_LLONG] = {.size = 8, .align = 8, .max = 0x7fffffffffffffff, .sign = true}, \
-//     [CMPL_TYPE_ULLONG] = {.size = 8, .align = 8, .max = 0xffffffffffffffff}, \
-//     [CMPL_TYPE_FLOAT] = {.size = 4, .align = 4}, \
-//     [CMPL_TYPE_DOUBLE] = {.size = 8, .align = 8}
+var win32_x86_metrics: TypeMetrics[NUM_CMPL_TYPE_KINDS] = {
+    // DEFAULT_CMPL_TYPE_METRICS,
+    [CMPL_TYPE_PTR] = {size = 4, align = 4},
+    [CMPL_TYPE_LONG] = {size = 4, align = 4, max = 0x7fffffff, sign = true},
+    [CMPL_TYPE_ULONG] = {size = 4, align = 4, max = 0x7fffffff, sign = true},
+};
 
-// TypeMetrics win32_x86_metrics[NUM_CMPL_TYPE_KINDS] = {
-//     DEFAULT_CMPL_TYPE_METRICS,
-//     [CMPL_TYPE_PTR] = {.size = 4, .align = 4},
-//     [CMPL_TYPE_LONG] = {.size = 4, .align = 4, .max = 0x7fffffff, .sign = true},
-//     [CMPL_TYPE_ULONG] = {.size = 4, .align = 4, .max = 0x7fffffff, .sign = true},
-// };
+var win32_x64_metrics: TypeMetrics[NUM_CMPL_TYPE_KINDS] = {
+    // DEFAULT_CMPL_TYPE_METRICS,
+    [CMPL_TYPE_PTR] = {size = 8, align = 8},
+    [CMPL_TYPE_LONG] = {size = 4, align = 4, max = 0x7fffffff, sign = true},
+    [CMPL_TYPE_ULONG] = {size = 4, align = 4, max = 0x7fffffff, sign = true},
+};
 
-// TypeMetrics win32_x64_metrics[NUM_CMPL_TYPE_KINDS] = {
-//     DEFAULT_CMPL_TYPE_METRICS,
-//     [CMPL_TYPE_PTR] = {.size = 8, .align = 8},
-//     [CMPL_TYPE_LONG] = {.size = 4, .align = 4, .max = 0x7fffffff, .sign = true},
-//     [CMPL_TYPE_ULONG] = {.size = 4, .align = 4, .max = 0x7fffffff, .sign = true},
-// };
+var ilp32_metrics: TypeMetrics[NUM_CMPL_TYPE_KINDS] = {
+    // DEFAULT_CMPL_TYPE_METRICS,
+    [CMPL_TYPE_PTR] = {size = 4, align = 4},
+    [CMPL_TYPE_LONG] = {size = 4, align = 4, max = 0x7fffffff, sign = true},
+    [CMPL_TYPE_ULONG] = {size = 4, align = 4, max = 0x7fffffff, sign = true},
+};
 
-// TypeMetrics ilp32_metrics[NUM_CMPL_TYPE_KINDS] = {
-//     DEFAULT_CMPL_TYPE_METRICS,
-//     [CMPL_TYPE_PTR] = {.size = 4, .align = 4},
-//     [CMPL_TYPE_LONG] = {.size = 4, .align = 4, .max = 0x7fffffff, .sign = true},
-//     [CMPL_TYPE_ULONG] = {.size = 4, .align = 4, .max = 0x7fffffff, .sign = true},
-// };
+var lp64_metrics: TypeMetrics[NUM_CMPL_TYPE_KINDS] = {
+    // DEFAULT_CMPL_TYPE_METRICS,
+    [CMPL_TYPE_PTR] = {size = 8, align = 8},
+    [CMPL_TYPE_LONG] = {size = 8, align = 8, max = 0x7fffffffffffffff, sign = true},
+    [CMPL_TYPE_ULONG] = {size = 8, align = 8, max = 0xffffffffffffffff, sign = true},
+};
 
-// TypeMetrics lp64_metrics[NUM_CMPL_TYPE_KINDS] = {
-//     DEFAULT_CMPL_TYPE_METRICS,
-//     [CMPL_TYPE_PTR] = {.size = 8, .align = 8},
-//     [CMPL_TYPE_LONG] = {.size = 8, .align = 8, .max = 0x7fffffffffffffff, .sign = true},
-//     [CMPL_TYPE_ULONG] = {.size = 8, .align = 8, .max = 0xffffffffffffffff, .sign = true},
-// };
+func init_default_type_metrics(metrics: TypeMetrics[NUM_CMPL_TYPE_KINDS]) {
+    metrics[CMPL_TYPE_BOOL] = {size = 1, align = 1};
+    metrics[CMPL_TYPE_CHAR] = {size = 1, align = 1, max = 0x7f, sign = true};
+    metrics[CMPL_TYPE_SCHAR] = {size = 1, align = 1, max = 0x7f, sign = true};
+    metrics[CMPL_TYPE_UCHAR] = {size = 1, align = 1, max = 0xff};
+    metrics[CMPL_TYPE_SHORT] = {size = 2, align = 2, max = 0x7fff, sign = true};
+    metrics[CMPL_TYPE_USHORT] = {size = 2, align = 2, max = 0xffff};
+    metrics[CMPL_TYPE_INT] = {size = 4, align = 4, max = 0x7fffffff, sign = true};
+    metrics[CMPL_TYPE_UINT] = {size = 4, align = 4, max = 0xffffffff};
+    metrics[CMPL_TYPE_LLONG] = {size = 8, align = 8, max = 0x7fffffffffffffff, sign = true};
+    metrics[CMPL_TYPE_ULLONG] = {size = 8, align = 8, max = 0xffffffffffffffff};
+    metrics[CMPL_TYPE_FLOAT] = {size = 4, align = 4};
+    metrics[CMPL_TYPE_DOUBLE] = {size = 8, align = 8};
+}
 
 func init_target() {
-    // type_metrics = NULL;
-    // switch (target_os) {
-    // case OS_WIN32:
-    //     switch (target_arch) {
-    //     case ARCH_X86:
-    //         type_metrics = win32_x86_metrics;
-    //         break;
-    //     case ARCH_X64:
-    //         type_metrics = win32_x64_metrics;
-    //         break;
-    //     default:
-    //         break;
-    //     }
-    //     break;
-    // case OS_LINUX:
-    //     switch (target_arch) {
-    //     case ARCH_X86:
-    //         type_metrics = ilp32_metrics;
-    //         break;
-    //     case ARCH_X64:
-    //         type_metrics = lp64_metrics;
-    //         break;
-    //     default:
-    //         break;
-    //     }
-    //     break;
-    // case OS_OSX:
-    //     switch (target_arch) {
-    //     case ARCH_X64:
-    //         type_metrics = lp64_metrics;
-    //         break;
-    //     default:
-    //         break;
-    //     }
-    //     break;
-    // default:
-    //     break;
-    // }
-    // if (!type_metrics) {
-    //     printf("Unsupported os/arch combination: %s/%s\n", os_names[target_os], arch_names[target_arch]);
-    //     exit(1);
-    // }
-    // if (type_metrics[CMPL_TYPE_PTR].size == 4) {
-    //     type_uintptr = type_uint;
-    //     type_usize = type_uint;
-    //     type_ssize = type_int;
-    // } else {
-    //     #assert(type_metrics[CMPL_TYPE_PTR].size == 8);
-    //     type_uintptr = type_ullong;
-    //     type_usize = type_ullong;
-    //     type_ssize = type_llong;
-    // }
+    type_metrics = NULL;
+    switch (target_os) {
+    case OS_WIN32:
+        switch (target_arch) {
+        case ARCH_X86:
+            type_metrics = win32_x86_metrics;
+        case ARCH_X64:
+            type_metrics = win32_x64_metrics;
+        default:
+        }
+    case OS_LINUX:
+        switch (target_arch) {
+        case ARCH_X86:
+            type_metrics = ilp32_metrics;
+        case ARCH_X64:
+            type_metrics = lp64_metrics;
+        default:
+        }
+    case OS_OSX:
+        switch (target_arch) {
+        case ARCH_X64:
+            type_metrics = lp64_metrics;
+        default:
+        }
+    default:
+    }
+    if (!type_metrics) {
+        printf("Unsupported os/arch combination: %s/%s\n", os_names[target_os], arch_names[target_arch]);
+        exit(1);
+    }
+    init_default_type_metrics(type_metrics);
+    if (type_metrics[CMPL_TYPE_PTR].size == 4) {
+        type_uintptr = type_uint;
+        type_usize = type_uint;
+        type_ssize = type_int;
+    } else {
+        #assert(type_metrics[CMPL_TYPE_PTR].size == 8);
+        type_uintptr = type_ullong;
+        type_usize = type_ullong;
+        type_ssize = type_llong;
+    }
 }
 
 func is_excluded_target_filename(name: char const*): bool {
