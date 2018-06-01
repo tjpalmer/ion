@@ -2,11 +2,11 @@
 
 void path_absolute(char path[MAX_PATH]) {
     char rel_path[MAX_PATH];
-    path_copy(rel_path, path);
+    ion_path_copy(rel_path, path);
     realpath(rel_path, path);
 }
 
-void dir_list_free(DirListIter *iter) {
+void dir_list_free(ion_DirListIter *iter) {
     if (iter->valid) {
         iter->valid = false;
         iter->error = false;
@@ -14,7 +14,7 @@ void dir_list_free(DirListIter *iter) {
     }
 }
 
-void dir_list_next(DirListIter *iter) {
+void dir_list_next(ion_DirListIter *iter) {
     if (!iter->valid) {
         return;
     }
@@ -24,12 +24,12 @@ void dir_list_next(DirListIter *iter) {
             dir_list_free(iter);
             return;
         }
-        path_copy(iter->name, entry->d_name);
+        ion_path_copy(iter->name, entry->d_name);
         iter->is_dir = entry->d_type & DT_DIR;
-    } while (dir_excluded(iter));
+    } while (ion_dir_excluded(iter));
 }
 
-void dir_list(DirListIter *iter, const char *path) {
+void dir_list(ion_DirListIter *iter, const char *path) {
     memset(iter, 0, sizeof(*iter));
     DIR *dir = opendir(path);
     if (!dir) {
@@ -38,7 +38,7 @@ void dir_list(DirListIter *iter, const char *path) {
         return;
     }
     iter->handle = dir;
-    path_copy(iter->base, path);
+    ion_path_copy(iter->base, path);
     iter->valid = true;
     dir_list_next(iter);
 }

@@ -1,5 +1,9 @@
 import libc {...}
 
+// Keep everything for now, because c code needs to access some things that ion
+// doesn't.
+#always
+
 var flag_verbose: bool;
 var flag_lazy: bool;
 var flag_notypeinfo: bool;

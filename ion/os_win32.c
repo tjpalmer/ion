@@ -52,6 +52,6 @@ void dir_list(ion_DirListIter *iter, const char *path) {
     iter->handle = (void *)handle;
     dir__update(iter, handle == -1, &fileinfo);
     if (ion_dir_excluded(iter)) {
-        ion_dir_list_next(iter);
+        dir_list_next(iter);
     }
 }
