@@ -2,13 +2,13 @@
 #include <stdlib.h>
 
 #ifndef MAX_PATH
-# if defined _MAX_PATH
-#   define MAX_PATH _MAX_PATH
-# elif defined PATH_MAX
-#   define MAX_PATH PATH_MAX
-# else
-#   error "No suitable MAX_PATH surrogate"
-# endif
+#   if defined _MAX_PATH
+#       define MAX_PATH _MAX_PATH
+#   elif defined PATH_MAX
+#       define MAX_PATH PATH_MAX
+#   else
+#       error "No suitable MAX_PATH surrogate"
+#   endif
 #endif
 
 struct ion_DirListIter;
@@ -24,10 +24,10 @@ bool cast_operand(struct ion_Operand *operand, struct ion_Type *type);
 #include "out_ion.c"
 
 #ifdef _WIN32
-# include "ion/os_win32.c"
-# define strdup _strdup
+#   include "ion/os_win32.c"
+#   define strdup _strdup
 #else
-# include "ion/os_unix.c"
+#   include "ion/os_unix.c"
 #endif
 
 #define CASE(k, t) \
