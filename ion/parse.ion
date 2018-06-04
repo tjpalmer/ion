@@ -511,17 +511,17 @@ func parse_stmt_switch_case(): SwitchCase {
         expect_token(TOKEN_COLON);
     }
     pos := token.pos;
-    stmts: Stmt** = NULL;
+    stmts: Stmt**;
     while (!is_token_eof() && !is_token(TOKEN_RBRACE) && !is_keyword(case_keyword) && !is_keyword(default_keyword)) {
         stmt := parse_stmt();
-        buf_push((:void**)stmts, &stmt, sizeof(stmt));
+        buf_push((:void**)&stmts, &stmt, sizeof(stmt));
     }
     return SwitchCase {patterns, buf_len(patterns), is_default, new_stmt_list(pos, stmts, buf_len(stmts))};
 }
 
 func parse_stmt_switch(pos: SrcPos): Stmt* {
     expr: Expr* = parse_paren_expr();
-    cases: SwitchCase* = NULL;
+    cases: SwitchCase*;
     expect_token(TOKEN_LBRACE);
     while (!is_token_eof() && !is_token(TOKEN_RBRACE)) {
         case_stmt := parse_stmt_switch_case();
@@ -534,7 +534,7 @@ func parse_stmt_switch(pos: SrcPos): Stmt* {
 func parse_stmt(): Stmt* {
     notes := parse_notes();
     pos := token.pos;
-    stmt: Stmt* = NULL;
+    stmt: Stmt*;
     if (match_keyword(if_keyword)) {
         stmt = parse_stmt_if(pos);
     } else if (match_keyword(while_keyword)) {
@@ -554,7 +554,7 @@ func parse_stmt(): Stmt* {
         expect_token(TOKEN_SEMICOLON);
         stmt = new_stmt_continue(pos);
     } else if (match_keyword(return_keyword)) {
-        expr: Expr* = NULL;
+        expr: Expr*;
         if (!is_token(TOKEN_SEMICOLON)) {
             expr = parse_expr();
         }
