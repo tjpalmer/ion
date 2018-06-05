@@ -8,8 +8,7 @@ var gen_pos: SrcPos;
 
 var gen_headers_buf: char const**;
 
-var gen_preamble_str: char const* = """
-// Preamble
+var gen_preamble_str: char const* = """// Preamble
 #ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -50,11 +49,11 @@ typedef unsigned long long ullong;
 #define va_end_ptr(args) (va_end(*(args)))
 
 struct Any;
-func va_arg_ptr(va_list *args, struct Any any);
+static void va_arg_ptr(va_list *args, struct Any any);
 """;
 
 var gen_postamble_str: char const* = """
-func va_arg_ptr(va_list *args, Any any) {
+static void va_arg_ptr(va_list *args, Any any) {
     switch (typeid_kind(any.type)) {
     case TYPE_BOOL:
         *(bool *)any.ptr = (bool)va_arg(*args, int);

@@ -595,7 +595,8 @@ func scan_str() {
             error(token.pos, "Unexpected end of file within string literal");
         }
     }
-    nul := "";
+    // TODO: If I say just "", I get a random byte in the c output from c ion.
+    nul := '\0';
     buf_push((:void**)&str, &nul, 1);
     token.kind = TOKEN_STR;
     token.val.str_val = str;
