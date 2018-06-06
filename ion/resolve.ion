@@ -108,7 +108,7 @@ func process_decl_notes(decl: Decl*, sym: Sym*) {
             if (arg.kind != EXPR_STR) {
                 fatal_error(decl.pos, "@foreign argument 1 must be a string literal");
             }
-            external_name = arg.detail.str_lit.val;
+            external_name = arg.str_lit.val;
         }
         sym.external_name = external_name;
     }
@@ -211,8 +211,8 @@ func sym_global_decl(decl: Decl*): Sym* {
     if (decl.kind == DECL_ENUM) {
         enum_typespec := new_typespec_name(decl.pos, sym ? sym.name : str_intern("int"));
         prev_item_name: char const* = NULL;
-        for (i: usize = 0; i < decl.detail.enum_decl.num_items; i++) {
-            item := decl.detail.enum_decl.items[i];
+        for (i: usize = 0; i < decl.enum_decl.num_items; i++) {
+            item := decl.enum_decl.items[i];
             init: Expr*;
             if (item.init) {
                 init = item.init;
@@ -250,22 +250,22 @@ func put_type_name(buf: char**, type: Type*) {
             buf_printf(buf, "*");
         case CMPL_TYPE_ARRAY:
             put_type_name(buf, type.base);
-            buf_printf(buf, "[%zu]", type.detail.num_elems);
+            buf_printf(buf, "[%zu]", type.num_elems);
         case CMPL_TYPE_FUNC:
             buf_printf(buf, "func(");
-            for (i: usize = 0; i < type.detail.function.num_params; i++) {
+            for (i: usize = 0; i < type.function.num_params; i++) {
                 if (i != 0) {
                     buf_printf(buf, ", ");
                 }
-                put_type_name(buf, type.detail.function.params[i]);
+                put_type_name(buf, type.function.params[i]);
             }
-            if (type.detail.function.has_varargs) {
+            if (type.function.has_varargs) {
                 buf_printf(buf, "...");
             }
             buf_printf(buf, ")");
-            if (type.detail.function.ret != type_void) {
+            if (type.function.ret != type_void) {
                 buf_printf(buf, ": ");
-                put_type_name(buf, type.detail.function.ret);
+                put_type_name(buf, type.function.ret);
             }
         default:
             #assert(0);
@@ -515,12 +515,12 @@ func resolve_typespec(typespec: Typespec*): Type* {
     result: Type* = NULL;
     switch (typespec.kind) {
     case TYPESPEC_NAME: {
-        sym := resolve_name(typespec.detail.name);
+        sym := resolve_name(typespec.name);
         if (!sym) {
-            fatal_error(typespec.pos, "Unresolved type name '%s'", typespec.detail.name);
+            fatal_error(typespec.pos, "Unresolved type name '%s'", typespec.name);
         }
         if (sym.kind != SYM_TYPE) {
-            fatal_error(typespec.pos, "%s must denote a type", typespec.detail.name);
+            fatal_error(typespec.pos, "%s must denote a type", typespec.name);
             return NULL;
         }
         set_resolved_sym(typespec, sym);
@@ -532,31 +532,31 @@ func resolve_typespec(typespec: Typespec*): Type* {
         result = type_ptr(resolve_typespec(typespec.base));
     case TYPESPEC_ARRAY: {
         size := 0;
-        if (typespec.detail.num_elems) {
-            operand := resolve_const_expr(typespec.detail.num_elems);
+        if (typespec.num_elems) {
+            operand := resolve_const_expr(typespec.num_elems);
             if (!is_integer_type(operand.type)) {
                 fatal_error(typespec.pos, "Array size constant expression must have integer type");
             }
             cast_operand(&operand, type_int);
             size = operand.val.i;
             if (size <= 0) {
-                fatal_error(typespec.detail.num_elems.pos, "Non-positive array size");
+                fatal_error(typespec.num_elems.pos, "Non-positive array size");
             }
         }
         result = type_array(resolve_typespec(typespec.base), size);
     }
     case TYPESPEC_FUNC: {
         args: Type** = NULL;
-        for (i: usize = 0; i < typespec.detail.function.num_args; i++) {
-            arg := resolve_typespec(typespec.detail.function.args[i]);
+        for (i: usize = 0; i < typespec.function.num_args; i++) {
+            arg := resolve_typespec(typespec.function.args[i]);
             if (arg == type_void) {
                 fatal_error(typespec.pos, "Function parameter type cannot be void");
             }
             buf_push((:void**)&args, &arg, sizeof(arg));
         }
         ret: Type* = type_void;
-        if (typespec.detail.function.ret) {
-            ret = resolve_typespec(typespec.detail.function.ret);
+        if (typespec.function.ret) {
+            ret = resolve_typespec(typespec.function.ret);
         }
         if (is_array_type(ret)) {
             fatal_error(typespec.pos, "Function return type cannot be array");
@@ -587,8 +587,8 @@ func complete_type(type: Type*) {
     type.kind = CMPL_TYPE_COMPLETING;
     #assert(decl.kind == DECL_STRUCT || decl.kind == DECL_UNION);
     fields: TypeField* = NULL;
-    for (i: usize = 0; i < decl.detail.aggregate.num_items; i++) {
-        item: AggregateItem = decl.detail.aggregate.items[i];
+    for (i: usize = 0; i < decl.aggregate.num_items; i++) {
+        item: AggregateItem = decl.aggregate.items[i];
         item_type := resolve_typespec(item.type);
         complete_type(item_type);
         if (type_sizeof(item_type) == 0) {
@@ -661,17 +661,17 @@ func resolve_init(pos: SrcPos, typespec: Typespec*, expr: Expr*): Type* {
 
 func resolve_decl_var(decl: Decl*): Type* {
     #assert(decl.kind == DECL_VAR);
-    return resolve_init(decl.pos, decl.detail.var_decl.type, decl.detail.var_decl.expr);
+    return resolve_init(decl.pos, decl.var_decl.type, decl.var_decl.expr);
 }
 
 func resolve_decl_const(decl: Decl*, val: Val*): Type* {
     #assert(decl.kind == DECL_CONST);
-    result := resolve_const_expr(decl.detail.const_decl.expr);
+    result := resolve_const_expr(decl.const_decl.expr);
     if (!is_scalar_type(result.type)) {
         fatal_error(decl.pos, "Const declarations must have scalar type");
     }
-    if (decl.detail.const_decl.type) {
-        type := resolve_typespec(decl.detail.const_decl.type);
+    if (decl.const_decl.type) {
+        type := resolve_typespec(decl.const_decl.type);
         if (!convert_operand(&result, type)) {
             fatal_error(decl.pos, "Invalid type in constant declaration. Expected %s, got %s", get_type_name(type), get_type_name(result.type));
         }
@@ -683,8 +683,8 @@ func resolve_decl_const(decl: Decl*, val: Val*): Type* {
 func resolve_decl_func(decl: Decl*): Type* {
     #assert(decl.kind == DECL_FUNC);
     params: Type** = NULL;
-    for (i: usize = 0; i < decl.detail.function.num_params; i++) {
-        param := resolve_typespec(decl.detail.function.params[i].type);
+    for (i: usize = 0; i < decl.function.num_params; i++) {
+        param := resolve_typespec(decl.function.params[i].type);
         complete_type(param);
         if (param == type_void) {
             fatal_error(decl.pos, "Function parameter type cannot be void");
@@ -692,14 +692,14 @@ func resolve_decl_func(decl: Decl*): Type* {
         buf_push((:void**)&params, &param, sizeof(param));
     }
     ret_type: Type* = type_void;
-    if (decl.detail.function.ret_type) {
-        ret_type = resolve_typespec(decl.detail.function.ret_type);
+    if (decl.function.ret_type) {
+        ret_type = resolve_typespec(decl.function.ret_type);
         complete_type(ret_type);
     }
     if (is_array_type(ret_type)) {
         fatal_error(decl.pos, "Function return type cannot be array");
     }
-    return type_func(params, buf_len(params), ret_type, decl.detail.function.has_varargs);
+    return type_func(params, buf_len(params), ret_type, decl.function.has_varargs);
 }
 
 struct StmtCtx {
@@ -783,7 +783,7 @@ func resolve_stmt_block(block: StmtList, ret_type: Type*, ctx: StmtCtx): bool {
 
 func resolve_stmt_assign(stmt: Stmt*) {
     #assert(stmt.kind == STMT_ASSIGN);
-    left := resolve_expr(stmt.detail.assign.left);
+    left := resolve_expr(stmt.assign.left);
     if (!left.is_lvalue) {
         fatal_error(stmt.pos, "Cannot assign to non-lvalue");
     }
@@ -793,13 +793,13 @@ func resolve_stmt_assign(stmt: Stmt*) {
     if (left.type.nonmodifiable) {
         fatal_error(stmt.pos, "Left-hand side of assignment has non-modifiable type");
     }
-    assign_op_name := token_kind_name(stmt.detail.assign.op);
-    binary_op := assign_token_to_binary_token[stmt.detail.assign.op];
-    right := resolve_expected_expr_rvalue(stmt.detail.assign.right, left.type);
+    assign_op_name := token_kind_name(stmt.assign.op);
+    binary_op := assign_token_to_binary_token[stmt.assign.op];
+    right := resolve_expected_expr_rvalue(stmt.assign.right, left.type);
     result: Operand;
-    if (stmt.detail.assign.op == TOKEN_ASSIGN) {
+    if (stmt.assign.op == TOKEN_ASSIGN) {
         result = right;
-    } else if (stmt.detail.assign.op == TOKEN_ADD_ASSIGN || stmt.detail.assign.op == TOKEN_SUB_ASSIGN) {
+    } else if (stmt.assign.op == TOKEN_ADD_ASSIGN || stmt.assign.op == TOKEN_SUB_ASSIGN) {
         if (left.type.kind == CMPL_TYPE_PTR && is_integer_type(right.type)) {
             result = operand_rvalue(left.type);
         } else if (is_arithmetic_type(left.type) && is_arithmetic_type(right.type)) {
@@ -817,8 +817,8 @@ func resolve_stmt_assign(stmt: Stmt*) {
 
 func resolve_stmt_init(stmt: Stmt*) {
     #assert(stmt.kind == STMT_INIT);
-    type := resolve_init(stmt.pos, stmt.detail.init.type, stmt.detail.init.expr);
-    if (!sym_push_var(stmt.detail.init.name, type)) {
+    type := resolve_init(stmt.pos, stmt.init.type, stmt.init.expr);
+    if (!sym_push_var(stmt.init.name, type)) {
         fatal_error(stmt.pos, "Shadowed definition of local symbol");
     }
 }
@@ -836,8 +836,8 @@ func resolve_static_assert(note: Note) {
 func resolve_stmt(stmt: Stmt*, ret_type: Type*, ctx: StmtCtx): bool {
     switch (stmt.kind) {
     case STMT_RETURN:
-        if (stmt.detail.expr) {
-            operand := resolve_expected_expr_rvalue(stmt.detail.expr, ret_type);
+        if (stmt.expr) {
+            operand := resolve_expected_expr_rvalue(stmt.expr, ret_type);
             if (!convert_operand(&operand, ret_type)) {
                 fatal_error(stmt.pos, "Invalid type in return expression. Expected %s, got %s", get_type_name(ret_type), get_type_name(operand.type));
             }
@@ -856,37 +856,37 @@ func resolve_stmt(stmt: Stmt*, ret_type: Type*, ctx: StmtCtx): bool {
         }
         return false;
     case STMT_BLOCK:
-        return resolve_stmt_block(stmt.detail.block, ret_type, ctx);
+        return resolve_stmt_block(stmt.block, ret_type, ctx);
     case STMT_NOTE:
-        if (stmt.detail.note.name == assert_name) {
-            if (stmt.detail.note.num_args != 1) {
+        if (stmt.note.name == assert_name) {
+            if (stmt.note.num_args != 1) {
                 fatal_error(stmt.pos, "#assert takes 1 argument");
             }
-            resolve_cond_expr(stmt.detail.note.args[0].expr);
-        } else if (stmt.detail.note.name == static_assert_name) {
-            resolve_static_assert(stmt.detail.note);
+            resolve_cond_expr(stmt.note.args[0].expr);
+        } else if (stmt.note.name == static_assert_name) {
+            resolve_static_assert(stmt.note);
         } else {
-            warning(stmt.pos, "Unknown statement #directive '%s'", stmt.detail.note.name);
+            warning(stmt.pos, "Unknown statement #directive '%s'", stmt.note.name);
         }
         return false;
     case STMT_IF: {
         scope := sym_enter();
-        if (stmt.detail.if_stmt.init) {
-            resolve_stmt_init(stmt.detail.if_stmt.init);
+        if (stmt.if_stmt.init) {
+            resolve_stmt_init(stmt.if_stmt.init);
         }
-        if (stmt.detail.if_stmt.cond) {
-            resolve_cond_expr(stmt.detail.if_stmt.cond);
-        } else if (!is_cond_operand(resolve_name_operand(stmt.pos, stmt.detail.if_stmt.init.detail.init.name))) {
+        if (stmt.if_stmt.cond) {
+            resolve_cond_expr(stmt.if_stmt.cond);
+        } else if (!is_cond_operand(resolve_name_operand(stmt.pos, stmt.if_stmt.init.init.name))) {
             fatal_error(stmt.pos, "Conditional expression must have scalar type");
         }
-        returns: bool = resolve_stmt_block(stmt.detail.if_stmt.then_block, ret_type, ctx);
-        for (i: usize = 0; i < stmt.detail.if_stmt.num_elseifs; i++) {
-            elseif: ElseIf = stmt.detail.if_stmt.elseifs[i];
+        returns: bool = resolve_stmt_block(stmt.if_stmt.then_block, ret_type, ctx);
+        for (i: usize = 0; i < stmt.if_stmt.num_elseifs; i++) {
+            elseif: ElseIf = stmt.if_stmt.elseifs[i];
             resolve_cond_expr(elseif.cond);
             returns = resolve_stmt_block(elseif.block, ret_type, ctx) && returns;
         }
-        if (stmt.detail.if_stmt.else_block.stmts) {
-            returns = resolve_stmt_block(stmt.detail.if_stmt.else_block, ret_type, ctx) && returns;
+        if (stmt.if_stmt.else_block.stmts) {
+            returns = resolve_stmt_block(stmt.if_stmt.else_block, ret_type, ctx) && returns;
         } else {
             returns = false;
         }
@@ -895,38 +895,38 @@ func resolve_stmt(stmt: Stmt*, ret_type: Type*, ctx: StmtCtx): bool {
     }
     case STMT_WHILE:
     case STMT_DO_WHILE:
-        resolve_cond_expr(stmt.detail.while_stmt.cond);
+        resolve_cond_expr(stmt.while_stmt.cond);
         ctx.is_break_legal = true;
         ctx.is_continue_legal = true;
-        resolve_stmt_block(stmt.detail.while_stmt.block, ret_type, ctx);
+        resolve_stmt_block(stmt.while_stmt.block, ret_type, ctx);
         return false;
     case STMT_FOR: {
         scope := sym_enter();
-        if (stmt.detail.for_stmt.init) {
-            resolve_stmt(stmt.detail.for_stmt.init, ret_type, ctx);
+        if (stmt.for_stmt.init) {
+            resolve_stmt(stmt.for_stmt.init, ret_type, ctx);
         }
-        if (stmt.detail.for_stmt.cond) {
-            resolve_cond_expr(stmt.detail.for_stmt.cond);
+        if (stmt.for_stmt.cond) {
+            resolve_cond_expr(stmt.for_stmt.cond);
         }
-        if (stmt.detail.for_stmt.next) {
-            resolve_stmt(stmt.detail.for_stmt.next, ret_type, ctx);
+        if (stmt.for_stmt.next) {
+            resolve_stmt(stmt.for_stmt.next, ret_type, ctx);
         }
         ctx.is_break_legal = true;
         ctx.is_continue_legal = true;
-        resolve_stmt_block(stmt.detail.for_stmt.block, ret_type, ctx);
+        resolve_stmt_block(stmt.for_stmt.block, ret_type, ctx);
         sym_leave(scope);
         return false;
     }
     case STMT_SWITCH: {
-        operand := resolve_expr_rvalue(stmt.detail.switch_stmt.expr);
+        operand := resolve_expr_rvalue(stmt.switch_stmt.expr);
         if (!is_integer_type(operand.type)) {
             fatal_error(stmt.pos, "Switch expression must have integer type");
         }
         ctx.is_break_legal = true;
         returns := true;
         has_default := false;
-        for (i: usize = 0; i < stmt.detail.switch_stmt.num_cases; i++) {
-            switch_case: SwitchCase = stmt.detail.switch_stmt.cases[i];
+        for (i: usize = 0; i < stmt.switch_stmt.num_cases; i++) {
+            switch_case: SwitchCase = stmt.switch_stmt.cases[i];
             for (j: usize = 0; j < switch_case.num_patterns; j++) {
                 pattern: SwitchCasePattern = switch_case.patterns[j];
                 start_expr: Expr* = pattern.start;
@@ -975,13 +975,13 @@ func resolve_stmt(stmt: Stmt*, ret_type: Type*, ctx: StmtCtx): bool {
         resolve_stmt_init(stmt);
         return false;
     case STMT_EXPR:
-        resolve_expr(stmt.detail.expr);
+        resolve_expr(stmt.expr);
         return false;
     case STMT_LABEL:
-        define_label(stmt.pos, stmt.detail.label);
+        define_label(stmt.pos, stmt.label);
         return false;
     case STMT_GOTO:
-        reference_label(stmt.pos, stmt.detail.label);
+        reference_label(stmt.pos, stmt.label);
         return false;
     default:
         #assert(0);
@@ -998,17 +998,17 @@ func resolve_func_body(sym: Sym*) {
     }
     old_package := enter_package(sym.package);
     scope := sym_enter();
-    for (i: usize = 0; i < decl.detail.function.num_params; i++) {
-        param := decl.detail.function.params[i];
+    for (i: usize = 0; i < decl.function.num_params; i++) {
+        param := decl.function.params[i];
         param_type := resolve_typespec(param.type);
         if (is_array_type(param_type)) {
             param_type = type_ptr(param_type.base);
         }
         sym_push_var(param.name, param_type);
     }
-    ret_type := resolve_typespec(decl.detail.function.ret_type);
+    ret_type := resolve_typespec(decl.function.ret_type);
     #assert(!is_array_type(ret_type));
-    returns := resolve_stmt_block(decl.detail.function.block, ret_type, StmtCtx {0});
+    returns := resolve_stmt_block(decl.function.block, ret_type, StmtCtx {0});
     resolve_labels();
     sym_leave(scope);
     if (ret_type != type_void && !returns) {
@@ -1036,9 +1036,9 @@ func resolve_sym(sym: Sym*) {
     switch (sym.kind) {
     case SYM_TYPE:
         if (decl && decl.kind == DECL_TYPEDEF) {
-            sym.type = resolve_typespec(decl.detail.typedef_decl.type);
+            sym.type = resolve_typespec(decl.typedef_decl.type);
         } else if (decl.kind == DECL_ENUM) {
-            base: Type* = decl.detail.enum_decl.type ? resolve_typespec(decl.detail.enum_decl.type) : type_int;
+            base: Type* = decl.enum_decl.type ? resolve_typespec(decl.enum_decl.type) : type_int;
             if (!is_integer_type(base)) {
                 fatal_error(decl.pos, "Base type of enum must be integer type");
             }
@@ -1084,7 +1084,7 @@ func resolve_name(name: char const*): Sym* {
 
 func resolve_expr_field(expr: Expr*): Operand {
     #assert(expr.kind == EXPR_FIELD);
-    operand := resolve_expr(expr.detail.field.expr);
+    operand := resolve_expr(expr.field.expr);
     was_const_type := is_const_type(operand.type);
     type := unqualify_type(operand.type);
     complete_type(type);
@@ -1098,9 +1098,9 @@ func resolve_expr_field(expr: Expr*): Operand {
         fatal_error(expr.pos, "Can only access fields on aggregates or pointers to aggregates");
         return operand_null;
     }
-    for (i: usize = 0; i < type.detail.aggregate.num_fields; i++) {
-        field := type.detail.aggregate.fields[i];
-        if (field.name == expr.detail.field.name) {
+    for (i: usize = 0; i < type.aggregate.num_fields; i++) {
+        field := type.aggregate.fields[i];
+        if (field.name == expr.field.name) {
             field_operand := operand.is_lvalue ? operand_lvalue(field.type) : operand_rvalue(field.type);
             if (was_const_type) {
                 field_operand.type = type_const(field_operand.type);
@@ -1108,7 +1108,7 @@ func resolve_expr_field(expr: Expr*): Operand {
             return field_operand;
         }
     }
-    fatal_error(expr.pos, "No field named '%s'", expr.detail.field.name);
+    fatal_error(expr.pos, "No field named '%s'", expr.field.name);
     return operand_null;
 }
 
@@ -1285,7 +1285,7 @@ func resolve_name_operand(pos: SrcPos, name: char const*): Operand {
 
 func resolve_expr_name(expr: Expr*): Operand {
     #assert(expr.kind == EXPR_NAME);
-    return resolve_name_operand(expr.pos, expr.detail.name);
+    return resolve_name_operand(expr.pos, expr.name);
 }
 
 func resolve_unary_op(op: TokenKind, operand: Operand): Operand {
@@ -1298,9 +1298,9 @@ func resolve_unary_op(op: TokenKind, operand: Operand): Operand {
 }
 
 func resolve_expr_unary(expr: Expr*): Operand {
-    operand := resolve_expr_rvalue(expr.detail.unary.expr);
+    operand := resolve_expr_rvalue(expr.unary.expr);
     type := operand.type;
-    switch (expr.detail.unary.op) {
+    switch (expr.unary.op) {
     case TOKEN_MUL:
         if (!is_ptr_type(type)) {
             fatal_error(expr.pos, "Cannot deref non-ptr type");
@@ -1309,19 +1309,19 @@ func resolve_expr_unary(expr: Expr*): Operand {
     case TOKEN_ADD:
     case TOKEN_SUB:
         if (!is_arithmetic_type(type)) {
-            fatal_error(expr.pos, "Can only use unary %s with arithmetic types", token_kind_name(expr.detail.unary.op));
+            fatal_error(expr.pos, "Can only use unary %s with arithmetic types", token_kind_name(expr.unary.op));
         }
-        return resolve_unary_op(expr.detail.unary.op, operand);
+        return resolve_unary_op(expr.unary.op, operand);
     case TOKEN_NEG:
         if (!is_integer_type(type)) {
             fatal_error(expr.pos, "Can only use ~ with integer types");
         }
-        return resolve_unary_op(expr.detail.unary.op, operand);
+        return resolve_unary_op(expr.unary.op, operand);
     case TOKEN_NOT:
         if (!is_scalar_type(type)) {
             fatal_error(expr.pos," Can only use ! with scalar types");
         }
-        return resolve_unary_op(expr.detail.unary.op, operand);
+        return resolve_unary_op(expr.unary.op, operand);
     default:
         #assert(0);
     }
@@ -1483,21 +1483,21 @@ func resolve_expr_binary_op(op: TokenKind, op_name: char const*, pos: SrcPos, le
 
 func resolve_expr_binary(expr: Expr*): Operand {
     #assert(expr.kind == EXPR_BINARY);
-    left := resolve_expr_rvalue(expr.detail.binary.left);
-    right := resolve_expr_rvalue(expr.detail.binary.right);
-    op: TokenKind = expr.detail.binary.op;
+    left := resolve_expr_rvalue(expr.binary.left);
+    right := resolve_expr_rvalue(expr.binary.right);
+    op: TokenKind = expr.binary.op;
     op_name := token_kind_name(op);
     return resolve_expr_binary_op(op, op_name, expr.pos, left, right);
 }
 
 func resolve_expr_compound(expr: Expr*, expected_type: Type*): Operand {
     #assert(expr.kind == EXPR_COMPOUND);
-    if (!expected_type && !expr.detail.compound.type) {
+    if (!expected_type && !expr.compound.type) {
         fatal_error(expr.pos, "Implicitly typed compound literals used in context without expected type");
     }
     type: Type* = NULL;
-    if (expr.detail.compound.type) {
-        type = resolve_typespec(expr.detail.compound.type);
+    if (expr.compound.type) {
+        type = resolve_typespec(expr.compound.type);
     } else {
         type = expected_type;
     }
@@ -1506,20 +1506,20 @@ func resolve_expr_compound(expr: Expr*, expected_type: Type*): Operand {
     type = unqualify_type(type);
     if (type.kind == CMPL_TYPE_STRUCT || type.kind == CMPL_TYPE_UNION) {
         index := 0;
-        for (i: usize = 0; i < expr.detail.compound.num_fields; i++) {
-            field: CompoundField = expr.detail.compound.fields[i];
+        for (i: usize = 0; i < expr.compound.num_fields; i++) {
+            field: CompoundField = expr.compound.fields[i];
             if (field.kind == FIELD_INDEX) {
                 fatal_error(field.pos, "Index field initializer not allowed for struct/union compound literal");
             } else if (field.kind == FIELD_NAME) {
-                index = aggregate_field_index(type, field.key.name);
+                index = aggregate_field_index(type, field.name);
                 if (index == -1) {
                     fatal_error(field.pos, "Named field in compound literal does not exist");
                 }
             }
-            if (index >= (:int)type.detail.aggregate.num_fields) {
+            if (index >= (:int)type.aggregate.num_fields) {
                 fatal_error(field.pos, "Field initializer in struct/union compound literal out of range");
             }
-            field_type := type.detail.aggregate.fields[index].type;
+            field_type := type.aggregate.fields[index].type;
             if (!resolve_typed_init(field.pos, field_type, field.init)) {
                 fatal_error(field.pos, "Invalid type in compound literal initializer for aggregate type. Expected %s", get_type_name(field_type));
             }
@@ -1529,12 +1529,12 @@ func resolve_expr_compound(expr: Expr*, expected_type: Type*): Operand {
         // These were int, but can't be negative below.
         index: usize = 0;
         max_index: usize = 0;
-        for (i: usize = 0; i < expr.detail.compound.num_fields; i++) {
-            field := expr.detail.compound.fields[i];
+        for (i: usize = 0; i < expr.compound.num_fields; i++) {
+            field := expr.compound.fields[i];
             if (field.kind == FIELD_NAME) {
                 fatal_error(field.pos, "Named field initializer not allowed for array compound literals");
             } else if (field.kind == FIELD_INDEX) {
-                operand := resolve_const_expr(field.key.index);
+                operand := resolve_const_expr(field.index);
                 if (!is_integer_type(operand.type)) {
                     fatal_error(field.pos, "Field initializer index expression must have type int");
                 }
@@ -1546,7 +1546,7 @@ func resolve_expr_compound(expr: Expr*, expected_type: Type*): Operand {
                 }
                 index = operand.val.i;
             }
-            if (type.detail.num_elems && index >= (:int)type.detail.num_elems) {
+            if (type.num_elems && index >= (:int)type.num_elems) {
                 fatal_error(field.pos, "Field initializer in array compound literal out of range");
             }
             if (!resolve_typed_init(field.pos, type.base, field.init)) {
@@ -1555,16 +1555,16 @@ func resolve_expr_compound(expr: Expr*, expected_type: Type*): Operand {
             max_index = max(max_index, index);
             index++;
         }
-        if (type.detail.num_elems == 0) {
+        if (type.num_elems == 0) {
             type = type_array(type.base, max_index + 1);
         }
     } else {
         #assert(is_scalar_type(type));
-        if (expr.detail.compound.num_fields > 1) {
+        if (expr.compound.num_fields > 1) {
             fatal_error(expr.pos, "Compound literal for scalar type cannot have more than one operand");
         }
-        if (expr.detail.compound.num_fields == 1) {
-            field := expr.detail.compound.fields[0];
+        if (expr.compound.num_fields == 1) {
+            field := expr.compound.fields[0];
             init := resolve_expected_expr_rvalue(field.init, type);
             if (!convert_operand(&init, type)) {
                 fatal_error(field.pos, "Invalid type in compound literal initializer. Expected %s, got %s", get_type_name(type), get_type_name(init.type));
@@ -1576,55 +1576,55 @@ func resolve_expr_compound(expr: Expr*, expected_type: Type*): Operand {
 
 func resolve_expr_call(expr: Expr*): Operand {
     #assert(expr.kind == EXPR_CALL);
-    if (expr.detail.call.expr.kind == EXPR_NAME) {
-        sym := resolve_name(expr.detail.call.expr.detail.name);
+    if (expr.call.expr.kind == EXPR_NAME) {
+        sym := resolve_name(expr.call.expr.name);
         if (sym && sym.kind == SYM_TYPE) {
-            if (expr.detail.call.num_args != 1) {
+            if (expr.call.num_args != 1) {
                 fatal_error(expr.pos, "Type conversion operator takes 1 argument");
             }
-            operand := resolve_expr_rvalue(expr.detail.call.args[0]);
+            operand := resolve_expr_rvalue(expr.call.args[0]);
             if (!cast_operand(&operand, sym.type)) {
                 fatal_error(expr.pos, "Invalid type cast from %s to %s", get_type_name(operand.type), get_type_name(sym.type));
             }
-            set_resolved_sym(expr.detail.call.expr, sym);
+            set_resolved_sym(expr.call.expr, sym);
             return operand;
         }
     }
-    function := resolve_expr_rvalue(expr.detail.call.expr);
+    function := resolve_expr_rvalue(expr.call.expr);
     if (function.type.kind != CMPL_TYPE_FUNC) {
         fatal_error(expr.pos, "Cannot call non-function value");
     }
-    num_params: usize = function.type.detail.function.num_params;
-    if (expr.detail.call.num_args < num_params) {
+    num_params: usize = function.type.function.num_params;
+    if (expr.call.num_args < num_params) {
         fatal_error(expr.pos, "Function call with too few arguments");
     }
-    if (expr.detail.call.num_args > num_params && !function.type.detail.function.has_varargs) {
+    if (expr.call.num_args > num_params && !function.type.function.has_varargs) {
         fatal_error(expr.pos, "Function call with too many arguments");
     }
     for (i: usize = 0; i < num_params; i++) {
-        param_type: Type* = function.type.detail.function.params[i];
-        arg := resolve_expected_expr_rvalue(expr.detail.call.args[i], param_type);
+        param_type: Type* = function.type.function.params[i];
+        arg := resolve_expected_expr_rvalue(expr.call.args[i], param_type);
         if (is_array_type(param_type)) {
             param_type = type_ptr(param_type.base);
         }
         if (!convert_operand(&arg, param_type)) {
-            fatal_error(expr.detail.call.args[i].pos, "Invalid type in function call argument. Expected %s, got %s", get_type_name(param_type), get_type_name(arg.type));
+            fatal_error(expr.call.args[i].pos, "Invalid type in function call argument. Expected %s, got %s", get_type_name(param_type), get_type_name(arg.type));
         }
     }
-    for (i: usize = num_params; i < expr.detail.call.num_args; i++) {
-        resolve_expr_rvalue(expr.detail.call.args[i]);
+    for (i: usize = num_params; i < expr.call.num_args; i++) {
+        resolve_expr_rvalue(expr.call.args[i]);
     }
-    return operand_rvalue(function.type.detail.function.ret);
+    return operand_rvalue(function.type.function.ret);
 }
 
 func resolve_expr_ternary(expr: Expr*, expected_type: Type*): Operand {
     #assert(expr.kind == EXPR_TERNARY);
-    cond := resolve_expr_rvalue(expr.detail.ternary.cond);
+    cond := resolve_expr_rvalue(expr.ternary.cond);
     if (!is_scalar_type(cond.type)) {
         fatal_error(expr.pos, "Ternary conditional must have scalar type");
     }
-    left := resolve_expected_expr_rvalue(expr.detail.ternary.then_expr, expected_type);
-    right := resolve_expected_expr_rvalue(expr.detail.ternary.else_expr, expected_type);
+    left := resolve_expected_expr_rvalue(expr.ternary.then_expr, expected_type);
+    right := resolve_expected_expr_rvalue(expr.ternary.else_expr, expected_type);
     if (left.type == right.type) {
         return operand_rvalue(left.type);
     } else if (is_arithmetic_type(left.type) && is_arithmetic_type(right.type)) {
@@ -1648,11 +1648,11 @@ func resolve_expr_ternary(expr: Expr*, expected_type: Type*): Operand {
 
 func resolve_expr_index(expr: Expr*): Operand {
     #assert(expr.kind == EXPR_INDEX);
-    operand := resolve_expr_rvalue(expr.detail.index.expr);
+    operand := resolve_expr_rvalue(expr.index.expr);
     if (!is_ptr_type(operand.type)) {
         fatal_error(expr.pos, "Can only index arrays and pointers");
     }
-    index := resolve_expr_rvalue(expr.detail.index.index);
+    index := resolve_expr_rvalue(expr.index.index);
     if (!is_integer_type(index.type)) {
         fatal_error(expr.pos, "Index must have integer type");
     }
@@ -1661,8 +1661,8 @@ func resolve_expr_index(expr: Expr*): Operand {
 
 func resolve_expr_cast(expr: Expr*): Operand {
     #assert(expr.kind == EXPR_CAST);
-    type := resolve_typespec(expr.detail.cast.type);
-    operand := resolve_expr_rvalue(expr.detail.cast.expr);
+    type := resolve_typespec(expr.cast.type);
+    operand := resolve_expr_rvalue(expr.cast.expr);
     if (!cast_operand(&operand, type)) {
         fatal_error(expr.pos, "Invalid type cast from %s to %s", get_type_name(operand.type), get_type_name(type));
     }
@@ -1676,12 +1676,12 @@ func resolve_expr_int(expr: Expr*): Operand {
     long_max: ullong = type_metrics[CMPL_TYPE_LONG].max;
     ulong_max: ullong = type_metrics[CMPL_TYPE_ULONG].max;
     llong_max: ullong = type_metrics[CMPL_TYPE_LLONG].max;
-    val: ullong = expr.detail.int_lit.val;
+    val: ullong = expr.int_lit.val;
     operand := operand_const(type_ullong, Val {ull = val});
     type := type_ullong;
-    if (expr.detail.int_lit.mod == MOD_NONE) {
+    if (expr.int_lit.mod == MOD_NONE) {
         overflow := false;
-        switch (expr.detail.int_lit.suffix) {
+        switch (expr.int_lit.suffix) {
         case SUFFIX_NONE:
             type = type_int;
             if (val > int_max) {
@@ -1722,7 +1722,7 @@ func resolve_expr_int(expr: Expr*): Operand {
             fatal_error(expr.pos, "Integer literal overflow");
         }
     } else {
-        switch (expr.detail.int_lit.suffix) {
+        switch (expr.int_lit.suffix) {
         case SUFFIX_NONE:
             type = type_int;
             if (val > int_max) {
@@ -1780,7 +1780,7 @@ func resolve_expr_int(expr: Expr*): Operand {
 }
 
 func resolve_expr_modify(expr: Expr*): Operand {
-    operand := resolve_expr(expr.detail.modify.expr);
+    operand := resolve_expr(expr.modify.expr);
     type := operand.type;
     complete_type(type);
     if (!operand.is_lvalue) {
@@ -1790,7 +1790,7 @@ func resolve_expr_modify(expr: Expr*): Operand {
         fatal_error(expr.pos, "Cannot modify non-modifiable type");
     }
     if (!(is_integer_type(type) || type.kind == CMPL_TYPE_PTR)) {
-        fatal_error(expr.pos, "%s only valid for integer and pointer types", token_kind_name(expr.detail.modify.op));
+        fatal_error(expr.pos, "%s only valid for integer and pointer types", token_kind_name(expr.modify.op));
     }
     return operand_rvalue(type);
 }
@@ -1799,16 +1799,16 @@ func resolve_expected_expr(expr: Expr*, expected_type: Type*): Operand {
     result: Operand;
     switch (expr.kind) {
     case EXPR_PAREN:
-        result = resolve_expected_expr(expr.detail.paren.expr, expected_type);
+        result = resolve_expected_expr(expr.paren.expr, expected_type);
     case EXPR_INT:
         result = resolve_expr_int(expr);
     case EXPR_FLOAT:
-        result = operand_const(expr.detail.float_lit.suffix == SUFFIX_D ? type_double : type_float, Val {0});
+        result = operand_const(expr.float_lit.suffix == SUFFIX_D ? type_double : type_float, Val {0});
     case EXPR_STR:
-        result = operand_rvalue(type_array(type_char, strlen(expr.detail.str_lit.val) + 1));
+        result = operand_rvalue(type_array(type_char, strlen(expr.str_lit.val) + 1));
     case EXPR_NAME:
         result = resolve_expr_name(expr);
-        set_resolved_sym(expr, resolve_name(expr.detail.name));
+        set_resolved_sym(expr, resolve_name(expr.name));
     case EXPR_CAST:
         result = resolve_expr_cast(expr);
     case EXPR_CALL:
@@ -1820,12 +1820,12 @@ func resolve_expected_expr(expr: Expr*, expected_type: Type*): Operand {
     case EXPR_COMPOUND:
         result = resolve_expr_compound(expr, expected_type);
     case EXPR_UNARY:
-        if (expr.detail.unary.op == TOKEN_AND) {
+        if (expr.unary.op == TOKEN_AND) {
             operand: Operand;
             if (expected_type && is_ptr_type(expected_type)) {
-                operand = resolve_expected_expr(expr.detail.unary.expr, expected_type.base);
+                operand = resolve_expected_expr(expr.unary.expr, expected_type.base);
             } else {
-                operand = resolve_expr(expr.detail.unary.expr);
+                operand = resolve_expr(expr.unary.expr);
             }
             if (!operand.is_lvalue) {
                 fatal_error(expr.pos, "Cannot take address of non-lvalue");
@@ -1839,73 +1839,73 @@ func resolve_expected_expr(expr: Expr*, expected_type: Type*): Operand {
     case EXPR_TERNARY:
         result = resolve_expr_ternary(expr, expected_type);
     case EXPR_SIZEOF_EXPR: {
-        if (expr.detail.sizeof_expr.kind == EXPR_NAME) {
-            sym := resolve_name(expr.detail.sizeof_expr.detail.name);
+        if (expr.sizeof_expr.kind == EXPR_NAME) {
+            sym := resolve_name(expr.sizeof_expr.name);
             if (sym && sym.kind == SYM_TYPE) {
                 complete_type(sym.type);
                 result = operand_const(type_usize, Val {ull = type_sizeof(sym.type)});
-                set_resolved_type(expr.detail.sizeof_expr, sym.type);
-                set_resolved_sym(expr.detail.sizeof_expr, sym);
+                set_resolved_type(expr.sizeof_expr, sym.type);
+                set_resolved_sym(expr.sizeof_expr, sym);
                 break;
             }
         }
-        type: Type* = resolve_expr(expr.detail.sizeof_expr).type;
+        type: Type* = resolve_expr(expr.sizeof_expr).type;
         complete_type(type);
         result = operand_const(type_usize, Val {ull = type_sizeof(type)});
     }
     case EXPR_SIZEOF_TYPE: {
-        type := resolve_typespec(expr.detail.sizeof_type);
+        type := resolve_typespec(expr.sizeof_type);
         complete_type(type);
         result = operand_const(type_usize, Val {ull = type_sizeof(type)});
     }
     case EXPR_ALIGNOF_EXPR: {
-        if (expr.detail.sizeof_expr.kind == EXPR_NAME) {
-            sym := resolve_name(expr.detail.alignof_expr.detail.name);
+        if (expr.sizeof_expr.kind == EXPR_NAME) {
+            sym := resolve_name(expr.alignof_expr.name);
             if (sym && sym.kind == SYM_TYPE) {
                 complete_type(sym.type);
                 result = operand_const(type_usize, Val {ull = type_alignof(sym.type)});
-                set_resolved_type(expr.detail.alignof_expr, sym.type);
-                set_resolved_sym(expr.detail.alignof_expr, sym);
+                set_resolved_type(expr.alignof_expr, sym.type);
+                set_resolved_sym(expr.alignof_expr, sym);
                 break;
             }
         }
-        type: Type* = resolve_expr(expr.detail.alignof_expr).type;
+        type: Type* = resolve_expr(expr.alignof_expr).type;
         complete_type(type);
         result = operand_const(type_usize, Val {ull = type_alignof(type)});
     }
     case EXPR_ALIGNOF_TYPE: {
-        type := resolve_typespec(expr.detail.alignof_type);
+        type := resolve_typespec(expr.alignof_type);
         complete_type(type);
         result = operand_const(type_usize, Val {ull = type_alignof(type)});
     }
     case EXPR_TYPEOF_TYPE: {
-        type := resolve_typespec(expr.detail.typeof_type);
+        type := resolve_typespec(expr.typeof_type);
         result = operand_const(type_ullong, Val {ull = type.typeid});
     }
     case EXPR_TYPEOF_EXPR: {
-        if (expr.detail.typeof_expr.kind == EXPR_NAME) {
-            sym := resolve_name(expr.detail.typeof_expr.detail.name);
+        if (expr.typeof_expr.kind == EXPR_NAME) {
+            sym := resolve_name(expr.typeof_expr.name);
             if (sym && sym.kind == SYM_TYPE) {
                 result = operand_const(type_ullong, Val {ull = sym.type.typeid});
-                set_resolved_type(expr.detail.typeof_expr, sym.type);
-                set_resolved_sym(expr.detail.typeof_expr, sym);
+                set_resolved_type(expr.typeof_expr, sym.type);
+                set_resolved_sym(expr.typeof_expr, sym);
                 break;
             }
         }
-        type: Type* = resolve_expr(expr.detail.typeof_expr).type;
+        type: Type* = resolve_expr(expr.typeof_expr).type;
         result = operand_const(type_ullong, Val {ull = type.typeid});
     }
     case EXPR_OFFSETOF: {
-        type := resolve_typespec(expr.detail.offsetof_field.type);
+        type := resolve_typespec(expr.offsetof_field.type);
         complete_type(type);
         if (type.kind != CMPL_TYPE_STRUCT && type.kind != CMPL_TYPE_UNION) {
             fatal_error(expr.pos, "offsetof can only be used with struct/union types");
         }
-        field := aggregate_field_index(type, expr.detail.offsetof_field.name);
+        field := aggregate_field_index(type, expr.offsetof_field.name);
         if (field < 0) {
-            fatal_error(expr.pos, "No field '%s' in type", expr.detail.offsetof_field.name);
+            fatal_error(expr.pos, "No field '%s' in type", expr.offsetof_field.name);
         }
-        result = operand_const(type_usize, Val {ull = type.detail.aggregate.fields[field].offset});
+        result = operand_const(type_usize, Val {ull = type.aggregate.fields[field].offset});
     }
     case EXPR_MODIFY:
         result = resolve_expr_modify(expr);
@@ -1950,22 +1950,22 @@ func add_package_decls(package: Package*) {
     for (i: usize = 0; i < package.num_decls; i++) {
         decl := package.decls[i];
         if (decl.kind == DECL_NOTE) {
-            if (!map_get(&decl_note_names, decl.detail.note.name)) {
-                warning(decl.pos, "Unknown declaration #directive '%s'", decl.detail.note.name);
+            if (!map_get(&decl_note_names, decl.note.name)) {
+                warning(decl.pos, "Unknown declaration #directive '%s'", decl.note.name);
             }
-            if (decl.detail.note.name == declare_note_name) {
-                if (decl.detail.note.num_args != 1) {
+            if (decl.note.name == declare_note_name) {
+                if (decl.note.num_args != 1) {
                     fatal_error(decl.pos, "#declare_note takes 1 argument");
                 }
-                arg: Expr* = decl.detail.note.args[0].expr;
+                arg: Expr* = decl.note.args[0].expr;
                 if (arg.kind != EXPR_NAME) {
                     fatal_error(decl.pos, "#declare_note argument must be name");
                 }
-                map_put(&decl_note_names, arg.detail.name, (:void*)1);
-            } else if (decl.detail.note.name == static_assert_name) {
+                map_put(&decl_note_names, arg.name, (:void*)1);
+            } else if (decl.note.name == static_assert_name) {
                 // TODO: decide how to handle top-level static #asserts wrt laziness/tree shaking
                 if (!flag_lazy) {
-                    resolve_static_assert(decl.detail.note);
+                    resolve_static_assert(decl.note);
                 }
             }
         } else if (decl.kind == DECL_IMPORT) {
@@ -2033,8 +2033,8 @@ func import_all_package_symbols(package: Package*) {
 }
 
 func import_package_symbols(decl: Decl*, package: Package*) {
-    for (i: usize = 0; i < decl.detail.import_decl.num_items; i++) {
-        item := decl.detail.import_decl.items[i];
+    for (i: usize = 0; i < decl.import_decl.num_items; i++) {
+        item := decl.import_decl.items[i];
         sym := get_package_sym(package, item.name);
         if (!sym) {
             fatal_error(decl.pos, "Symbol '%s' does not exist in package '%s'", item.name, package.path);
@@ -2047,19 +2047,19 @@ func process_package_imports(package: Package*) {
     for (i: usize = 0; i < package.num_decls; i++) {
         decl := package.decls[i];
         if (decl.kind == DECL_NOTE) {
-            if (decl.detail.note.name == always_name) {
+            if (decl.note.name == always_name) {
                 package.always_reachable = true;
             }
         } else if (decl.kind == DECL_IMPORT) {
             path_buf: char* = NULL;
-            if (decl.detail.import_decl.is_relative) {
+            if (decl.import_decl.is_relative) {
                 buf_printf(&path_buf, "%s/", package.path);
             }
-            for (k: usize = 0; k < decl.detail.import_decl.num_names; k++) {
-                if (!str_islower(decl.detail.import_decl.names[k])) {
-                    fatal_error(decl.pos, "Import name must be lower case: '%s'", decl.detail.import_decl.names[k]);
+            for (k: usize = 0; k < decl.import_decl.num_names; k++) {
+                if (!str_islower(decl.import_decl.names[k])) {
+                    fatal_error(decl.pos, "Import name must be lower case: '%s'", decl.import_decl.names[k]);
                 }
-                buf_printf(&path_buf, "%s%s", k == 0 ? "" : "/", decl.detail.import_decl.names[k]);
+                buf_printf(&path_buf, "%s%s", k == 0 ? "" : "/", decl.import_decl.names[k]);
             }
             imported_package: Package* = import_package(path_buf);
             if (!imported_package) {
@@ -2067,7 +2067,7 @@ func process_package_imports(package: Package*) {
             }
             buf_free((:void**)&path_buf);
             import_package_symbols(decl, imported_package);
-            if (decl.detail.import_decl.import_all) {
+            if (decl.import_decl.import_all) {
                 import_all_package_symbols(imported_package);
             }
         }

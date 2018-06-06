@@ -39,7 +39,7 @@ func new_typespec(kind: TypespecKind, pos: SrcPos): Typespec* {
 
 func new_typespec_name(pos: SrcPos, name: char const*): Typespec* {
     t := new_typespec(TYPESPEC_NAME, pos);
-    t.detail.name = name;
+    t.name = name;
     return t;
 }
 
@@ -58,16 +58,16 @@ func new_typespec_const(pos: SrcPos, base: Typespec*): Typespec* {
 func new_typespec_array(pos: SrcPos, elem: Typespec*, size: Expr*): Typespec* {
     t := new_typespec(TYPESPEC_ARRAY, pos);
     t.base = elem;
-    t.detail.num_elems = size;
+    t.num_elems = size;
     return t;
 }
 
 func new_typespec_func(pos: SrcPos, args: Typespec**, num_args: usize, ret: Typespec*, has_varargs: bool): Typespec* {
     t := new_typespec(TYPESPEC_FUNC, pos);
-    t.detail.function.args = ast_dup(args, num_args * sizeof(*args));
-    t.detail.function.num_args = num_args;
-    t.detail.function.ret = ret;
-    t.detail.function.has_varargs = has_varargs;
+    t.function.args = ast_dup(args, num_args * sizeof(*args));
+    t.function.num_args = num_args;
+    t.function.ret = ret;
+    t.function.has_varargs = has_varargs;
     return t;
 }
 
@@ -102,71 +102,71 @@ func is_decl_foreign(decl: Decl*): bool {
 
 func new_decl_enum(pos: SrcPos, name: char const*, type: Typespec*, items: EnumItem*, num_items: usize): Decl* {
     d := new_decl(DECL_ENUM, pos, name);
-    d.detail.enum_decl.type = type;
-    d.detail.enum_decl.items = ast_dup(items, num_items * sizeof(*items));
-    d.detail.enum_decl.num_items = num_items;
+    d.enum_decl.type = type;
+    d.enum_decl.items = ast_dup(items, num_items * sizeof(*items));
+    d.enum_decl.num_items = num_items;
     return d;
 }
 
 func new_decl_aggregate(pos: SrcPos, kind: DeclKind, name: char const*, items: AggregateItem*, num_items: usize): Decl* {
     #assert(kind == DECL_STRUCT || kind == DECL_UNION);
     d := new_decl(kind, pos, name);
-    d.detail.aggregate.items = ast_dup(items, num_items * sizeof(*items));
-    d.detail.aggregate.num_items = num_items;
+    d.aggregate.items = ast_dup(items, num_items * sizeof(*items));
+    d.aggregate.num_items = num_items;
     return d;
 }
 
 func new_decl_union(pos: SrcPos, name: char const*, items: AggregateItem*, num_items: usize): Decl* {
     d := new_decl(DECL_UNION, pos, name);
-    d.detail.aggregate.items = ast_dup(items, num_items * sizeof(*items));
-    d.detail.aggregate.num_items = num_items;
+    d.aggregate.items = ast_dup(items, num_items * sizeof(*items));
+    d.aggregate.num_items = num_items;
     return d;
 }
 
 func new_decl_var(pos: SrcPos, name: char const*, type: Typespec*, expr: Expr*): Decl* {
     d := new_decl(DECL_VAR, pos, name);
-    d.detail.var_decl.type = type;
-    d.detail.var_decl.expr = expr;
+    d.var_decl.type = type;
+    d.var_decl.expr = expr;
     return d;
 }
 
 func new_decl_func(pos: SrcPos, name: char const*, params: FuncParam*, num_params: usize, ret_type: Typespec*, has_varargs: bool, block: StmtList): Decl* {
     d := new_decl(DECL_FUNC, pos, name);
-    d.detail.function.params = ast_dup(params, num_params * sizeof(*params));
-    d.detail.function.num_params = num_params;
-    d.detail.function.ret_type = ret_type;
-    d.detail.function.has_varargs = has_varargs;
-    d.detail.function.block = block;
+    d.function.params = ast_dup(params, num_params * sizeof(*params));
+    d.function.num_params = num_params;
+    d.function.ret_type = ret_type;
+    d.function.has_varargs = has_varargs;
+    d.function.block = block;
     return d;
 }
 
 func new_decl_const(pos: SrcPos, name: char const*, type: Typespec*, expr: Expr*): Decl* {
     d := new_decl(DECL_CONST, pos, name);
-    d.detail.const_decl.type = type;
-    d.detail.const_decl.expr = expr;
+    d.const_decl.type = type;
+    d.const_decl.expr = expr;
     return d;
 }
 
 func new_decl_typedef(pos: SrcPos, name: char const*, type: Typespec*): Decl* {
     d := new_decl(DECL_TYPEDEF, pos, name);
-    d.detail.typedef_decl.type = type;
+    d.typedef_decl.type = type;
     return d;
 }
 
 func new_decl_note(pos: SrcPos, note: Note): Decl* {
     d := new_decl(DECL_NOTE, pos, NULL);
-    d.detail.note = note;
+    d.note = note;
     return d;
 }
 
 func new_decl_import(pos: SrcPos, is_relative: bool, names: char const**, num_names: usize, import_all: bool, items: ImportItem*, num_items: usize): Decl* {
     d := new_decl(DECL_IMPORT, pos, NULL);
-    d.detail.import_decl.is_relative = is_relative;
-    d.detail.import_decl.names = ast_dup(names, num_names * sizeof(*names));
-    d.detail.import_decl.num_names = num_names;
-    d.detail.import_decl.import_all = import_all;
-    d.detail.import_decl.items = ast_dup(items, num_items * sizeof(*items));
-    d.detail.import_decl.num_items = num_items;
+    d.import_decl.is_relative = is_relative;
+    d.import_decl.names = ast_dup(names, num_names * sizeof(*names));
+    d.import_decl.num_names = num_names;
+    d.import_decl.import_all = import_all;
+    d.import_decl.items = ast_dup(items, num_items * sizeof(*items));
+    d.import_decl.num_items = num_items;
     return d;
 }
 
@@ -179,146 +179,146 @@ func new_expr(kind: ExprKind, pos: SrcPos): Expr* {
 
 func new_expr_paren(pos: SrcPos, expr: Expr*): Expr* {
     e := new_expr(EXPR_PAREN, pos);
-    e.detail.paren.expr = expr;
+    e.paren.expr = expr;
     return e;
 }
 
 func new_expr_sizeof_expr(pos: SrcPos, expr: Expr*): Expr* {
     e := new_expr(EXPR_SIZEOF_EXPR, pos);
-    e.detail.sizeof_expr = expr;
+    e.sizeof_expr = expr;
     return e;
 }
 
 func new_expr_sizeof_type(pos: SrcPos, type: Typespec*): Expr* {
     e := new_expr(EXPR_SIZEOF_TYPE, pos);
-    e.detail.sizeof_type = type;
+    e.sizeof_type = type;
     return e;
 }
 
 func new_expr_typeof_expr(pos: SrcPos, expr: Expr*): Expr* {
     e := new_expr(EXPR_TYPEOF_EXPR, pos);
-    e.detail.typeof_expr  = expr;
+    e.typeof_expr  = expr;
     return e;
 }
 
 func new_expr_typeof_type(pos: SrcPos, type: Typespec*): Expr* {
     e := new_expr(EXPR_TYPEOF_TYPE, pos);
-    e.detail.typeof_type = type;
+    e.typeof_type = type;
     return e;
 }
 
 func new_expr_alignof_expr(pos: SrcPos, expr: Expr*): Expr* {
     e := new_expr(EXPR_ALIGNOF_EXPR, pos);
-    e.detail.alignof_expr = expr;
+    e.alignof_expr = expr;
     return e;
 }
 
 func new_expr_alignof_type(pos: SrcPos, type: Typespec*): Expr* {
     e := new_expr(EXPR_ALIGNOF_TYPE, pos);
-    e.detail.alignof_type = type;
+    e.alignof_type = type;
     return e;
 }
 
 func new_expr_offsetof(pos: SrcPos, type: Typespec*, name: char const*): Expr* {
     e := new_expr(EXPR_OFFSETOF, pos);
-    e.detail.offsetof_field.type = type;
-    e.detail.offsetof_field.name = name;
+    e.offsetof_field.type = type;
+    e.offsetof_field.name = name;
     return e;
 }
 
 func new_expr_modify(pos: SrcPos, op: TokenKind, post: bool, expr: Expr*): Expr* {
     e := new_expr(EXPR_MODIFY, pos);
-    e.detail.modify.op = op;
-    e.detail.modify.post = post;
-    e.detail.modify.expr = expr;
+    e.modify.op = op;
+    e.modify.post = post;
+    e.modify.expr = expr;
     return e;
 }
 
 func new_expr_int(pos: SrcPos, val: ullong, mod: TokenMod, suffix: TokenSuffix): Expr* {
     e := new_expr(EXPR_INT, pos);
-    e.detail.int_lit.val = val;
-    e.detail.int_lit.mod = mod;
-    e.detail.int_lit.suffix = suffix;
+    e.int_lit.val = val;
+    e.int_lit.mod = mod;
+    e.int_lit.suffix = suffix;
     return e;
 }
 
 func new_expr_float(pos: SrcPos, val: double, suffix: TokenSuffix): Expr* {
     e := new_expr(EXPR_FLOAT, pos);
-    e.detail.float_lit.val = val;
-    e.detail.float_lit.suffix = suffix;
+    e.float_lit.val = val;
+    e.float_lit.suffix = suffix;
     return e;
 }
 
 func new_expr_str(pos: SrcPos, val: char const*, mod: TokenMod): Expr* {
     e := new_expr(EXPR_STR, pos);
-    e.detail.str_lit.val = val;
-    e.detail.str_lit.mod = mod;
+    e.str_lit.val = val;
+    e.str_lit.mod = mod;
     return e;
 }
 
 func new_expr_name(pos: SrcPos, name: char const*): Expr* {
     e := new_expr(EXPR_NAME, pos);
-    e.detail.name = name;
+    e.name = name;
     return e;
 }
 
 func new_expr_compound(pos: SrcPos, type: Typespec*, fields: CompoundField*, num_fields: usize): Expr* {
     e := new_expr(EXPR_COMPOUND, pos);
-    e.detail.compound.type = type;
-    e.detail.compound.fields = ast_dup(fields, num_fields * sizeof(*fields));
-    e.detail.compound.num_fields = num_fields;
+    e.compound.type = type;
+    e.compound.fields = ast_dup(fields, num_fields * sizeof(*fields));
+    e.compound.num_fields = num_fields;
     return e;
 }
 
 func new_expr_cast(pos: SrcPos, type: Typespec*, expr: Expr*): Expr* {
     e := new_expr(EXPR_CAST, pos);
-    e.detail.cast.type = type;
-    e.detail.cast.expr = expr;
+    e.cast.type = type;
+    e.cast.expr = expr;
     return e;
 }
 
 func new_expr_call(pos: SrcPos, expr: Expr*, args: Expr**, num_args: usize): Expr* {
     e := new_expr(EXPR_CALL, pos);
-    e.detail.call.expr = expr;
-    e.detail.call.args = ast_dup(args, num_args * sizeof(*args));
-    e.detail.call.num_args = num_args;
+    e.call.expr = expr;
+    e.call.args = ast_dup(args, num_args * sizeof(*args));
+    e.call.num_args = num_args;
     return e;
 }
 
 func new_expr_index(pos: SrcPos, expr: Expr*, index: Expr*): Expr* {
     e := new_expr(EXPR_INDEX, pos);
-    e.detail.index.expr = expr;
-    e.detail.index.index = index;
+    e.index.expr = expr;
+    e.index.index = index;
     return e;
 }
 
 func new_expr_field(pos: SrcPos, expr: Expr*, name: char const*): Expr* {
     e := new_expr(EXPR_FIELD, pos);
-    e.detail.field.expr = expr;
-    e.detail.field.name = name;
+    e.field.expr = expr;
+    e.field.name = name;
     return e;
 }
 
 func new_expr_unary(pos: SrcPos, op: TokenKind, expr: Expr*): Expr* {
     e := new_expr(EXPR_UNARY, pos);
-    e.detail.unary.op = op;
-    e.detail.unary.expr = expr;
+    e.unary.op = op;
+    e.unary.expr = expr;
     return e;
 }
 
 func new_expr_binary(pos: SrcPos, op: TokenKind, left: Expr*, right: Expr*): Expr* {
     e := new_expr(EXPR_BINARY, pos);
-    e.detail.binary.op = op;
-    e.detail.binary.left = left;
-    e.detail.binary.right = right;
+    e.binary.op = op;
+    e.binary.left = left;
+    e.binary.right = right;
     return e;
 }
 
 func new_expr_ternary(pos: SrcPos, cond: Expr*, then_expr: Expr*, else_expr: Expr*): Expr* {
     e := new_expr(EXPR_TERNARY, pos);
-    e.detail.ternary.cond = cond;
-    e.detail.ternary.then_expr = then_expr;
-    e.detail.ternary.else_expr = else_expr;
+    e.ternary.cond = cond;
+    e.ternary.then_expr = then_expr;
+    e.ternary.else_expr = else_expr;
     return e;
 }
 
@@ -341,31 +341,31 @@ func new_stmt(kind: StmtKind, pos: SrcPos): Stmt* {
 
 func new_stmt_label(pos: SrcPos, label: char const*): Stmt* {
     s := new_stmt(STMT_LABEL, pos);
-    s.detail.label = label;
+    s.label = label;
     return s;
 }
 
 func new_stmt_goto(pos: SrcPos, label: char const*): Stmt* {
     s := new_stmt(STMT_GOTO, pos);
-    s.detail.label = label;
+    s.label = label;
     return s;
 }
 
 func new_stmt_note(pos: SrcPos, note: Note): Stmt* {
     s := new_stmt(STMT_NOTE, pos);
-    s.detail.note = note;
+    s.note = note;
     return s;
 }
 
 func new_stmt_decl(pos: SrcPos, decl: Decl*): Stmt* {
     s := new_stmt(STMT_DECL, pos);
-    s.detail.decl = decl;
+    s.decl = decl;
     return s;
 }
 
 func new_stmt_return(pos: SrcPos, expr: Expr*): Stmt* {
     s := new_stmt(STMT_RETURN, pos);
-    s.detail.expr = expr;
+    s.expr = expr;
     return s;
 }
 
@@ -379,71 +379,71 @@ func new_stmt_continue(pos: SrcPos): Stmt* {
 
 func new_stmt_block(pos: SrcPos, block: StmtList): Stmt* {
     s := new_stmt(STMT_BLOCK, pos);
-    s.detail.block = block;
+    s.block = block;
     return s;
 }
 
 func new_stmt_if(pos: SrcPos, init: Stmt*, cond: Expr*, then_block: StmtList, elseifs: ElseIf*, num_elseifs: usize, else_block: StmtList): Stmt* {
     s := new_stmt(STMT_IF, pos);
-    s.detail.if_stmt.init = init;
-    s.detail.if_stmt.cond = cond;
-    s.detail.if_stmt.then_block = then_block;
-    s.detail.if_stmt.elseifs = ast_dup(elseifs, num_elseifs * sizeof(*elseifs));
-    s.detail.if_stmt.num_elseifs = num_elseifs;
-    s.detail.if_stmt.else_block = else_block;
+    s.if_stmt.init = init;
+    s.if_stmt.cond = cond;
+    s.if_stmt.then_block = then_block;
+    s.if_stmt.elseifs = ast_dup(elseifs, num_elseifs * sizeof(*elseifs));
+    s.if_stmt.num_elseifs = num_elseifs;
+    s.if_stmt.else_block = else_block;
     return s;
 }
 
 func new_stmt_while(pos: SrcPos, cond: Expr*, block: StmtList): Stmt* {
     s := new_stmt(STMT_WHILE, pos);
-    s.detail.while_stmt.cond = cond;
-    s.detail.while_stmt.block = block;
+    s.while_stmt.cond = cond;
+    s.while_stmt.block = block;
     return s;
 }
 
 func new_stmt_do_while(pos: SrcPos, cond: Expr*, block: StmtList): Stmt* {
     s := new_stmt(STMT_DO_WHILE, pos);
-    s.detail.while_stmt.cond = cond;
-    s.detail.while_stmt.block = block;
+    s.while_stmt.cond = cond;
+    s.while_stmt.block = block;
     return s;
 }
 
 func new_stmt_for(pos: SrcPos, init: Stmt*, cond: Expr*, next: Stmt*, block: StmtList): Stmt* {
     s := new_stmt(STMT_FOR, pos);
-    s.detail.for_stmt.init = init;
-    s.detail.for_stmt.cond = cond;
-    s.detail.for_stmt.next = next;
-    s.detail.for_stmt.block = block;
+    s.for_stmt.init = init;
+    s.for_stmt.cond = cond;
+    s.for_stmt.next = next;
+    s.for_stmt.block = block;
     return s;
 }
 
 func new_stmt_switch(pos: SrcPos, expr: Expr*, cases: SwitchCase*, num_cases: usize): Stmt* {
     s := new_stmt(STMT_SWITCH, pos);
-    s.detail.switch_stmt.expr = expr;
-    s.detail.switch_stmt.cases = ast_dup(cases, num_cases * sizeof(*cases));
-    s.detail.switch_stmt.num_cases = num_cases;
+    s.switch_stmt.expr = expr;
+    s.switch_stmt.cases = ast_dup(cases, num_cases * sizeof(*cases));
+    s.switch_stmt.num_cases = num_cases;
     return s;
 }
 
 func new_stmt_assign(pos: SrcPos, op: TokenKind, left: Expr*, right: Expr*): Stmt* {
     s := new_stmt(STMT_ASSIGN, pos);
-    s.detail.assign.op = op;
-    s.detail.assign.left = left;
-    s.detail.assign.right = right;
+    s.assign.op = op;
+    s.assign.left = left;
+    s.assign.right = right;
     return s;
 }
 
 func new_stmt_init(pos: SrcPos, name: char const*, type: Typespec*, expr: Expr*): Stmt* {
     s := new_stmt(STMT_INIT, pos);
-    s.detail.init.name = name;
-    s.detail.init.type = type;
-    s.detail.init.expr = expr;
+    s.init.name = name;
+    s.init.type = type;
+    s.init.expr = expr;
     return s;
 }
 
 func new_stmt_expr(pos: SrcPos, expr: Expr*): Stmt* {
     s := new_stmt(STMT_EXPR, pos);
-    s.detail.expr = expr;
+    s.expr = expr;
     return s;
 }
 

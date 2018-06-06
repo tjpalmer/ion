@@ -86,14 +86,14 @@ func parse_expr_compound_field(): CompoundField {
         index := parse_expr();
         expect_token(TOKEN_RBRACKET);
         expect_token(TOKEN_ASSIGN);
-        return CompoundField {FIELD_INDEX, pos, parse_expr(), key = {index = index}};
+        return CompoundField {FIELD_INDEX, pos, parse_expr(), index = index};
     } else {
         expr := parse_expr();
         if (match_token(TOKEN_ASSIGN)) {
             if (expr.kind != EXPR_NAME) {
                 fatal_error(token.pos, "Named initializer in compound literal must be preceded by field name");
             }
-            return CompoundField {FIELD_NAME, pos, parse_expr(), key = {name = expr.detail.name}};
+            return CompoundField {FIELD_NAME, pos, parse_expr(), name = expr.name};
         } else {
             return CompoundField {FIELD_DEFAULT, pos, expr};
         }
@@ -417,13 +417,13 @@ func parse_init_stmt(left: Expr*): Stmt* {
             fatal_error(token.pos, ":= must be preceded by a name");
             return NULL;
         }
-        return new_stmt_init(left.pos, left.detail.name, NULL, parse_expr());
+        return new_stmt_init(left.pos, left.name, NULL, parse_expr());
     } else if (match_token(TOKEN_COLON)) {
         if (left.kind != EXPR_NAME) {
             fatal_error(token.pos, ": must be preceded by a name");
             return NULL;
         }
-        name: char const* = left.detail.name;
+        name: char const* = left.name;
         type := parse_type();
         expr: Expr* = NULL;
         if (match_token(TOKEN_ASSIGN)) {
@@ -746,7 +746,7 @@ func parse_note_arg(): NoteArg {
         if (expr.kind != EXPR_NAME) {
             fatal_error(token.pos, "Left of: operand = in note argument must be a name");
         }
-        name = expr.detail.name;
+        name = expr.name;
         expr = parse_expr();
     }
     return NoteArg {pos = pos, name = name, expr = expr};

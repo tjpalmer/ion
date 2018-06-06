@@ -41,13 +41,11 @@ struct Type {
     base: Type*;
     typeid: int;
     nonmodifiable: bool;
-    detail: TypeDetail;
-}
-
-union TypeDetail {
-    num_elems: usize;
-    aggregate: TypeAggregate;
-    function: TypeFunc;
+    union {
+        num_elems: usize;
+        aggregate: TypeAggregate;
+        function: TypeFunc;
+    }
 }
 
 struct TypeAggregate {
@@ -135,7 +133,7 @@ func is_array_type(type: Type*): bool {
 }
 
 func is_incomplete_array_type(type: Type*): bool {
-    return is_array_type(type) && type.detail.num_elems == 0;
+    return is_array_type(type) && type.num_elems == 0;
 }
 
 func is_integer_type(type: Type*): bool {
@@ -302,7 +300,7 @@ func type_array(base: Type*, num_elems: usize): Type* {
     cached: CachedArrayType* = map_get_from_uint64(&cached_array_types, key);
     for (it: CachedArrayType* = cached; it; it = it.next) {
         type := it.type;
-        if (type.base == base && type.detail.num_elems == num_elems) {
+        if (type.base == base && type.num_elems == num_elems) {
             return type;
         }
     }
@@ -312,7 +310,7 @@ func type_array(base: Type*, num_elems: usize): Type* {
     type.size = num_elems * type_sizeof(base);
     type.align = type_alignof(base);
     type.base = base;
-    type.detail.num_elems = num_elems;
+    type.num_elems = num_elems;
     new_cached: CachedArrayType* = xmalloc(sizeof(CachedArrayType));
     new_cached.type = type;
     new_cached.next = cached;
@@ -334,8 +332,8 @@ func type_func(params: Type**, num_params: usize, ret: Type*, has_varargs: bool)
     cached: CachedFuncType* = map_get_from_uint64(&cached_func_types, key);
     for (it := cached; it; it = it.next) {
         type := it.type;
-        if (type.detail.function.num_params == num_params && type.detail.function.ret == ret && type.detail.function.has_varargs == has_varargs) {
-            if (memcmp(type.detail.function.params, params, params_size) == 0) {
+        if (type.function.num_params == num_params && type.function.ret == ret && type.function.has_varargs == has_varargs) {
+            if (memcmp(type.function.params, params, params_size) == 0) {
                 return type;
             }
         }
@@ -343,10 +341,10 @@ func type_func(params: Type**, num_params: usize, ret: Type*, has_varargs: bool)
     type: Type* = type_alloc(CMPL_TYPE_FUNC);
     type.size = type_metrics[CMPL_TYPE_PTR].size;
     type.align = type_metrics[CMPL_TYPE_PTR].align;
-    type.detail.function.params = memdup(params, params_size);
-    type.detail.function.num_params = num_params;
-    type.detail.function.has_varargs = has_varargs;
-    type.detail.function.ret = ret;
+    type.function.params = memdup(params, params_size);
+    type.function.num_params = num_params;
+    type.function.has_varargs = has_varargs;
+    type.function.ret = ret;
     new_cached: CachedFuncType* = xmalloc(sizeof(CachedFuncType));
     new_cached.type = type;
     new_cached.next = cached;
@@ -378,8 +376,9 @@ func type_complete_struct(type: Type*, fields: TypeField*, num_fields: usize) {
         type.align = max(type.align, type_alignof(it.type));
         nonmodifiable = it.type.nonmodifiable || nonmodifiable;
     }
-    type.detail.aggregate.fields = memdup(fields, num_fields * sizeof(*fields));
-    type.detail.aggregate.num_fields = num_fields;
+    type.size = align_up(type.size, type.align);
+    type.aggregate.fields = memdup(fields, num_fields * sizeof(*fields));
+    type.aggregate.num_fields = num_fields;
     type.nonmodifiable = nonmodifiable;
 }
 
@@ -396,8 +395,9 @@ func type_complete_union(type: Type*, fields: TypeField*, num_fields: usize) {
         type.align = max(type.align, type_alignof(it.type));
         nonmodifiable = it.type.nonmodifiable || nonmodifiable;
     }
-    type.detail.aggregate.fields = memdup(fields, num_fields * sizeof(*fields));
-    type.detail.aggregate.num_fields = num_fields;
+    type.size = align_up(type.size, type.align);
+    type.aggregate.fields = memdup(fields, num_fields * sizeof(*fields));
+    type.aggregate.num_fields = num_fields;
     type.nonmodifiable = nonmodifiable;
 }
 
@@ -443,8 +443,8 @@ func init_builtin_types() {
 
 func aggregate_field_index(type: Type*, name: char const*): int {
     #assert(is_aggregate_type(type));
-    for (i: usize = 0; i < type.detail.aggregate.num_fields; i++) {
-        if (type.detail.aggregate.fields[i].name == name) {
+    for (i: usize = 0; i < type.aggregate.num_fields; i++) {
+        if (type.aggregate.fields[i].name == name) {
             return (:int)i;
         }
     }
@@ -453,8 +453,8 @@ func aggregate_field_index(type: Type*, name: char const*): int {
 
 func aggregate_field_type_from_index(type: Type*, index: int): Type* {
     #assert(is_aggregate_type(type));
-    #assert(0 <= index && index < (:int)type.detail.aggregate.num_fields);
-    return type.detail.aggregate.fields[index].type;
+    #assert(0 <= index && index < (:int)type.aggregate.num_fields);
+    return type.aggregate.fields[index].type;
 }
 
 func aggregate_field_type_from_name(type: Type*, name: char const*): Type* {

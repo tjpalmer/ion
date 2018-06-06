@@ -37,13 +37,11 @@ struct Typespec {
     kind: TypespecKind;
     pos: SrcPos;
     base: Typespec*;
-    detail: TypespecDetail;
-}
-
-union TypespecDetail {
-    name: char const*;
-    function: TypespecFunc;
-    num_elems: Expr*;
+    union {
+        name: char const*;
+        function: TypespecFunc;
+        num_elems: Expr*;
+    }
 }
 
 struct TypespecFunc {
@@ -96,19 +94,18 @@ struct Decl {
     name: char const*;
     notes: Notes;
     is_incomplete: bool;
-    detail: DeclDetail;
+    union {
+        note: Note;
+        enum_decl: DeclEnum;
+        aggregate: DeclAggregate;
+        function: DeclFunc;
+        typedef_decl: DeclTypedef;
+        var_decl: DeclVar;
+        const_decl: DeclVar;
+        import_decl: DeclImport;
+    }
 }
 
-union DeclDetail {
-    note: Note;
-    enum_decl: DeclEnum;
-    aggregate: DeclAggregate;
-    function: DeclFunc;
-    typedef_decl: DeclTypedef;
-    var_decl: DeclVar;
-    const_decl: DeclVar;
-    import_decl: DeclImport;
-}
 
 struct DeclEnum {
     type: Typespec*;
@@ -187,42 +184,38 @@ struct CompoundField {
     kind: CompoundFieldKind;
     pos: SrcPos;
     init: Expr*;
-    key: CompoundFieldKey;
-}
-
-union CompoundFieldKey {
-	name: char const*;
-	index: Expr*;
+    union {
+        name: char const*;
+        index: Expr*;
+    }
 }
 
 struct Expr {
     kind: ExprKind;
     pos: SrcPos;
-    detail: ExprDetail;
-}
-
-union ExprDetail {
-    paren: ExprParen;
-    int_lit: ExprIntLit;
-    float_lit: ExprFloatLit;
-    str_lit: ExprStrLit;
-    name: char const*;
-    sizeof_expr: Expr*;
-    sizeof_type: Typespec*;
-    typeof_expr: Expr*;
-    typeof_type: Typespec*;
-    alignof_expr: Expr*;
-    alignof_type: Typespec*;
-    offsetof_field: ExprOffsetofField;
-    compound: ExprCompound;
-    cast: ExprCast;
-    modify: ExprModify;
-    unary: ExprUnary;
-    binary: ExprBinary;
-    ternary: ExprTernary;
-    call: ExprCall;
-    index: ExprIndex;
-    field: ExprField;
+    union {
+        paren: ExprParen;
+        int_lit: ExprIntLit;
+        float_lit: ExprFloatLit;
+        str_lit: ExprStrLit;
+        name: char const*;
+        sizeof_expr: Expr*;
+        sizeof_type: Typespec*;
+        typeof_expr: Expr*;
+        typeof_type: Typespec*;
+        alignof_expr: Expr*;
+        alignof_type: Typespec*;
+        offsetof_field: ExprOffsetofField;
+        compound: ExprCompound;
+        cast: ExprCast;
+        modify: ExprModify;
+        unary: ExprUnary;
+        binary: ExprBinary;
+        ternary: ExprTernary;
+        call: ExprCall;
+        index: ExprIndex;
+        field: ExprField;
+    }
 }
 
 struct ExprParen {
@@ -341,21 +334,19 @@ struct Stmt {
     kind: StmtKind;
     notes: Notes;
     pos: SrcPos;
-    detail: StmtDetail;
-}
-
-union StmtDetail {
-    note: Note;
-    expr: Expr*;
-    decl: Decl*;
-    if_stmt: StmtIf;
-    while_stmt: StmtWhile;
-    for_stmt: StmtFor;
-    switch_stmt: StmtSwitch;
-    block: StmtList;
-    assign: StmtAssign;
-    init: StmtInit;
-    label: char const*;
+    union {
+        note: Note;
+        expr: Expr*;
+        decl: Decl*;
+        if_stmt: StmtIf;
+        while_stmt: StmtWhile;
+        for_stmt: StmtFor;
+        switch_stmt: StmtSwitch;
+        block: StmtList;
+        assign: StmtAssign;
+        init: StmtInit;
+        label: char const*;
+    }
 }
 
 struct StmtIf {
