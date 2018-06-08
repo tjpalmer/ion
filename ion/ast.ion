@@ -108,18 +108,19 @@ func new_decl_enum(pos: SrcPos, name: char const*, type: Typespec*, items: EnumI
     return d;
 }
 
-func new_decl_aggregate(pos: SrcPos, kind: DeclKind, name: char const*, items: AggregateItem*, num_items: usize): Decl* {
-    #assert(kind == DECL_STRUCT || kind == DECL_UNION);
-    d := new_decl(kind, pos, name);
-    d.aggregate.items = ast_dup(items, num_items * sizeof(*items));
-    d.aggregate.num_items = num_items;
-    return d;
+func new_aggregate(pos: SrcPos, kind: AggregateKind, items: AggregateItem*, num_items: usize): Aggregate* {
+    aggregate: Aggregate* = ast_alloc(sizeof(Aggregate));
+    aggregate.pos = pos;
+    aggregate.kind = kind;
+    aggregate.items = ast_dup(items, num_items * sizeof(*items));
+    aggregate.num_items = num_items;
+    return aggregate;
 }
 
-func new_decl_union(pos: SrcPos, name: char const*, items: AggregateItem*, num_items: usize): Decl* {
-    d := new_decl(DECL_UNION, pos, name);
-    d.aggregate.items = ast_dup(items, num_items * sizeof(*items));
-    d.aggregate.num_items = num_items;
+func new_decl_aggregate(pos: SrcPos, kind: DeclKind, name: char const*, aggregate: Aggregate*): Decl* {
+    #assert(kind == DECL_STRUCT || kind == DECL_UNION);
+    d := new_decl(kind, pos, name);
+    d.aggregate = aggregate;
     return d;
 }
 
@@ -159,8 +160,9 @@ func new_decl_note(pos: SrcPos, note: Note): Decl* {
     return d;
 }
 
-func new_decl_import(pos: SrcPos, is_relative: bool, names: char const**, num_names: usize, import_all: bool, items: ImportItem*, num_items: usize): Decl* {
+func new_decl_import(pos: SrcPos, rename_name: char const*, is_relative: bool, names: char const**, num_names: usize, import_all: bool, items: ImportItem*, num_items: usize): Decl* {
     d := new_decl(DECL_IMPORT, pos, NULL);
+    d.name = rename_name;
     d.import_decl.is_relative = is_relative;
     d.import_decl.names = ast_dup(names, num_names * sizeof(*names));
     d.import_decl.num_names = num_names;
@@ -242,8 +244,10 @@ func new_expr_int(pos: SrcPos, val: ullong, mod: TokenMod, suffix: TokenSuffix):
     return e;
 }
 
-func new_expr_float(pos: SrcPos, val: double, suffix: TokenSuffix): Expr* {
+func new_expr_float(pos: SrcPos, start: char const*, end: char const*, val: double, suffix: TokenSuffix): Expr* {
     e := new_expr(EXPR_FLOAT, pos);
+    e.float_lit.start = start;
+    e.float_lit.end = end;
     e.float_lit.val = val;
     e.float_lit.suffix = suffix;
     return e;

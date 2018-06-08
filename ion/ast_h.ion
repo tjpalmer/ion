@@ -57,11 +57,23 @@ struct FuncParam {
     type: Typespec*;
 }
 
+enum AggregateItemKind {
+    AGGREGATE_ITEM_NONE,
+    AGGREGATE_ITEM_FIELD,
+    AGGREGATE_ITEM_SUBAGGREGATE,
+}
+
 struct AggregateItem {
     pos: SrcPos;
-    names: char const**;
-    num_names: usize;
-    type: Typespec*;
+    kind: AggregateItemKind;
+    union {
+        struct {
+            names: char const**;
+            num_names: usize;
+            type: Typespec*;
+        }
+        subaggregate: Aggregate*;
+    }
 }
 
 struct EnumItem {
@@ -88,6 +100,19 @@ enum DeclKind {
     DECL_IMPORT,
 }
 
+enum AggregateKind {
+    AGGREGATE_NONE,
+    AGGREGATE_STRUCT,
+    AGGREGATE_UNION,
+}
+
+struct Aggregate {
+    pos: SrcPos;
+    kind: AggregateKind;
+    items: AggregateItem*;
+    num_items: usize;
+}
+
 struct Decl {
     kind: DeclKind;
     pos: SrcPos;
@@ -97,7 +122,7 @@ struct Decl {
     union {
         note: Note;
         enum_decl: DeclEnum;
-        aggregate: DeclAggregate;
+        aggregate: Aggregate*;
         function: DeclFunc;
         typedef_decl: DeclTypedef;
         var_decl: DeclVar;
@@ -110,11 +135,6 @@ struct Decl {
 struct DeclEnum {
     type: Typespec*;
     items: EnumItem*;
-    num_items: usize;
-}
-
-struct DeclAggregate {
-    items: AggregateItem*;
     num_items: usize;
 }
 
@@ -229,6 +249,8 @@ struct ExprIntLit {
 }
 
 struct ExprFloatLit {
+    start: char const*;
+    end: char const*;
     val: double;
     suffix: TokenSuffix;
 }

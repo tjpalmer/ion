@@ -43,7 +43,7 @@ func parse_type_func(): Typespec* {
 func parse_type_base(): Typespec* {
     if (is_token(TOKEN_NAME)) {
         pos := token.pos;
-        name := token.val.name;
+        name := token.name;
         next_token();
         return new_typespec_name(pos, name);
     } else if (match_keyword(func_keyword)) {
@@ -118,23 +118,25 @@ func parse_expr_compound(type: Typespec*): Expr* {
 func parse_expr_operand(): Expr* {
     pos := token.pos;
     if (is_token(TOKEN_INT)) {
-        val := token.val.int_val;
+        val := token.int_val;
         mod := token.mod;
         suffix := token.suffix;
         next_token();
         return new_expr_int(pos, val, mod, suffix);
     } else if (is_token(TOKEN_FLOAT)) {
-        val := token.val.float_val;
+        start := token.start;
+        end := token.end;
+        val := token.float_val;
         suffix := token.suffix;
         next_token();
-        return new_expr_float(pos, val, suffix);
+        return new_expr_float(pos, start, end, val, suffix);
     } else if (is_token(TOKEN_STR)) {
-        val := token.val.str_val;
+        val := token.str_val;
         mod := token.mod;
         next_token();
         return new_expr_str(pos, val, mod);
     } else if (is_token(TOKEN_NAME)) {
-        name := token.val.name;
+        name := token.name;
         next_token();
         if (is_token(TOKEN_LBRACE)) {
             return parse_expr_compound(new_typespec_name(pos, name));
@@ -225,7 +227,7 @@ func parse_expr_base(): Expr* {
             expr = new_expr_index(pos, expr, index);
         } else if (is_token(TOKEN_DOT)) {
             next_token();
-            field := token.val.name;
+            field := token.name;
             expect_token(TOKEN_NAME);
             expr = new_expr_field(pos, expr, field);
         } else {
@@ -578,7 +580,7 @@ func parse_stmt(): Stmt* {
 }
 
 func parse_name(): char const* {
-    name := token.val.name;
+    name := token.name;
     expect_token(TOKEN_NAME);
     return name;
 }
@@ -617,35 +619,61 @@ func parse_decl_enum(pos: SrcPos): Decl* {
 
 func parse_decl_aggregate_item(): AggregateItem {
     pos := token.pos;
-    names: char const** = NULL;
-    name := parse_name();
-    buf_push((:void**)&names, &name, sizeof(name));
-    while (match_token(TOKEN_COMMA)) {
-        name = parse_name();
+    if (match_keyword(struct_keyword)) {
+        return AggregateItem {
+            pos = pos,
+            kind = AGGREGATE_ITEM_SUBAGGREGATE,
+            subaggregate = parse_aggregate(AGGREGATE_STRUCT),
+        };
+    } else if (match_keyword(union_keyword)) {
+        return AggregateItem {
+            pos = pos,
+            kind = AGGREGATE_ITEM_SUBAGGREGATE,
+            subaggregate = parse_aggregate(AGGREGATE_UNION),
+        };
+    } else {
+        names: char const** = NULL;
+        name := parse_name();
         buf_push((:void**)&names, &name, sizeof(name));
+        while (match_token(TOKEN_COMMA)) {
+            name = parse_name();
+            buf_push((:void**)&names, &name, sizeof(name));
+        }
+        expect_token(TOKEN_COLON);
+        type := parse_type();
+        expect_token(TOKEN_SEMICOLON);
+        return AggregateItem {
+            pos = pos,
+            kind = AGGREGATE_ITEM_FIELD,
+            names = names,
+            num_names = buf_len(names),
+            type = type,
+        };
     }
-    expect_token(TOKEN_COLON);
-    type := parse_type();
-    expect_token(TOKEN_SEMICOLON);
-    return AggregateItem {pos, names, buf_len(names), type};
+}
+
+func parse_aggregate(kind: AggregateKind): Aggregate* {
+    pos := token.pos;
+    expect_token(TOKEN_LBRACE);
+    items: AggregateItem* = NULL;
+    while (!is_token_eof() && !is_token(TOKEN_RBRACE)) {
+        item := parse_decl_aggregate_item();
+        buf_push((:void**)&items, &item, sizeof(item));
+    }
+    expect_token(TOKEN_RBRACE);
+    return new_aggregate(pos, kind, items, buf_len(items));
 }
 
 func parse_decl_aggregate(pos: SrcPos, kind: DeclKind): Decl* {
     #assert(kind == DECL_STRUCT || kind == DECL_UNION);
     name := parse_name();
+    aggregate_kind := kind == DECL_STRUCT ? AGGREGATE_STRUCT : AGGREGATE_UNION;
     if (match_token(TOKEN_SEMICOLON)) {
-        decl: Decl* = new_decl_aggregate(pos, kind, name, NULL, 0);
+        decl := new_decl_aggregate(pos, kind, name, new_aggregate(pos, aggregate_kind, NULL, 0));
         decl.is_incomplete = true;
         return decl;
     } else {
-        expect_token(TOKEN_LBRACE);
-        items: AggregateItem* = NULL;
-        while (!is_token_eof() && !is_token(TOKEN_RBRACE)) {
-            item := parse_decl_aggregate_item();
-            buf_push((:void**)&items, &item, sizeof(item));
-        }
-        expect_token(TOKEN_RBRACE);
-        return new_decl_aggregate(pos, kind, name, items, buf_len(items));
+        return new_decl_aggregate(pos, kind, name, parse_aggregate(aggregate_kind));
     }
 }
 
@@ -782,30 +810,41 @@ func parse_decl_note(pos: SrcPos): Decl* {
 }
 
 func parse_decl_import(pos: SrcPos): Decl* {
-    is_relative: bool = false;
+    rename_name: char const*;
+    is_relative: bool;
+    :repeat
+    is_relative = false;
     if (match_token(TOKEN_DOT)) {
         is_relative = true;
     }
-    names: char const** = NULL;
-    buf_push((:void**)&names, &token.val.name, sizeof(token.val.name));
+    name := token.name;
     expect_token(TOKEN_NAME);
+    if (!is_relative && match_token(TOKEN_ASSIGN)) {
+        if (rename_name) {
+            fatal_error(pos, "Only one import assignment is allowed");
+        }
+        rename_name = name;
+        goto repeat;
+    }
+    names: char const** = NULL;
+    buf_push((:void**)&names, &name, sizeof(name));
     while (match_token(TOKEN_DOT)) {
-        buf_push((:void**)&names, &token.val.name, sizeof(token.val.name));
+        buf_push((:void**)&names, &token.name, sizeof(token.name));
         expect_token(TOKEN_NAME);
     }
-    import_all: bool = false;
-    items: ImportItem* = NULL;
+    import_all := false;
+    items: ImportItem*;
     if (match_token(TOKEN_LBRACE)) {
         while (!is_token(TOKEN_RBRACE)) {
             if (match_token(TOKEN_ELLIPSIS)) {
                 import_all = true;
             } else {
-                name := parse_name();
+                item_name := parse_name();
                 if (match_token(TOKEN_ASSIGN)) {
-                    item := ImportItem {name = parse_name(), rename = name};
+                    item := ImportItem {name = parse_name(), rename = item_name};
                     buf_push((:void**)&items, &item, sizeof(item));
                 } else {
-                    item := ImportItem {name = name};
+                    item := ImportItem {name = item_name};
                     buf_push((:void**)&items, &item, sizeof(item));
                 }
                 if (!match_token(TOKEN_COMMA)) {
@@ -815,7 +854,7 @@ func parse_decl_import(pos: SrcPos): Decl* {
         }
         expect_token(TOKEN_RBRACE);
     }
-    return new_decl_import(pos, is_relative, names, buf_len(names), import_all, items, buf_len(items));
+    return new_decl_import(pos, rename_name, is_relative, names, buf_len(names), import_all, items, buf_len(items));
 }
 
 func parse_decl_opt(): Decl* {

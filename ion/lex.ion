@@ -284,14 +284,12 @@ struct Token {
     pos: SrcPos;
     start: char const*;
     end: char const*;
-    val: TokenVal;
-}
-
-union TokenVal {
-    int_val: ullong;
-    float_val: double;
-    str_val: char const*;
-    name: char const*;
+    union {
+        int_val: ullong;
+        float_val: double;
+        str_val: char const*;
+        name: char const*;
+    }
 }
 
 var token: Token;
@@ -340,7 +338,7 @@ func fatal_error(pos: SrcPos, fmt: char const*, ...) {
 
 func token_info(): char const* {
     if (token.kind == TOKEN_NAME || token.kind == TOKEN_KEYWORD) {
-        return token.val.name;
+        return token.name;
     } else {
         return token_kind_name(token.kind);
     }
@@ -415,7 +413,7 @@ func scan_int() {
         error(token.pos, "Expected base %d digit, got '%c'", base, *stream);
     }
     token.kind = TOKEN_INT;
-    token.val.int_val = val;
+    token.int_val = val;
     if (tolower(*stream) == 'u') {
         token.suffix = SUFFIX_U;
         stream++;
@@ -468,7 +466,7 @@ func scan_float() {
         error(token.pos, "Float literal overflow");
     }
     token.kind = TOKEN_FLOAT;
-    token.val.float_val = val;
+    token.float_val = val;
     if (tolower(*stream) == 'd') {
         token.suffix = SUFFIX_D;
         stream++;
@@ -539,7 +537,7 @@ func scan_char() {
         stream++;
     }
     token.kind = TOKEN_INT;
-    token.val.int_val = val;
+    token.int_val = val;
     token.mod = MOD_CHAR;
 }
 
@@ -599,7 +597,7 @@ func scan_str() {
     nul := '\0';
     buf_push((:void**)&str, &nul, 1);
     token.kind = TOKEN_STR;
-    token.val.str_val = str;
+    token.str_val = str;
 }
 
 // #define CASE1(c1, k1) \
@@ -681,8 +679,8 @@ func next_token() {
         while (isalnum(*stream) || *stream == '_') {
             stream++;
         }
-        token.val.name = str_intern_range(token.start, stream);
-        token.kind = is_keyword_name(token.val.name) ? TOKEN_KEYWORD : TOKEN_NAME;
+        token.name = str_intern_range(token.start, stream);
+        token.kind = is_keyword_name(token.name) ? TOKEN_KEYWORD : TOKEN_NAME;
     case '<':
         token.kind = TOKEN_LT;
         stream++;
@@ -897,11 +895,11 @@ func is_token_eof(): bool {
 }
 
 func is_token_name(name: char const*): bool {
-    return token.kind == TOKEN_NAME && token.val.name == name;
+    return token.kind == TOKEN_NAME && token.name == name;
 }
 
 func is_keyword(name: char const*): bool {
-    return is_token(TOKEN_KEYWORD) && token.val.name == name;
+    return is_token(TOKEN_KEYWORD) && token.name == name;
 }
 
 func match_keyword(name: char const*): bool {

@@ -9,8 +9,12 @@ var gen_pos: SrcPos;
 var gen_headers_buf: char const**;
 
 var gen_preamble_str: char const* = """// Preamble
+#define __USE_MINGW_ANSI_STDIO 1
 #ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
+#endif
+#ifndef _CRT_NONSTDC_NO_DEPRECATE
+#define _CRT_NONSTDC_NO_DEPRECATE
 #endif
 
 #if _MSC_VER >= 1900 || __STDC_VERSION__ >= 201112L
@@ -254,8 +258,8 @@ func get_gen_name_or_default(ptr: void const*, default_name: char const*): char 
         if (sym) {
             if (sym.external_name) {
                 name = sym.external_name;
-            } else if (sym.package.external_name) {
-                external_name := sym.package.external_name;
+            } else if (sym.home_package.external_name) {
+                external_name := sym.home_package.external_name;
                 buf: char[256];
                 if (sym.kind == SYM_CONST) {
                     ptr2 := buf;
@@ -379,21 +383,33 @@ func gen_forward_decls() {
     }
 }
 
+func gen_aggregate_items(aggregate: Aggregate*) {
+    gen_indent++;
+    for (i: usize = 0; i < aggregate.num_items; i++) {
+        item := aggregate.items[i];
+        if (item.kind == AGGREGATE_ITEM_FIELD) {
+            for (j: usize = 0; j < item.num_names; j++) {
+                gen_sync_pos(item.pos);
+                genln(); buf_printf(&gen_buf, "%s;", typespec_to_cdecl(item.type, item.names[j]));
+            }
+        } else if (item.kind == AGGREGATE_ITEM_SUBAGGREGATE) {
+            genln(); buf_printf(&gen_buf, "%s {", item.subaggregate.kind == AGGREGATE_STRUCT ? "struct" : "union");
+            gen_aggregate_items(item.subaggregate);
+            genln(); buf_printf(&gen_buf, "};");
+        } else {
+            #assert(0);
+        }
+    }
+    gen_indent--;
+}
+
 func gen_aggregate(decl: Decl*) {
     #assert(decl.kind == DECL_STRUCT || decl.kind == DECL_UNION);
     if (decl.is_incomplete) {
         return;
     }
     genln(); buf_printf(&gen_buf, "%s %s {", decl.kind == DECL_STRUCT ? "struct" : "union", get_gen_name(decl));
-    gen_indent++;
-    for (i: usize = 0; i < decl.aggregate.num_items; i++) {
-        item := decl.aggregate.items[i];
-        for (j: usize = 0; j < item.num_names; j++) {
-            gen_sync_pos(item.pos);
-            genln(); buf_printf(&gen_buf, "%s;", typespec_to_cdecl(item.type, item.names[j]));
-        }
-    }
-    gen_indent--;
+    gen_aggregate_items(decl.aggregate);
     genln(); buf_printf(&gen_buf, "};");
 }
 
@@ -471,7 +487,11 @@ func is_excluded_typeinfo(type: Type*): bool {
     while (type.kind == CMPL_TYPE_ARRAY || type.kind == CMPL_TYPE_CONST || type.kind == CMPL_TYPE_PTR) {
         type = type.base;
     }
-    return type.sym && !gen_reachable(type.sym);
+    if (type.sym) {
+        return !gen_reachable(type.sym);
+    } else {
+        return !type.sym && (type.kind == CMPL_TYPE_STRUCT || type.kind == CMPL_TYPE_UNION);
+    }
 }
 
 func gen_typeid(type: Type*) {
@@ -502,8 +522,11 @@ func gen_expr(expr: Expr*) {
             buf_printf(&gen_buf, "%llu%s", expr.int_lit.val, suffix_name);
         }
     }
-    case EXPR_FLOAT:
-        buf_printf(&gen_buf, "%f%s", expr.float_lit.val, expr.float_lit.suffix == SUFFIX_D ? "" : "f");
+    case EXPR_FLOAT: {
+        is_double := expr.float_lit.suffix == SUFFIX_D;
+        len: usize = expr.float_lit.end - expr.float_lit.start;
+        buf_printf(&gen_buf, "%.*s%s", is_double ? len-1 : len, expr.float_lit.start, is_double ? "" : "f");
+    }
     case EXPR_STR:
         gen_str(expr.str_lit.val, expr.str_lit.mod == MOD_MULTILINE);
     case EXPR_NAME:
@@ -533,9 +556,16 @@ func gen_expr(expr: Expr*) {
         buf_printf(&gen_buf, "[");
         gen_expr(expr.index.index);
         buf_printf(&gen_buf, "]");
-    case EXPR_FIELD:
-        gen_expr(expr.field.expr);
-        buf_printf(&gen_buf, "%s%s", get_resolved_type(expr.field.expr).kind == CMPL_TYPE_PTR ? "->" : ".", expr.field.name);
+    case EXPR_FIELD: {
+        sym := get_resolved_sym(expr);
+        if (sym) {
+            buf_printf(&gen_buf, "(%s)", get_gen_name(sym));
+        } else {
+            gen_expr(expr.field.expr);
+            type := unqualify_type(get_resolved_type(expr.field.expr));
+            buf_printf(&gen_buf, "%s%s", type.kind == CMPL_TYPE_PTR ? "->" : ".", expr.field.name);
+        }
+    }
     case EXPR_COMPOUND:
         gen_expr_compound(expr);
     case EXPR_UNARY:
@@ -839,6 +869,9 @@ func gen_decl(sym: Sym*) {
         } else {
             genln(); buf_printf(&gen_buf, "typedef int %s;", get_gen_name(decl));
         }
+    case DECL_IMPORT:
+        // Do nothing
+        break;
     default:
         #assert(0);
     }

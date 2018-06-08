@@ -4,6 +4,7 @@ enum SymKind {
     SYM_CONST,
     SYM_FUNC,
     SYM_TYPE,
+    SYM_PACKAGE,
 }
 
 enum SymState {
@@ -14,14 +15,19 @@ enum SymState {
 
 struct Sym {
     name: char const*;
-    package: Package*;
+    home_package: Package*;
     kind: SymKind;
     state: SymState;
     reachable: uint8;
     decl: Decl*;
-    type: Type*;
-    val: Val;
     external_name: char const*;
+    union {
+        struct {
+            type: Type*;
+            val: Val;
+        }
+        package: Package*;
+    }
 }
 
 struct Package {
@@ -89,7 +95,7 @@ func sym_new(kind: SymKind, name: char const*, decl: Decl*): Sym* {
     sym.kind = kind;
     sym.name = name;
     sym.decl = decl;
-    sym.package = current_package;
+    sym.home_package = current_package;
     set_resolved_sym(sym, sym);
     return sym;
 }
@@ -180,6 +186,9 @@ func sym_global_put(name: char const*, sym: Sym*) {
     old_sym: Sym* = map_get(&current_package.syms_map, name);
     if (old_sym) {
         if (sym == old_sym) {
+            return;
+        }
+        if (sym.kind == SYM_PACKAGE && old_sym.kind == SYM_PACKAGE && sym.package == old_sym.package) {
             return;
         }
         pos := sym.decl ? sym.decl.pos : pos_builtin;
@@ -571,6 +580,46 @@ func resolve_typespec(typespec: Typespec*): Type* {
     return result;
 }
 
+func complete_aggregate(type: Type*, aggregate: Aggregate*): Type* {
+    fields: TypeField*;
+    for (i: usize = 0; i < aggregate.num_items; i++) {
+        item := aggregate.items[i];
+        if (item.kind == AGGREGATE_ITEM_FIELD) {
+            item_type := resolve_typespec(item.type);
+            complete_type(item_type);
+            if (type_sizeof(item_type) == 0) {
+                fatal_error(item.pos, "Field type of size 0 is not allowed");
+            }
+            for (j: usize = 0; j < item.num_names; j++) {
+                type_field := TypeField {item.names[j], item_type};
+                buf_push((:void**)&fields, &type_field, sizeof(type_field));
+            }
+        } else {
+            #assert(item.kind == AGGREGATE_ITEM_SUBAGGREGATE);
+            item_type := complete_aggregate(NULL, item.subaggregate);
+            type_field := TypeField {NULL, item_type};
+            buf_push((:void**)&fields, &type_field, sizeof(type_field));
+        }
+    }
+    if (!type) {
+        type = type_incomplete(NULL);
+        type.kind = CMPL_TYPE_COMPLETING;
+    }
+    if (aggregate.kind == AGGREGATE_STRUCT) {
+        type_complete_struct(type, fields, buf_len(fields));
+    } else {
+        #assert(aggregate.kind == AGGREGATE_UNION);
+        type_complete_union(type, fields, buf_len(fields));
+    }
+    if (type.aggregate.num_fields == 0) {
+        fatal_error(aggregate.pos, "No fields");
+    }
+    if (has_duplicate_fields(type)) {
+        fatal_error(aggregate.pos, "Duplicate fields");
+    }
+    return type;
+}
+
 func complete_type(type: Type*) {
     if (type.kind == CMPL_TYPE_COMPLETING) {
         fatal_error(type.sym.decl.pos, "Type completion cycle");
@@ -579,38 +628,14 @@ func complete_type(type: Type*) {
         return;
     }
     sym: Sym* = type.sym;
-    old_package := enter_package(sym.package);
+    old_package := enter_package(sym.home_package);
     decl := sym.decl;
     if (decl.is_incomplete) {
         fatal_error(decl.pos, "Trying to use incomplete type as complete type");
     }
     type.kind = CMPL_TYPE_COMPLETING;
     #assert(decl.kind == DECL_STRUCT || decl.kind == DECL_UNION);
-    fields: TypeField* = NULL;
-    for (i: usize = 0; i < decl.aggregate.num_items; i++) {
-        item: AggregateItem = decl.aggregate.items[i];
-        item_type := resolve_typespec(item.type);
-        complete_type(item_type);
-        if (type_sizeof(item_type) == 0) {
-            fatal_error(item.pos, "Field type of size 0 is not allowed");
-        }
-        for (j: usize = 0; j < item.num_names; j++) {
-            field := TypeField {item.names[j], item_type};
-            buf_push((:void**)&fields, &field, sizeof(field));
-        }
-    }
-    if (buf_len(fields) == 0) {
-        fatal_error(decl.pos, "No fields");
-    }
-    if (has_duplicate_fields(fields, buf_len(fields))) {
-        fatal_error(decl.pos, "Duplicate fields");
-    }
-    if (decl.kind == DECL_STRUCT) {
-        type_complete_struct(type, fields, buf_len(fields));
-    } else {
-        #assert(decl.kind == DECL_UNION);
-        type_complete_union(type, fields, buf_len(fields));
-    }
+    complete_aggregate(type, decl.aggregate);
     buf_push((:void**)&sorted_syms, &type.sym, sizeof(type.sym));
     leave_package(old_package);
 }
@@ -996,7 +1021,7 @@ func resolve_func_body(sym: Sym*) {
     if (decl.is_incomplete) {
         return;
     }
-    old_package := enter_package(sym.package);
+    old_package := enter_package(sym.home_package);
     scope := sym_enter();
     for (i: usize = 0; i < decl.function.num_params; i++) {
         param := decl.function.params[i];
@@ -1032,7 +1057,7 @@ func resolve_sym(sym: Sym*) {
     }
     sym.state = SYM_RESOLVING;
     decl := sym.decl;
-    old_package := enter_package(sym.package);
+    old_package := enter_package(sym.home_package);
     switch (sym.kind) {
     case SYM_TYPE:
         if (decl && decl.kind == DECL_TYPEDEF) {
@@ -1052,6 +1077,9 @@ func resolve_sym(sym: Sym*) {
         sym.type = resolve_decl_const(decl, &sym.val);
     case SYM_FUNC:
         sym.type = resolve_decl_func(decl);
+    case SYM_PACKAGE:
+        // Do nothing
+        break;
     default:
         #assert(0);
     }
@@ -1082,8 +1110,35 @@ func resolve_name(name: char const*): Sym* {
     return sym;
 }
 
+func try_resolve_package(expr: Expr*): Package* {
+    if (expr.kind == EXPR_NAME) {
+        sym := resolve_name(expr.name);
+        if (sym && sym.kind == SYM_PACKAGE) {
+            return sym.package;
+        }
+    } else if (expr.kind == EXPR_FIELD) {
+        package := try_resolve_package(expr.field.expr);
+        if (package) {
+            sym := get_package_sym(package, expr.field.name);
+            if (sym && sym.kind == SYM_PACKAGE) {
+                return sym.package;
+            }
+        }
+    }
+    return NULL;
+}
+
 func resolve_expr_field(expr: Expr*): Operand {
     #assert(expr.kind == EXPR_FIELD);
+    package := try_resolve_package(expr.field.expr);
+    if (package) {
+        old_package := enter_package(package);
+        sym := resolve_name(expr.field.name);
+        operand := resolve_name_operand(expr.pos, expr.field.name);
+        leave_package(old_package);
+        set_resolved_sym(expr, sym);
+        return operand;
+    }
     operand := resolve_expr(expr.field.expr);
     was_const_type := is_const_type(operand.type);
     type := unqualify_type(operand.type);
@@ -1511,7 +1566,7 @@ func resolve_expr_compound(expr: Expr*, expected_type: Type*): Operand {
             if (field.kind == FIELD_INDEX) {
                 fatal_error(field.pos, "Index field initializer not allowed for struct/union compound literal");
             } else if (field.kind == FIELD_NAME) {
-                index = aggregate_field_index(type, field.name);
+                index = aggregate_item_field_index(type, field.name);
                 if (index == -1) {
                     fatal_error(field.pos, "Named field in compound literal does not exist");
                 }
@@ -1901,7 +1956,7 @@ func resolve_expected_expr(expr: Expr*, expected_type: Type*): Operand {
         if (type.kind != CMPL_TYPE_STRUCT && type.kind != CMPL_TYPE_UNION) {
             fatal_error(expr.pos, "offsetof can only be used with struct/union types");
         }
-        field := aggregate_field_index(type, expr.offsetof_field.name);
+        field := aggregate_item_field_index(type, expr.offsetof_field.name);
         if (field < 0) {
             fatal_error(expr.pos, "No field '%s' in type", expr.offsetof_field.name);
         }
@@ -2026,7 +2081,7 @@ func import_all_package_symbols(package: Package*) {
     // TODO: should have a more general mechanism
     main_name: char const* = str_intern("main");
     for (i: usize = 0; i < buf_len(package.syms); i++) {
-        if (package.syms[i].package == package && package.syms[i].name != main_name) {
+        if (package.syms[i].home_package == package && package.syms[i].name != main_name) {
             sym_global_put(package.syms[i].name, package.syms[i]);
         }
     }
@@ -2070,6 +2125,10 @@ func process_package_imports(package: Package*) {
             if (decl.import_decl.import_all) {
                 import_all_package_symbols(imported_package);
             }
+            sym_name := decl.name ? decl.name : decl.import_decl.names[decl.import_decl.num_names - 1];
+            sym := sym_new(SYM_PACKAGE, sym_name, decl);
+            sym.package = imported_package;
+            sym_global_put(sym_name, sym);
         }
     }
 }
@@ -2130,7 +2189,7 @@ func compile_package(package: Package*): bool {
 func resolve_package_syms(package: Package*) {
     old_package := enter_package(package);
     for (i: usize = 0; i < buf_len(package.syms); i++) {
-        if (package.syms[i].package == package) {
+        if (package.syms[i].home_package == package) {
             resolve_sym(package.syms[i]);
         }
     }
@@ -2149,7 +2208,7 @@ func finalize_reachable_syms() {
             if (flag_verbose) {
                 printf("New reachable symbols:");
                 for (k: usize = prev_num_reachable; k < num_reachable; k++) {
-                    printf(" %s/%s", reachable_syms[k].package.path, reachable_syms[k].name);
+                    printf(" %s/%s", reachable_syms[k].home_package.path, reachable_syms[k].name);
                 }
                 printf("\n");
             }

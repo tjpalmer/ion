@@ -352,15 +352,24 @@ func type_func(params: Type**, num_params: usize, ret: Type*, has_varargs: bool)
     return type;
 }
 
-func has_duplicate_fields(fields: TypeField*, num_fields: usize): bool {
-    for (i: usize = 0; i < num_fields; i++) {
-        for (j: usize = i+1; j < num_fields; j++) {
-            if (fields[i].name == fields[j].name) {
+func has_duplicate_fields(type: Type*): bool {
+    for (i: usize = 0; i < type.aggregate.num_fields; i++) {
+        for (j: usize = i+1; j < type.aggregate.num_fields; j++) {
+            if (type.aggregate.fields[i].name == type.aggregate.fields[j].name) {
                 return true;
             }
         }
     }
     return false;
+}
+
+func add_type_fields(fields: TypeField**, type: Type*, offset: usize) {
+    #assert(type.kind == CMPL_TYPE_STRUCT || type.kind == CMPL_TYPE_UNION);
+    for (i: usize = 0; i < type.aggregate.num_fields; i++) {
+        field := &type.aggregate.fields[i];
+        new_field := TypeField {field.name, field.type, field.offset + offset};
+        buf_push((:void**)fields, &new_field, sizeof(new_field));
+    }
 }
 
 func type_complete_struct(type: Type*, fields: TypeField*, num_fields: usize) {
@@ -369,16 +378,22 @@ func type_complete_struct(type: Type*, fields: TypeField*, num_fields: usize) {
     type.size = 0;
     type.align = 0;
     nonmodifiable: bool = false;
+    new_fields: TypeField*;
     for (it := fields; it != fields + num_fields; it++) {
         #assert(is_pow2(type_alignof(it.type)));
-        it.offset = type.size;
-        type.size = type_sizeof(it.type) + align_up(type.size, type_alignof(it.type));
+        if (it.name) {
+            it.offset = type.size;
+            buf_push((:void**)&new_fields, it, sizeof(*it));
+        } else {
+            add_type_fields(&new_fields, it.type, type.size);
+        }
         type.align = max(type.align, type_alignof(it.type));
+        type.size = type_sizeof(it.type) + align_up(type.size, type_alignof(it.type));
         nonmodifiable = it.type.nonmodifiable || nonmodifiable;
     }
     type.size = align_up(type.size, type.align);
-    type.aggregate.fields = memdup(fields, num_fields * sizeof(*fields));
-    type.aggregate.num_fields = num_fields;
+    type.aggregate.fields = new_fields;
+    type.aggregate.num_fields = buf_len(new_fields);
     type.nonmodifiable = nonmodifiable;
 }
 
@@ -388,16 +403,22 @@ func type_complete_union(type: Type*, fields: TypeField*, num_fields: usize) {
     type.size = 0;
     type.align = 0;
     nonmodifiable: bool = false;
+    new_fields: TypeField*;
     for (it := fields; it != fields + num_fields; it++) {
         #assert(it.type.kind > CMPL_TYPE_COMPLETING);
-        it.offset = 0;
+        if (it.name) {
+            it.offset = type.size;
+            buf_push((:void**)&new_fields, it, sizeof(*it));
+        } else {
+            add_type_fields(&new_fields, it.type, 0);
+        }
         type.size = max(type.size, type_sizeof(it.type));
         type.align = max(type.align, type_alignof(it.type));
         nonmodifiable = it.type.nonmodifiable || nonmodifiable;
     }
     type.size = align_up(type.size, type.align);
-    type.aggregate.fields = memdup(fields, num_fields * sizeof(*fields));
-    type.aggregate.num_fields = num_fields;
+    type.aggregate.fields = new_fields;
+    type.aggregate.num_fields = buf_len(new_fields);
     type.nonmodifiable = nonmodifiable;
 }
 
@@ -441,7 +462,7 @@ func init_builtin_types() {
     init_builtin_type(type_double);
 }
 
-func aggregate_field_index(type: Type*, name: char const*): int {
+func aggregate_item_field_index(type: Type*, name: char const*): int {
     #assert(is_aggregate_type(type));
     for (i: usize = 0; i < type.aggregate.num_fields; i++) {
         if (type.aggregate.fields[i].name == name) {
@@ -451,17 +472,17 @@ func aggregate_field_index(type: Type*, name: char const*): int {
     return -1;
 }
 
-func aggregate_field_type_from_index(type: Type*, index: int): Type* {
+func aggregate_item_field_type_from_index(type: Type*, index: int): Type* {
     #assert(is_aggregate_type(type));
     #assert(0 <= index && index < (:int)type.aggregate.num_fields);
     return type.aggregate.fields[index].type;
 }
 
-func aggregate_field_type_from_name(type: Type*, name: char const*): Type* {
+func aggregate_item_field_type_from_name(type: Type*, name: char const*): Type* {
     #assert(is_aggregate_type(type));
-    index := aggregate_field_index(type, name);
+    index := aggregate_item_field_index(type, name);
     if (index < 0) {
         return NULL;
     }
-    return aggregate_field_type_from_index(type, index);
+    return aggregate_item_field_type_from_index(type, index);
 }
