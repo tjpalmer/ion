@@ -3,4 +3,4 @@ No warranties are implied. Use at your own risk.
 
 This software is derived from the
 [Bitwise](https://github.com/pervognsen/bitwise) project.
-See the licence there for additional details.
+See the license there for additional details.
