@@ -21,24 +21,12 @@
 #   endif
 #endif
 
-struct ion_DirListIter;
 struct ion_Operand;
 struct ion_Type;
 
-void path_absolute(char path[MAX_PATH]);
-void dir_list_free(struct ion_DirListIter *iter);
-void dir_list_next(struct ion_DirListIter *iter);
-void dir_list(struct ion_DirListIter *iter, const char *path);
 bool cast_operand(struct ion_Operand *operand, struct ion_Type *type);
 
 #include "out_ion.c"
-
-#ifdef _WIN32
-#   include "ion/os_win32.c"
-#   define strdup _strdup
-#else
-#   include "ion/os_unix.c"
-#endif
 
 #define CASE(k, t) \
     case k: \

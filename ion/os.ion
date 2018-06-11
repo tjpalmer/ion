@@ -65,21 +65,6 @@ func dir_excluded(iter: DirListIter*): bool {
     return iter.valid && (strcmp(iter.name, ".") == 0 || strcmp(iter.name, "..") == 0);
 }
 
-@foreign
-func path_absolute(path: char[MAX_PATH]);
-
-@foreign
-func dir_list_free(iter: DirListIter*);
-
-@foreign
-func dir_list_next(iter: DirListIter*);
-
-@foreign
-func dir_list(iter: DirListIter*, path: char const*);
-
-@foreign
-func strdup(str: char const*): char*;
-
 func dir_list_subdir(iter: DirListIter*): bool {
     if (!iter.valid || !iter.is_dir) {
         return false;
