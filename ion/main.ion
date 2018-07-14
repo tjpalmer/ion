@@ -11,5 +11,5 @@ var flag_fullgen: bool;
 
 func main(argc: int, argv: char const**): int {
     // main_test();
-    return ion_main(argc, argv);
+    return ion_main(argc, argv, gen_all, "c");
 }

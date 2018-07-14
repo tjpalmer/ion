@@ -73,7 +73,7 @@ func parse_env_vars() {
     }
 }
 
-func ion_main(argc: int, argv: char const**): int {
+func ion_main(argc: int, argv: char const**, gen_all: func(), extension: char const*): int {
     parse_env_vars();
     output_name: char const*;
     flag_check := false;
@@ -139,7 +139,7 @@ func ion_main(argc: int, argv: char const**): int {
         if (output_name) {
             path_copy(c_path, output_name);
         } else {
-            snprintf(c_path, sizeof(c_path), "out_%s.c", package_name);
+            snprintf(c_path, sizeof(c_path), "out_%s.%s", package_name, extension);
         }
         gen_all();
         c_code := gen_buf;
