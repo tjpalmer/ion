@@ -2,7 +2,7 @@ export IONHOME="$(dirname "$(readlink -f "$0")")"
 export IONOS=linux
 
 cd $IONHOME
-mkdir -p bin
+
 if [ -e bin/ion ]; then
   bin/ion -o out/out_ion_linux.c ion
 else
@@ -10,4 +10,5 @@ else
   echo "-- No ion binary found; using previously built out/out_ion_linux.c --"
   echo
 fi
+
 gcc -o bin/ion ion.c
