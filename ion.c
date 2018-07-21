@@ -26,7 +26,11 @@ struct ion_Type;
 
 bool cast_operand(struct ion_Operand *operand, struct ion_Type *type);
 
-#include "out_ion.c"
+#ifdef _WIN32
+#   include "out/out_ion_win32.c"
+#else
+#   include "out/out_ion_linux.c"
+#endif
 
 #define CASE(k, t) \
     case k: \
