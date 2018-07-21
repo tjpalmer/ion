@@ -8,7 +8,7 @@ var gen_pos: SrcPos;
 
 var gen_headers_buf: char const**;
 
-var gen_preamble_str: char const* = """// Preamble
+var gen_preamble_str = """// Preamble
 #define __USE_MINGW_ANSI_STDIO 1
 #ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
@@ -56,7 +56,7 @@ struct Any;
 static void va_arg_ptr(va_list *args, struct Any any);
 """;
 
-var gen_postamble_str: char const* = """
+var gen_postamble_str = """
 static void va_arg_ptr(va_list *args, Any any) {
     switch (typeid_kind(any.type)) {
     case TYPE_BOOL:

@@ -892,10 +892,10 @@ extern ion_SrcPos ion_gen_pos;
 
 extern char const ((*(*ion_gen_headers_buf)));
 
-extern char const ((*ion_gen_preamble_str));
+extern char (*ion_gen_preamble_str);
 
 #line 59
-extern char const ((*ion_gen_postamble_str));
+extern char (*ion_gen_postamble_str);
 
 #line 119
 void ion_genln(void);
@@ -4891,7 +4891,7 @@ char (*ion_gen_buf) = NULL;
 int ion_gen_indent;
 ion_SrcPos ion_gen_pos;
 char const ((*(*ion_gen_headers_buf)));
-char const ((*ion_gen_preamble_str)) = 
+char (*ion_gen_preamble_str) = 
     "// Preamble\n"
     "#define __USE_MINGW_ANSI_STDIO 1\n"
     "#ifndef _CRT_SECURE_NO_WARNINGS\n"
@@ -4938,7 +4938,7 @@ char const ((*ion_gen_preamble_str)) =
     "\n"
     "struct Any;\n"
     "static void va_arg_ptr(va_list *args, struct Any any);\n";
-char const ((*ion_gen_postamble_str)) = 
+char (*ion_gen_postamble_str) = 
     "\n"
     "static void va_arg_ptr(va_list *args, Any any) {\n"
     "    switch (typeid_kind(any.type)) {\n"
