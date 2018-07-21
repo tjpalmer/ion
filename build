@@ -1,7 +1,7 @@
 export IONHOME="$(dirname "$(readlink -f "$0")")"
 export IONOS=linux
 
-cd $IONHOME
+cd "$IONHOME"
 
 if [ -e bin/ion ]; then
   bin/ion -o c/out_ion_linux.c ion
