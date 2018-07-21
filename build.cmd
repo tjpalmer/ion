@@ -11,14 +11,14 @@ call bin\vsenv
 popd
 
 if exist bin\ion.exe (
-  bin\ion.exe -o out\out_ion_win32.c ion
+  bin\ion.exe -o c\out_ion_win32.c ion
 ) else (
   echo.
-  echo -- No ion binary found; using previously built out/out_ion_win32.c --
+  echo -- No ion binary found; using previously built c\out_ion_win32.c --
   echo.
 )
 
-cl ion.c /Fe:bin\ion /Fo:bin\ion
+cl /Fe:bin\ion /Fo:bin\ion c\ion.c
 
 popd
 

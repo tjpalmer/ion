@@ -1,3 +1,6 @@
+// This file contains code that can't easily be expressed in ion at present.
+// Ideally, this file goes away sometime.
+
 #if _MSC_VER >= 1900 || __STDC_VERSION__ >= 201112L
 // Visual Studio 2015 supports enough C99/C11 features for us.
 #else
@@ -27,9 +30,9 @@ struct ion_Type;
 bool cast_operand(struct ion_Operand *operand, struct ion_Type *type);
 
 #ifdef _WIN32
-#   include "out/out_ion_win32.c"
+#   include "out_ion_win32.c"
 #else
-#   include "out/out_ion_linux.c"
+#   include "out_ion_linux.c"
 #endif
 
 #define CASE(k, t) \
