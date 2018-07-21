@@ -6,9 +6,7 @@ set IONOS=win32
 
 pushd %IONHOME%
 
-pushd .
-call bin\vsenv
-popd
+call bin\vsenv -arch=x64
 
 if exist bin\ion.exe (
   bin\ion.exe -o c\out_ion_win32.c ion

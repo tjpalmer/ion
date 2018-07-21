@@ -11,5 +11,7 @@ for /f "usebackq tokens=*" %%i in (`%~dp0\vswhere -latest -products * -requires 
 )
 
 if exist "%InstallDir%\Common7\Tools\vsdevcmd.bat" (
-  call "%InstallDir%\Common7\Tools\vsdevcmd.bat %*
+  pushd .
+  call "%InstallDir%\Common7\Tools\vsdevcmd.bat" %*
+  popd
 )
