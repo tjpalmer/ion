@@ -211,12 +211,11 @@ func parse_expr_base(): Expr* {
         pos := token.pos;
         if (match_token(TOKEN_LPAREN)) {
             args: Expr** = NULL;
-            if (!is_token(TOKEN_RPAREN)) {
+            while (!is_token(TOKEN_RPAREN)) {
                 arg := parse_expr();
                 buf_push((:void**)&args, &arg, sizeof(arg));
-                while (match_token(TOKEN_COMMA)) {
-                    arg = parse_expr();
-                    buf_push((:void**)&args, &arg, sizeof(arg));
+                if (!match_token(TOKEN_COMMA)) {
+                    break;
                 }
             }
             expect_token(TOKEN_RPAREN);

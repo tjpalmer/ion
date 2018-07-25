@@ -134,16 +134,16 @@ typedef struct ion_CachedArrayType ion_CachedArrayType;
 typedef struct ion_CachedFuncType ion_CachedFuncType;
 
 // Sorted declarations
-#line 12 "D:\\Workspace\\ion\\ion\\main.ion"
+#line 12 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\main.ion"
 int main(int argc, char const ((*(*argv))));
 
-#line 1 "D:\\Workspace\\ion\\system_packages\\builtin\\config_win32.ion"
+#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\config_win32.ion"
 extern char const ((*IONOS));
 
-#line 1 "D:\\Workspace\\ion\\system_packages\\builtin\\config_x64.ion"
+#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\config_x64.ion"
 extern char const ((*IONARCH));
 
-#line 1 "D:\\Workspace\\ion\\system_packages\\builtin\\typeinfo.ion"
+#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\typeinfo.ion"
 typedef ullong typeid;
 
 typedef int TypeKind;
@@ -238,7 +238,7 @@ size_t typeid_size(typeid type);
 #line 63
 TypeInfo const ((*get_typeinfo(typeid type)));
 
-#line 65 "D:\\Workspace\\ion\\system_packages\\builtin\\types.ion"
+#line 65 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\types.ion"
 #define UCHAR_MIN ((uchar)(0))
 
 #line 88
@@ -262,23 +262,23 @@ TypeInfo const ((*get_typeinfo(typeid type)));
 #line 148
 #define UINT64_MIN (ULLONG_MIN)
 
-#line 19 "D:\\Workspace\\ion\\system_packages\\builtin\\types_win32.ion"
+#line 19 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\types_win32.ion"
 #define ULONG_MIN ((ulong)(INT32_MIN))
 
-#line 15 "D:\\Workspace\\ion\\system_packages\\builtin\\types_x64.ion"
+#line 15 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\types_x64.ion"
 #define USIZE_MIN (UINT64_MIN)
 
 #line 26
 #define UINTPTR_MIN (UINT64_MIN)
 
-#line 246 "D:\\Workspace\\ion\\ion\\common.ion"
+#line 246 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\common.ion"
 struct ion_Arena {
     char (*ptr);
     char (*end);
     char (*(*blocks));
 };
 
-#line 1 "D:\\Workspace\\ion\\ion\\ast.ion"
+#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast.ion"
 extern ion_Arena ion_ast_arena;
 
 void (*ion_ast_alloc(size_t size));
@@ -286,13 +286,13 @@ void (*ion_ast_alloc(size_t size));
 #line 10
 void (*ion_ast_dup(void const ((*src)), size_t size));
 
-#line 273 "D:\\Workspace\\ion\\ion\\lex.ion"
+#line 273 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\lex.ion"
 struct ion_SrcPos {
     char const ((*name));
     int line;
 };
 
-#line 9 "D:\\Workspace\\ion\\ion\\ast_h.ion"
+#line 9 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 struct ion_Note {
     ion_SrcPos pos;
     char const ((*name));
@@ -300,32 +300,32 @@ struct ion_Note {
     size_t num_args;
 };
 
-#line 21 "D:\\Workspace\\ion\\ion\\ast.ion"
+#line 21 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast.ion"
 ion_Note ion_new_note(ion_SrcPos pos, char const ((*name)), ion_NoteArg (*args), size_t num_args);
 
-#line 16 "D:\\Workspace\\ion\\ion\\ast_h.ion"
+#line 16 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 struct ion_Notes {
     ion_Note (*notes);
     size_t num_notes;
 };
 
-#line 25 "D:\\Workspace\\ion\\ion\\ast.ion"
+#line 25 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast.ion"
 ion_Notes ion_new_notes(ion_Note (*notes), size_t num_notes);
 
-#line 21 "D:\\Workspace\\ion\\ion\\ast_h.ion"
+#line 21 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 struct ion_StmtList {
     ion_SrcPos pos;
     ion_Stmt (*(*stmts));
     size_t num_stmts;
 };
 
-#line 29 "D:\\Workspace\\ion\\ion\\ast.ion"
+#line 29 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast.ion"
 ion_StmtList ion_new_stmt_list(ion_SrcPos pos, ion_Stmt (*(*stmts)), size_t num_stmts);
 
-#line 27 "D:\\Workspace\\ion\\ion\\ast_h.ion"
+#line 27 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 typedef int ion_TypespecKind;
 
-#line 33 "D:\\Workspace\\ion\\ion\\ast.ion"
+#line 33 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast.ion"
 ion_Typespec (*ion_new_typespec(ion_TypespecKind kind, ion_SrcPos pos));
 
 #line 40
@@ -346,10 +346,10 @@ ion_Typespec (*ion_new_typespec_func(ion_SrcPos pos, ion_Typespec (*(*args)), si
 #line 74
 ion_Decls (*ion_new_decls(ion_Decl (*(*decls)), size_t num_decls));
 
-#line 90 "D:\\Workspace\\ion\\ion\\ast_h.ion"
+#line 90 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 typedef int ion_DeclKind;
 
-#line 81 "D:\\Workspace\\ion\\ion\\ast.ion"
+#line 81 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast.ion"
 ion_Decl (*ion_new_decl(ion_DeclKind kind, ion_SrcPos pos, char const ((*name))));
 
 #line 89
@@ -361,10 +361,10 @@ bool ion_is_decl_foreign(ion_Decl (*decl));
 #line 103
 ion_Decl (*ion_new_decl_enum(ion_SrcPos pos, char const ((*name)), ion_Typespec (*type), ion_EnumItem (*items), size_t num_items));
 
-#line 103 "D:\\Workspace\\ion\\ion\\ast_h.ion"
+#line 103 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 typedef int ion_AggregateKind;
 
-#line 111 "D:\\Workspace\\ion\\ion\\ast.ion"
+#line 111 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast.ion"
 ion_Aggregate (*ion_new_aggregate(ion_SrcPos pos, ion_AggregateKind kind, ion_AggregateItem (*items), size_t num_items));
 
 #line 120
@@ -388,10 +388,10 @@ ion_Decl (*ion_new_decl_note(ion_SrcPos pos, ion_Note note));
 #line 163
 ion_Decl (*ion_new_decl_import(ion_SrcPos pos, char const ((*rename_name)), bool is_relative, char const ((*(*names))), size_t num_names, bool import_all, ion_ImportItem (*items), size_t num_items));
 
-#line 172 "D:\\Workspace\\ion\\ion\\ast_h.ion"
+#line 172 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 typedef int ion_ExprKind;
 
-#line 175 "D:\\Workspace\\ion\\ion\\ast.ion"
+#line 175 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast.ion"
 ion_Expr (*ion_new_expr(ion_ExprKind kind, ion_SrcPos pos));
 
 #line 182
@@ -418,19 +418,19 @@ ion_Expr (*ion_new_expr_alignof_type(ion_SrcPos pos, ion_Typespec (*type)));
 #line 224
 ion_Expr (*ion_new_expr_offsetof(ion_SrcPos pos, ion_Typespec (*type), char const ((*name))));
 
-#line 96 "D:\\Workspace\\ion\\ion\\lex.ion"
+#line 96 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\lex.ion"
 typedef int ion_TokenKind;
 
-#line 231 "D:\\Workspace\\ion\\ion\\ast.ion"
+#line 231 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast.ion"
 ion_Expr (*ion_new_expr_modify(ion_SrcPos pos, ion_TokenKind op, bool post, ion_Expr (*expr)));
 
-#line 166 "D:\\Workspace\\ion\\ion\\lex.ion"
+#line 166 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\lex.ion"
 typedef int ion_TokenMod;
 
 #line 175
 typedef int ion_TokenSuffix;
 
-#line 239 "D:\\Workspace\\ion\\ion\\ast.ion"
+#line 239 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast.ion"
 ion_Expr (*ion_new_expr_int(ion_SrcPos pos, ullong val, ion_TokenMod mod, ion_TokenSuffix suffix));
 
 #line 247
@@ -469,10 +469,10 @@ ion_Expr (*ion_new_expr_ternary(ion_SrcPos pos, ion_Expr (*cond), ion_Expr (*the
 #line 329
 ion_Note (*ion_get_stmt_note(ion_Stmt (*stmt), char const ((*name))));
 
-#line 335 "D:\\Workspace\\ion\\ion\\ast_h.ion"
+#line 335 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 typedef int ion_StmtKind;
 
-#line 339 "D:\\Workspace\\ion\\ion\\ast.ion"
+#line 339 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast.ion"
 ion_Stmt (*ion_new_stmt(ion_StmtKind kind, ion_SrcPos pos));
 
 #line 346
@@ -523,7 +523,7 @@ ion_Stmt (*ion_new_stmt_init(ion_SrcPos pos, char const ((*name)), ion_Typespec 
 #line 448
 ion_Stmt (*ion_new_stmt_expr(ion_SrcPos pos, ion_Expr (*expr)));
 
-#line 28 "D:\\Workspace\\ion\\ion\\ast_h.ion"
+#line 28 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 #define ION_TYPESPEC_NONE ((ion_TypespecKind)(0))
 
 #line 29
@@ -721,7 +721,7 @@ typedef int ion_CompoundFieldKind;
 #line 352
 #define ION_STMT_GOTO ((ion_StmtKind)((ION_STMT_LABEL) + (1)))
 
-#line 2 "D:\\Workspace\\ion\\ion\\common.ion"
+#line 2 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\common.ion"
 size_t ion_min(size_t x, size_t y);
 
 #line 7
@@ -881,7 +881,7 @@ char const ((*ion_str_intern(char const ((*str)))));
 #line 453
 bool ion_str_islower(char const ((*str)));
 
-#line 1 "D:\\Workspace\\ion\\ion\\gen.ion"
+#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\gen.ion"
 extern char (*ion_gen_buf);
 
 #line 6
@@ -959,7 +959,7 @@ void ion_gen_paren_expr(ion_Expr (*expr));
 #line 422
 void ion_gen_expr_compound(ion_Expr (*expr));
 
-#line 1 "D:\\Workspace\\ion\\ion\\type.ion"
+#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\type.ion"
 typedef int ion_CompilerTypeKind;
 
 #line 2
@@ -1040,7 +1040,7 @@ typedef int ion_CompilerTypeKind;
 #line 27
 #define ION_NUM_CMPL_TYPE_KINDS ((ion_CompilerTypeKind)((ION_CMPL_TYPE_CONST) + (1)))
 
-#line 451 "D:\\Workspace\\ion\\ion\\gen.ion"
+#line 451 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\gen.ion"
 extern char const ((*(ion_typeid_kind_names[ION_NUM_CMPL_TYPE_KINDS])));
 
 #line 476
@@ -1138,7 +1138,7 @@ void ion_gen_postamble(void);
 #line 1204
 void ion_gen_all(void);
 
-#line 1 "D:\\Workspace\\ion\\ion\\ion.ion"
+#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ion.ion"
 #define ION_MAX_SEARCH_PATHS ((int)(256))
 
 #line 2
@@ -1167,7 +1167,7 @@ void ion_parse_env_vars(void);
 #line 76
 int ion_ion_main(int argc, char const ((*(*argv))), void (*gen_all)(void), char const ((*extension)));
 
-#line 1 "D:\\Workspace\\ion\\ion\\lex.ion"
+#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\lex.ion"
 extern char const ((*ion_typedef_keyword));
 
 #line 2
@@ -1602,7 +1602,7 @@ bool ion_match_token(ion_TokenKind kind);
 #line 923
 bool ion_expect_token(ion_TokenKind kind);
 
-#line 7 "D:\\Workspace\\ion\\ion\\main.ion"
+#line 7 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\main.ion"
 extern bool ion_flag_verbose;
 
 #line 8
@@ -1614,7 +1614,7 @@ extern bool ion_flag_notypeinfo;
 #line 10
 extern bool ion_flag_fullgen;
 
-#line 4 "D:\\Workspace\\ion\\ion\\os.ion"
+#line 4 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\os.ion"
 void ion_path_normalize(char (*path));
 
 #line 16
@@ -1670,7 +1670,7 @@ void ion_print_flags_usage(void);
 #line 172
 char const ((*ion_parse_flags(int (*argc_ptr), char const ((*(*(*argv_ptr)))))));
 
-#line 35 "D:\\Workspace\\ion\\ion\\os_win32.ion"
+#line 35 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\os_win32.ion"
 void ion_path_absolute(char (path[MAX_PATH]));
 
 #line 41
@@ -1685,7 +1685,7 @@ void ion_dir_list_next(ion_DirListIter (*iter));
 #line 75
 void ion_dir_list(ion_DirListIter (*iter), char const ((*path)));
 
-#line 1 "D:\\Workspace\\ion\\ion\\parse.ion"
+#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
 ion_Typespec (*ion_parse_type_func_param(void));
 
 #line 12
@@ -1697,7 +1697,7 @@ ion_Typespec (*ion_parse_type_base(void));
 #line 61
 ion_Typespec (*ion_parse_type(void));
 
-#line 203 "D:\\Workspace\\ion\\ion\\ast_h.ion"
+#line 203 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 struct ion_CompoundField {
     ion_CompoundFieldKind kind;
     ion_SrcPos pos;
@@ -1708,7 +1708,7 @@ struct ion_CompoundField {
     };
 };
 
-#line 83 "D:\\Workspace\\ion\\ion\\parse.ion"
+#line 83 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
 ion_CompoundField ion_parse_expr_compound_field(void);
 
 #line 103
@@ -1717,7 +1717,7 @@ ion_Expr (*ion_parse_expr_compound(ion_Typespec (*type)));
 #line 118
 ion_Expr (*ion_parse_expr_operand(void));
 
-#line 208
+#line 209
 ion_Expr (*ion_parse_expr_base(void));
 
 #line 243
@@ -1783,16 +1783,16 @@ ion_Stmt (*ion_parse_simple_stmt(void));
 #line 456
 ion_Stmt (*ion_parse_stmt_for(ion_SrcPos pos));
 
-#line 323 "D:\\Workspace\\ion\\ion\\ast_h.ion"
+#line 323 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 struct ion_SwitchCasePattern {
     ion_Expr (*start);
     ion_Expr (*end);
 };
 
-#line 480 "D:\\Workspace\\ion\\ion\\parse.ion"
+#line 480 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
 ion_SwitchCasePattern ion_parse_switch_case_pattern(void);
 
-#line 328 "D:\\Workspace\\ion\\ion\\ast_h.ion"
+#line 328 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 struct ion_SwitchCase {
     ion_SwitchCasePattern (*patterns);
     size_t num_patterns;
@@ -1800,7 +1800,7 @@ struct ion_SwitchCase {
     ion_StmtList block;
 };
 
-#line 489 "D:\\Workspace\\ion\\ion\\parse.ion"
+#line 489 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
 ion_SwitchCase ion_parse_stmt_switch_case(void);
 
 #line 524
@@ -1812,20 +1812,20 @@ ion_Stmt (*ion_parse_stmt(void));
 #line 582
 char const ((*ion_parse_name(void)));
 
-#line 79 "D:\\Workspace\\ion\\ion\\ast_h.ion"
+#line 79 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 struct ion_EnumItem {
     ion_SrcPos pos;
     char const ((*name));
     ion_Expr (*init);
 };
 
-#line 588 "D:\\Workspace\\ion\\ion\\parse.ion"
+#line 588 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
 ion_EnumItem ion_parse_decl_enum_item(void);
 
 #line 598
 ion_Decl (*ion_parse_decl_enum(ion_SrcPos pos));
 
-#line 66 "D:\\Workspace\\ion\\ion\\ast_h.ion"
+#line 66 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 struct ion_AggregateItem {
     ion_SrcPos pos;
     ion_AggregateItemKind kind;
@@ -1839,7 +1839,7 @@ struct ion_AggregateItem {
     };
 };
 
-#line 620 "D:\\Workspace\\ion\\ion\\parse.ion"
+#line 620 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
 ion_AggregateItem ion_parse_decl_aggregate_item(void);
 
 #line 655
@@ -1857,27 +1857,27 @@ ion_Decl (*ion_parse_decl_const(ion_SrcPos pos));
 #line 712
 ion_Decl (*ion_parse_decl_typedef(ion_SrcPos pos));
 
-#line 54 "D:\\Workspace\\ion\\ion\\ast_h.ion"
+#line 54 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 struct ion_FuncParam {
     ion_SrcPos pos;
     char const ((*name));
     ion_Typespec (*type);
 };
 
-#line 720 "D:\\Workspace\\ion\\ion\\parse.ion"
+#line 720 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
 ion_FuncParam ion_parse_decl_func_param(void);
 
 #line 728
 ion_Decl (*ion_parse_decl_func(ion_SrcPos pos));
 
-#line 3 "D:\\Workspace\\ion\\ion\\ast_h.ion"
+#line 3 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 struct ion_NoteArg {
     ion_SrcPos pos;
     char const ((*name));
     ion_Expr (*expr);
 };
 
-#line 769 "D:\\Workspace\\ion\\ion\\parse.ion"
+#line 769 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
 ion_NoteArg ion_parse_note_arg(void);
 
 #line 783
@@ -1901,7 +1901,7 @@ ion_Decl (*ion_parse_decl(void));
 #line 895
 ion_Decls (*ion_parse_decls(void));
 
-#line 1 "D:\\Workspace\\ion\\ion\\resolve.ion"
+#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\resolve.ion"
 typedef int ion_SymKind;
 
 #line 2
@@ -1978,7 +1978,7 @@ extern ion_Sym (*(*ion_reachable_syms));
 #line 85
 extern ion_Sym (*(*ion_sorted_syms));
 
-#line 465 "D:\\Workspace\\ion\\ion\\common.ion"
+#line 465 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\common.ion"
 union ion_Val {
     bool b;
     char c;
@@ -1995,7 +1995,7 @@ union ion_Val {
     uintptr_t p;
 };
 
-#line 16 "D:\\Workspace\\ion\\ion\\resolve.ion"
+#line 16 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\resolve.ion"
 struct ion_Sym {
     char const ((*name));
     ion_Package (*home_package);
@@ -2347,7 +2347,7 @@ void ion_resolve_package_syms(ion_Package (*package));
 #line 2199
 void ion_finalize_reachable_syms(void);
 
-#line 1 "D:\\Workspace\\ion\\ion\\targets.ion"
+#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\targets.ion"
 typedef int ion_Os;
 
 #line 2
@@ -2391,7 +2391,7 @@ int ion_get_os(char const ((*name)));
 #line 37
 int ion_get_arch(char const ((*name)));
 
-#line 63 "D:\\Workspace\\ion\\ion\\type.ion"
+#line 63 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\type.ion"
 struct ion_TypeMetrics {
     size_t size;
     size_t align;
@@ -2399,7 +2399,7 @@ struct ion_TypeMetrics {
     ullong max;
 };
 
-#line 46 "D:\\Workspace\\ion\\ion\\targets.ion"
+#line 46 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\targets.ion"
 void ion_init_default_type_metrics(ion_TypeMetrics (metrics[ION_NUM_CMPL_TYPE_KINDS]));
 
 #line 61
@@ -2420,7 +2420,7 @@ void ion_init_target(void);
 #line 133
 bool ion_is_excluded_target_filename(char const ((*name)));
 
-#line 70 "D:\\Workspace\\ion\\ion\\type.ion"
+#line 70 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\type.ion"
 extern ion_TypeMetrics (*ion_type_metrics);
 
 #line 51
@@ -2627,9 +2627,9 @@ ion_Type (*ion_aggregate_item_field_type_from_index(ion_Type (*type), int index)
 #line 481
 ion_Type (*ion_aggregate_item_field_type_from_name(ion_Type (*type), char const ((*name))));
 
-#line 1 "D:\\Workspace\\ion\\ion\\main.ion"
+#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\main.ion"
 
-#line 28 "D:\\Workspace\\ion\\system_packages\\builtin\\typeinfo.ion"
+#line 28 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\typeinfo.ion"
 struct TypeFieldInfo {
     char const ((*name));
     typeid type;
@@ -2642,7 +2642,7 @@ struct Any {
     typeid type;
 };
 
-#line 374 "D:\\Workspace\\ion\\ion\\ast_h.ion"
+#line 374 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 struct ion_StmtIf {
     ion_Stmt (*init);
     ion_Expr (*cond);
@@ -2907,7 +2907,7 @@ struct ion_ElseIf {
     ion_StmtList block;
 };
 
-#line 132 "D:\\Workspace\\ion\\ion\\common.ion"
+#line 132 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\common.ion"
 struct ion_BufHdr {
     size_t len;
     size_t cap;
@@ -2922,7 +2922,7 @@ struct ion_Intern {
     char (str[1]);
 };
 
-#line 33 "D:\\Workspace\\ion\\ion\\resolve.ion"
+#line 33 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\resolve.ion"
 struct ion_Package {
     char const ((*path));
     char (full_path[MAX_PATH]);
@@ -2934,14 +2934,14 @@ struct ion_Package {
     bool always_reachable;
 };
 
-#line 30 "D:\\Workspace\\ion\\ion\\type.ion"
+#line 30 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\type.ion"
 struct ion_TypeField {
     char const ((*name));
     ion_Type (*type);
     size_t offset;
 };
 
-#line 52 "D:\\Workspace\\ion\\ion\\os.ion"
+#line 52 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\os.ion"
 struct ion_DirListIter {
     bool valid;
     bool error;
@@ -2972,7 +2972,7 @@ struct ion_FlagDef {
     ion_FlagDefPtr ptr;
 };
 
-#line 290 "D:\\Workspace\\ion\\ion\\type.ion"
+#line 290 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\type.ion"
 struct ion_CachedArrayType {
     ion_Type (*type);
     ion_CachedArrayType (*next);
@@ -4016,7 +4016,7 @@ int num_typeinfos = 647;
 const TypeInfo **typeinfos = (const TypeInfo **)typeinfo_table;
 
 // Definitions
-#line 12 "D:\\Workspace\\ion\\ion\\main.ion"
+#line 12 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\main.ion"
 int main(int argc, char const ((*(*argv)))) {
     #line 14
     return ion_ion_main(argc, argv, ion_gen_all, "c");
@@ -4024,7 +4024,7 @@ int main(int argc, char const ((*(*argv)))) {
 
 char const ((*IONOS)) = "win32";
 char const ((*IONARCH)) = "x64";
-#line 51 "D:\\Workspace\\ion\\system_packages\\builtin\\typeinfo.ion"
+#line 51 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\typeinfo.ion"
 TypeKind typeid_kind(typeid type) {
     return (TypeKind)((((type) >> (24))) & (0xff));
 }
@@ -4047,7 +4047,7 @@ TypeInfo const ((*get_typeinfo(typeid type))) {
 }
 
 ion_Arena ion_ast_arena;
-#line 3 "D:\\Workspace\\ion\\ion\\ast.ion"
+#line 3 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast.ion"
 void (*ion_ast_alloc(size_t size)) {
     assert((size) != (0));
     void (*ptr) = ion_arena_alloc(&(ion_ast_arena), size);
@@ -4498,7 +4498,7 @@ ion_Stmt (*ion_new_stmt_expr(ion_SrcPos pos, ion_Expr (*expr))) {
     return s;
 }
 
-#line 2 "D:\\Workspace\\ion\\ion\\common.ion"
+#line 2 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\common.ion"
 size_t ion_min(size_t x, size_t y) {
     return ((x) <= (y) ? x : y);
 }
@@ -4997,7 +4997,7 @@ char (*ion_gen_postamble_str) =
     "#ifdef __GNUC__\n"
     "#pragma GCC diagnostic pop\n"
     "#endif\n";
-#line 119 "D:\\Workspace\\ion\\ion\\gen.ion"
+#line 119 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\gen.ion"
 void ion_genln(void) {
     ion_buf_printf(&(ion_gen_buf), "\n"
     "%.*s", (ion_gen_indent) * (4), "                                                                  ");
@@ -6465,7 +6465,7 @@ void ion_gen_all(void) {
 char const ((*(ion_static_package_search_paths[ION_MAX_SEARCH_PATHS])));
 char const ((*(*ion_package_search_paths))) = ion_static_package_search_paths;
 int ion_num_package_search_paths;
-#line 6 "D:\\Workspace\\ion\\ion\\ion.ion"
+#line 6 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ion.ion"
 void ion_add_package_search_path(char const ((*path))) {
     if (ion_flag_verbose) {
         printf("Adding package search path %s\n", path);
@@ -6649,7 +6649,7 @@ char const ((*ion_complete_name));
 char const ((*ion_assert_name));
 char const ((*ion_declare_note_name));
 char const ((*ion_static_assert_name));
-#line 38 "D:\\Workspace\\ion\\ion\\lex.ion"
+#line 38 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\lex.ion"
 char const ((*ion_init_keyword(char const ((*keyword))))) {
     keyword = ion_str_intern(keyword);
     #line 41
@@ -7452,7 +7452,7 @@ bool ion_flag_verbose;
 bool ion_flag_lazy;
 bool ion_flag_notypeinfo;
 bool ion_flag_fullgen;
-#line 4 "D:\\Workspace\\ion\\ion\\os.ion"
+#line 4 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\os.ion"
 void ion_path_normalize(char (*path)) {
     char (*ptr) = {0};
     for (ptr = path; *(ptr); (ptr)++) {
@@ -7669,7 +7669,7 @@ char const ((*ion_parse_flags(int (*argc_ptr), char const ((*(*(*argv_ptr)))))))
     return ion_path_file(_strdup(argv[0]));
 }
 
-#line 35 "D:\\Workspace\\ion\\ion\\os_win32.ion"
+#line 35 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\os_win32.ion"
 void ion_path_absolute(char (path[MAX_PATH])) {
     char (rel_path[MAX_PATH]) = {0};
     ion_path_copy(rel_path, path);
@@ -7725,7 +7725,7 @@ void ion_dir_list(ion_DirListIter (*iter), char const ((*path))) {
     }
 }
 
-#line 1 "D:\\Workspace\\ion\\ion\\parse.ion"
+#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
 ion_Typespec (*ion_parse_type_func_param(void)) {
     ion_Typespec (*type) = ion_parse_type();
     if (ion_match_token(ION_TOKEN_COLON)) {
@@ -7846,6 +7846,7 @@ ion_Expr (*ion_parse_expr_compound(ion_Typespec (*type))) {
 ion_Expr (*ion_parse_expr_operand(void)) {
     ion_SrcPos pos = ion_token.pos;
     if (ion_is_token(ION_TOKEN_INT)) {
+        #line 122
         ullong val = ion_token.int_val;
         ion_TokenMod mod = ion_token.mod;
         ion_TokenSuffix suffix = ion_token.suffix;
@@ -7939,12 +7940,11 @@ ion_Expr (*ion_parse_expr_base(void)) {
         ion_SrcPos pos = ion_token.pos;
         if (ion_match_token(ION_TOKEN_LPAREN)) {
             ion_Expr (*(*args)) = NULL;
-            if (!(ion_is_token(ION_TOKEN_RPAREN))) {
+            while (!(ion_is_token(ION_TOKEN_RPAREN))) {
                 ion_Expr (*arg) = ion_parse_expr();
                 ion_buf_push((void (**))(&(args)), &(arg), sizeof(arg));
-                while (ion_match_token(ION_TOKEN_COMMA)) {
-                    arg = ion_parse_expr();
-                    ion_buf_push((void (**))(&(args)), &(arg), sizeof(arg));
+                if (!(ion_match_token(ION_TOKEN_COMMA))) {
+                    break;
                 }
             }
             ion_expect_token(ION_TOKEN_RPAREN);
@@ -8616,7 +8616,7 @@ ion_Package (*ion_builtin_package);
 ion_Map ion_package_map;
 ion_Package (*(*ion_package_list));
 uint8_t ion_reachable_phase = ION_REACHABLE_NATURAL;
-#line 61 "D:\\Workspace\\ion\\ion\\resolve.ion"
+#line 61 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\resolve.ion"
 ion_Sym (*ion_get_package_sym(ion_Package (*package), char const ((*name)))) {
     return ion_map_get(&(package->syms_map), name);
 }
@@ -11161,7 +11161,7 @@ char const ((*(ion_os_names[ION_NUM_OSES]))) = {[ION_OS_WIN32] = "win32", [ION_O
 char const ((*(ion_arch_names[ION_NUM_ARCHES]))) = {[ION_ARCH_X64] = "x64", [ION_ARCH_X86] = "x86"};
 int ion_target_os;
 int ion_target_arch;
-#line 28 "D:\\Workspace\\ion\\ion\\targets.ion"
+#line 28 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\targets.ion"
 int ion_get_os(char const ((*name))) {
     for (int i = 0; (i) < (ION_NUM_OSES); (i)++) {
         if ((strcmp(ion_os_names[i], name)) == (0)) {
@@ -11339,7 +11339,7 @@ ion_Type (*ion_type_uintptr);
 ion_Type (*ion_type_usize);
 ion_Type (*ion_type_ssize);
 ion_Map ion_typeid_map;
-#line 96 "D:\\Workspace\\ion\\ion\\type.ion"
+#line 96 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\type.ion"
 ion_Type (*ion_get_type_from_typeid(int typeid)) {
     if ((typeid) == (0)) {
         return NULL;
