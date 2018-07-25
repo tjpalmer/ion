@@ -1717,70 +1717,70 @@ ion_Expr (*ion_parse_expr_compound(ion_Typespec (*type)));
 #line 118
 ion_Expr (*ion_parse_expr_operand(void));
 
-#line 209
+#line 208
 ion_Expr (*ion_parse_expr_base(void));
 
-#line 243
+#line 242
 bool ion_is_unary_op(void);
 
-#line 255
+#line 254
 ion_Expr (*ion_parse_expr_unary(void));
 
-#line 270
+#line 269
 bool ion_is_mul_op(void);
 
-#line 274
+#line 273
 ion_Expr (*ion_parse_expr_mul(void));
 
-#line 285
+#line 284
 bool ion_is_add_op(void);
 
-#line 289
+#line 288
 ion_Expr (*ion_parse_expr_add(void));
 
-#line 300
+#line 299
 bool ion_is_cmp_op(void);
 
-#line 304
+#line 303
 ion_Expr (*ion_parse_expr_cmp(void));
 
-#line 315
+#line 314
 ion_Expr (*ion_parse_expr_and(void));
 
-#line 324
+#line 323
 ion_Expr (*ion_parse_expr_or(void));
 
-#line 333
+#line 332
 ion_Expr (*ion_parse_expr_ternary(void));
 
-#line 345
+#line 344
 ion_Expr (*ion_parse_expr(void));
 
-#line 349
+#line 348
 ion_Expr (*ion_parse_paren_expr(void));
 
-#line 356
+#line 355
 ion_StmtList ion_parse_stmt_block(void);
 
-#line 368
+#line 367
 ion_Stmt (*ion_parse_stmt_if(ion_SrcPos pos));
 
-#line 396
+#line 395
 ion_Stmt (*ion_parse_stmt_while(ion_SrcPos pos));
 
-#line 401
+#line 400
 ion_Stmt (*ion_parse_stmt_do_while(ion_SrcPos pos));
 
-#line 412
+#line 411
 bool ion_is_assign_op(void);
 
-#line 416
+#line 415
 ion_Stmt (*ion_parse_init_stmt(ion_Expr (*left)));
 
-#line 440
+#line 439
 ion_Stmt (*ion_parse_simple_stmt(void));
 
-#line 456
+#line 455
 ion_Stmt (*ion_parse_stmt_for(ion_SrcPos pos));
 
 #line 323 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
@@ -1789,7 +1789,7 @@ struct ion_SwitchCasePattern {
     ion_Expr (*end);
 };
 
-#line 480 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
+#line 479 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
 ion_SwitchCasePattern ion_parse_switch_case_pattern(void);
 
 #line 328 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
@@ -1800,16 +1800,16 @@ struct ion_SwitchCase {
     ion_StmtList block;
 };
 
-#line 489 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
+#line 488 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
 ion_SwitchCase ion_parse_stmt_switch_case(void);
 
-#line 524
+#line 523
 ion_Stmt (*ion_parse_stmt_switch(ion_SrcPos pos));
 
-#line 536
+#line 535
 ion_Stmt (*ion_parse_stmt(void));
 
-#line 582
+#line 581
 char const ((*ion_parse_name(void)));
 
 #line 79 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
@@ -1819,10 +1819,10 @@ struct ion_EnumItem {
     ion_Expr (*init);
 };
 
-#line 588 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
+#line 587 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
 ion_EnumItem ion_parse_decl_enum_item(void);
 
-#line 598
+#line 597
 ion_Decl (*ion_parse_decl_enum(ion_SrcPos pos));
 
 #line 66 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
@@ -1839,22 +1839,22 @@ struct ion_AggregateItem {
     };
 };
 
-#line 620 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
+#line 619 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
 ion_AggregateItem ion_parse_decl_aggregate_item(void);
 
-#line 655
+#line 654
 ion_Aggregate (*ion_parse_aggregate(ion_AggregateKind kind));
 
-#line 667
+#line 666
 ion_Decl (*ion_parse_decl_aggregate(ion_SrcPos pos, ion_DeclKind kind));
 
-#line 680
+#line 679
 ion_Decl (*ion_parse_decl_var(ion_SrcPos pos));
 
-#line 700
+#line 699
 ion_Decl (*ion_parse_decl_const(ion_SrcPos pos));
 
-#line 712
+#line 711
 ion_Decl (*ion_parse_decl_typedef(ion_SrcPos pos));
 
 #line 54 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
@@ -1864,10 +1864,10 @@ struct ion_FuncParam {
     ion_Typespec (*type);
 };
 
-#line 720 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
+#line 719 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
 ion_FuncParam ion_parse_decl_func_param(void);
 
-#line 728
+#line 727
 ion_Decl (*ion_parse_decl_func(ion_SrcPos pos));
 
 #line 3 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
@@ -1877,28 +1877,28 @@ struct ion_NoteArg {
     ion_Expr (*expr);
 };
 
-#line 769 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
+#line 768 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
 ion_NoteArg ion_parse_note_arg(void);
 
-#line 783
+#line 782
 ion_Note ion_parse_note(void);
 
-#line 799
+#line 798
 ion_Notes ion_parse_notes(void);
 
-#line 808
+#line 807
 ion_Decl (*ion_parse_decl_note(ion_SrcPos pos));
 
-#line 812
+#line 811
 ion_Decl (*ion_parse_decl_import(ion_SrcPos pos));
 
-#line 860
+#line 859
 ion_Decl (*ion_parse_decl_opt(void));
 
-#line 885
+#line 884
 ion_Decl (*ion_parse_decl(void));
 
-#line 895
+#line 894
 ion_Decls (*ion_parse_decls(void));
 
 #line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\resolve.ion"
@@ -7846,7 +7846,6 @@ ion_Expr (*ion_parse_expr_compound(ion_Typespec (*type))) {
 ion_Expr (*ion_parse_expr_operand(void)) {
     ion_SrcPos pos = ion_token.pos;
     if (ion_is_token(ION_TOKEN_INT)) {
-        #line 122
         ullong val = ion_token.int_val;
         ion_TokenMod mod = ion_token.mod;
         ion_TokenSuffix suffix = ion_token.suffix;
@@ -7972,7 +7971,7 @@ bool ion_is_unary_op(void) {
     return (((((((ion_is_token(ION_TOKEN_ADD)) || (ion_is_token(ION_TOKEN_SUB))) || (ion_is_token(ION_TOKEN_MUL))) || (ion_is_token(ION_TOKEN_AND))) || (ion_is_token(ION_TOKEN_NEG))) || (ion_is_token(ION_TOKEN_NOT))) || (ion_is_token(ION_TOKEN_INC))) || (ion_is_token(ION_TOKEN_DEC));
 }
 
-#line 255
+#line 254
 ion_Expr (*ion_parse_expr_unary(void)) {
     if (ion_is_unary_op()) {
         ion_SrcPos pos = ion_token.pos;
@@ -8343,10 +8342,10 @@ ion_AggregateItem ion_parse_decl_aggregate_item(void) {
     if (ion_match_keyword(ion_struct_keyword)) {
         return (ion_AggregateItem){.pos = pos, .kind = ION_AGGREGATE_ITEM_SUBAGGREGATE, .subaggregate = ion_parse_aggregate(ION_AGGREGATE_STRUCT)};
     } else if (ion_match_keyword(ion_union_keyword)) {
-        #line 629
+        #line 628
         return (ion_AggregateItem){.pos = pos, .kind = ION_AGGREGATE_ITEM_SUBAGGREGATE, .subaggregate = ion_parse_aggregate(ION_AGGREGATE_UNION)};
     } else {
-        #line 635
+        #line 634
         char const ((*(*names))) = NULL;
         char const ((*name)) = ion_parse_name();
         ion_buf_push((void (**))(&(names)), &(name), sizeof(name));
@@ -8361,7 +8360,7 @@ ion_AggregateItem ion_parse_decl_aggregate_item(void) {
     }
 }
 
-#line 655
+#line 654
 ion_Aggregate (*ion_parse_aggregate(ion_AggregateKind kind)) {
     ion_SrcPos pos = ion_token.pos;
     ion_expect_token(ION_TOKEN_LBRACE);
