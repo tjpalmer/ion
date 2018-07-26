@@ -314,7 +314,10 @@ func test_enum() {
     c := a + b;
     i: int = a;
     a = i;
-    printf("%d %d %d %d\n", COLOR_NONE, COLOR_RED, COLOR_GREEN, COLOR_BLUE);
+    printf(
+        "%d %d %d %d\n",
+        COLOR_NONE, COLOR_RED, COLOR_GREEN, COLOR_BLUE,
+    );
     d := BAR;
     e := QUUX;
     #static_assert(typeof(e) == typeof(TypedEnum));
