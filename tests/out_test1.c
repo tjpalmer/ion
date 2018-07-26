@@ -75,87 +75,60 @@ typedef struct test1_UartCtrl test1_UartCtrl;
 typedef union test1_IntOrPtr test1_IntOrPtr;
 
 // Sorted declarations
-#line 806 "C:\\Users\\Tom\\Documents\\projects\\ion\\tests\\test1\\test1.ion"
 int main(int argc, char (*(*argv)));
 
-#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\config_win32.ion"
 extern char const ((*IONOS));
 
-#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\config_x64.ion"
 extern char const ((*IONARCH));
 
-#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\typeinfo.ion"
 typedef ullong typeid;
 
 typedef int TypeKind;
 
-#line 4
 #define TYPE_NONE ((TypeKind)(0))
 
-#line 5
 #define TYPE_VOID ((TypeKind)((TYPE_NONE) + (1)))
 
-#line 6
 #define TYPE_BOOL ((TypeKind)((TYPE_VOID) + (1)))
 
-#line 7
 #define TYPE_CHAR ((TypeKind)((TYPE_BOOL) + (1)))
 
-#line 8
 #define TYPE_UCHAR ((TypeKind)((TYPE_CHAR) + (1)))
 
-#line 9
 #define TYPE_SCHAR ((TypeKind)((TYPE_UCHAR) + (1)))
 
-#line 10
 #define TYPE_SHORT ((TypeKind)((TYPE_SCHAR) + (1)))
 
-#line 11
 #define TYPE_USHORT ((TypeKind)((TYPE_SHORT) + (1)))
 
-#line 12
 #define TYPE_INT ((TypeKind)((TYPE_USHORT) + (1)))
 
-#line 13
 #define TYPE_UINT ((TypeKind)((TYPE_INT) + (1)))
 
-#line 14
 #define TYPE_LONG ((TypeKind)((TYPE_UINT) + (1)))
 
-#line 15
 #define TYPE_ULONG ((TypeKind)((TYPE_LONG) + (1)))
 
-#line 16
 #define TYPE_LLONG ((TypeKind)((TYPE_ULONG) + (1)))
 
-#line 17
 #define TYPE_ULLONG ((TypeKind)((TYPE_LLONG) + (1)))
 
-#line 18
 #define TYPE_FLOAT ((TypeKind)((TYPE_ULLONG) + (1)))
 
-#line 19
 #define TYPE_DOUBLE ((TypeKind)((TYPE_FLOAT) + (1)))
 
-#line 20
 #define TYPE_CONST ((TypeKind)((TYPE_DOUBLE) + (1)))
 
-#line 21
 #define TYPE_PTR ((TypeKind)((TYPE_CONST) + (1)))
 
-#line 22
 #define TYPE_ARRAY ((TypeKind)((TYPE_PTR) + (1)))
 
-#line 23
 #define TYPE_STRUCT ((TypeKind)((TYPE_ARRAY) + (1)))
 
-#line 24
 #define TYPE_UNION ((TypeKind)((TYPE_STRUCT) + (1)))
 
-#line 25
 #define TYPE_FUNC ((TypeKind)((TYPE_UNION) + (1)))
 
-#line 34
 struct TypeInfo {
     TypeKind kind;
     int size;
@@ -167,140 +140,97 @@ struct TypeInfo {
     int num_fields;
 };
 
-#line 51
 TypeKind typeid_kind(typeid type);
 
-#line 55
 int typeid_index(typeid type);
 
-#line 59
 size_t typeid_size(typeid type);
 
-#line 63
 TypeInfo const ((*get_typeinfo(typeid type)));
 
-#line 65 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\types.ion"
 #define UCHAR_MIN ((uchar)(0))
 
-#line 88
 #define USHORT_MIN ((short)(0))
 
-#line 99
 #define UINT_MIN ((uint)(0))
 
-#line 110
 #define ULLONG_MIN ((ullong)(0))
 
-#line 115
 #define UINT8_MIN (UCHAR_MIN)
 
-#line 126
 #define UINT16_MIN (USHORT_MIN)
 
-#line 137
 #define UINT32_MIN (UINT_MIN)
 
-#line 148
 #define UINT64_MIN (ULLONG_MIN)
 
-#line 19 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\types_win32.ion"
 #define ULONG_MIN ((ulong)(INT32_MIN))
 
-#line 15 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\types_x64.ion"
 #define USIZE_MIN (UINT64_MIN)
 
-#line 26
 #define UINTPTR_MIN (UINT64_MIN)
 
-#line 800 "C:\\Users\\Tom\\Documents\\projects\\ion\\tests\\test1\\test1.ion"
 void test1_test_const_ptr_deref(void);
 
-#line 675
 void test1_test_limits(void);
 
-#line 613
 void test1_test_va_list(char const ((*fmt)), ...);
 
-#line 787
 void test1_test_os_arch(void);
 
-#line 60
 void test1_test_packages(void);
 
-#line 770
 void test1_test_if(void);
 
-#line 64
 void test1_test_modify(void);
 
-#line 763
 void test1_test_lvalue(void);
 
-#line 729
 void test1_test_alignof(void);
 
-#line 744
 void test1_test_offsetof(void);
 
-#line 647
 void test1_test_complete(void);
 
-#line 629
 void test1_test_compound_literals(void);
 
-#line 98
 void test1_test_loops(void);
 
-#line 489
 void test1_test_sizeof(void);
 
-#line 325
 void test1_test_assign(void);
 
-#line 311
 void test1_test_enum(void);
 
-#line 89
 void test1_test_arrays(void);
 
-#line 497
 void test1_test_cast(void);
 
-#line 473
 void test1_test_init(void);
 
-#line 359
 void test1_test_lits(void);
 
-#line 447
 void test1_test_const(void);
 
-#line 408
 void test1_test_bool(void);
 
-#line 376
 void test1_test_ops(void);
 
-#line 587
 void test1_test_typeinfo(void);
 
-#line 783
 void test1_test_reachable(void);
 
-#line 28 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\typeinfo.ion"
 struct TypeFieldInfo {
     char const ((*name));
     typeid type;
     int offset;
 };
 
-#line 72
 struct Any {
     void (*ptr);
     typeid type;
 };
 
-#line 792 "C:\\Users\\Tom\\Documents\\projects\\ion\\tests\\test1\\test1.ion"
 struct test1_Bar {
     int rc;
 };
@@ -309,144 +239,102 @@ struct test1_Foo {
     test1_Bar (*const (bar));
 };
 
-#line 21 "C:\\Users\\Tom\\Documents\\projects\\ion\\tests\\test1\\subtest1\\subtest1.ion"
 int test1_subtest1_func1(void);
 
-#line 755 "C:\\Users\\Tom\\Documents\\projects\\ion\\tests\\test1\\test1.ion"
 test1_Thing (*test1_returns_ptr(void));
 
-#line 749
 struct test1_Thing {
     int a;
 };
 
-#line 759
 test1_Thing const ((*test1_returns_ptr_to_const(void)));
 
-#line 737
 struct test1_BufHdr {
     size_t cap;
-    #line 738
     size_t len;
     char (buf[1]);
 };
 
-#line 254
 struct test1_Vector {
     int x;
-    #line 255
     int y;
 };
 
-#line 607
 struct test1_Ints {
     int num_ints;
     int (*int_ptr);
     int (int_arr[3]);
 };
 
-#line 286
 typedef int test1_Color;
 
-#line 287
 #define TEST1_COLOR_NONE ((test1_Color)(0))
 
-#line 288
 #define TEST1_COLOR_RED ((test1_Color)((TEST1_COLOR_NONE) + (1)))
 
-#line 289
 #define TEST1_COLOR_GREEN ((test1_Color)((TEST1_COLOR_RED) + (1)))
 
-#line 290
 #define TEST1_COLOR_BLUE ((test1_Color)((TEST1_COLOR_GREEN) + (1)))
 
-#line 295
 #define TEST1_FOO ((int)(0))
 
-#line 296
 #define TEST1_BAR ((int)((TEST1_FOO) + (1)))
 
-#line 299
 typedef int8_t test1_TypedEnum;
 
-#line 300
 #define TEST1_BAZ ((test1_TypedEnum)(0))
 
-#line 301
 #define TEST1_QUUX ((test1_TypedEnum)((TEST1_BAZ) + (1)))
 
-#line 85
 void test1_f10(wchar_t (a[3]));
 
-#line 432
 struct test1_ConstVector {
     int const (x);
-    #line 433
     int const (y);
 };
 
-#line 427
 extern test1_Vector const (test1_cv);
 
-#line 220
 extern char const ((test1_escape_to_char[256]));
 
-#line 207
 extern char const ((test1_char_to_escape[256]));
 
-#line 6
 extern char (*test1_esc_test_str);
 
-#line 429
 void test1_f4(char const ((*x)));
 
-#line 406
 #define TEST1_IS_DEBUG (true)
 
-#line 519
 void test1_println_any(Any any);
 
-#line 554
 void test1_println_type(typeid type);
 
-#line 582
 void test1_println_typeinfo(typeid type);
 
-#line 16 "C:\\Users\\Tom\\Documents\\projects\\ion\\tests\\test1\\subtest1\\subtest1.ion"
 void test1_subtest1_func2(void);
 
-#line 753 "C:\\Users\\Tom\\Documents\\projects\\ion\\tests\\test1\\test1.ion"
 extern test1_Thing test1_thing;
 
-#line 506
 void test1_print_any(Any any);
 
-#line 529
 void test1_print_type(typeid type);
 
-#line 147
 struct test1_UartCtrl {
     bool tx_enable;
-    #line 148
     bool rx_enable;
 };
 
-#line 559
 void test1_print_typeinfo(typeid type);
 
-#line 202
 union test1_IntOrPtr {
     int i;
     int (*p);
 };
 
-#line 9 "C:\\Users\\Tom\\Documents\\projects\\ion\\tests\\test1\\subtest1\\subtest1.ion"
 void test1_subtest1_func3(void);
 
-#line 13
 void test1_subtest1_func4(void);
 
-#line 524 "C:\\Users\\Tom\\Documents\\projects\\ion\\tests\\test1\\test1.ion"
 void test1_print_typeid(typeid type);
 
 // Typeinfo
@@ -760,7 +648,6 @@ int num_typeinfos = 258;
 const TypeInfo **typeinfos = (const TypeInfo **)typeinfo_table;
 
 // Definitions
-#line 806
 int main(int argc, char (*(*argv))) {
     if ((argv) == (0)) {
         printf("argv is null\n");
@@ -796,7 +683,6 @@ int main(int argc, char (*(*argv))) {
 
 char const ((*IONOS)) = "win32";
 char const ((*IONARCH)) = "x64";
-#line 51 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\typeinfo.ion"
 TypeKind typeid_kind(typeid type) {
     return (TypeKind)((((type) >> (24))) & (0xff));
 }
@@ -818,14 +704,12 @@ TypeInfo const ((*get_typeinfo(typeid type))) {
     }
 }
 
-#line 800 "C:\\Users\\Tom\\Documents\\projects\\ion\\tests\\test1\\test1.ion"
 void test1_test_const_ptr_deref(void) {
     test1_Bar bar = {.rc = 42};
     test1_Foo foo = {.bar = &(bar)};
     int i = foo.bar->rc;
 }
 
-#line 675
 void test1_test_limits(void) {
     char char_min = CHAR_MIN;
     char char_max = CHAR_MAX;
@@ -849,10 +733,8 @@ void test1_test_limits(void) {
     llong llong_max = LLONG_MAX;
     ullong ullong_min = ULLONG_MIN;
     ullong ullong_max = ULLONG_MAX;
-    #line 699
     short wchar_min = WCHAR_MIN;
     ushort wchar_max = WCHAR_MAX;
-    #line 702
     schar int8_min = INT8_MIN;
     schar int8_max = INT8_MAX;
     uchar uint8_min = UINT8_MIN;
@@ -869,7 +751,6 @@ void test1_test_limits(void) {
     llong int64_max = INT64_MAX;
     ullong uint64_min = UINT64_MIN;
     ullong uint64_max = UINT64_MAX;
-    #line 719
     ullong usize_min = USIZE_MIN;
     ullong usize_max = SIZE_MAX;
     llong ssize_min = PTRDIFF_MIN;
@@ -880,7 +761,6 @@ void test1_test_limits(void) {
     llong intptr_max = INTPTR_MAX;
 }
 
-#line 613
 void test1_test_va_list(char const ((*fmt)), ...) {
     va_list init_args = {0};
     va_start_ptr(&(init_args), &(fmt));
@@ -897,53 +777,38 @@ void test1_test_va_list(char const ((*fmt)), ...) {
     va_end_ptr(&(args));
 }
 
-#line 787
 void test1_test_os_arch(void) {
     printf("Target operating system: %s\n", IONOS);
     printf("Target machine architecture: %s\n", IONARCH);
 }
 
-#line 60
 void test1_test_packages(void) {
     test1_subtest1_func1();
 }
 
-#line 770
 void test1_test_if(void) {
     if (1) {
     }
-    #line 775
     {
-        #line 775
         int x = 42;
-        #line 775
         if (x) {
         }
     }
-    #line 777
     {
-        #line 777
         int x = 42;
-        #line 777
         if ((x) >= (0)) {
         }
     }
-    #line 779
     {
-        #line 779
         int x = 42;
-        #line 779
         if ((x) >= (0)) {
         }
     }
 }
 
-#line 64
 void test1_test_modify(void) {
     int i = 42;
-    #line 67
     int (*p) = &(i);
-    #line 69
     (p)--;
     int x = *((p)++);
     assert((x) == (*(--(p))));
@@ -960,14 +825,11 @@ void test1_test_modify(void) {
     assert((sp) == (stk));
 }
 
-#line 763
 void test1_test_lvalue(void) {
     test1_returns_ptr()->a = 5;
-    #line 766
     test1_Thing const ((*p)) = test1_returns_ptr_to_const();
 }
 
-#line 729
 void test1_test_alignof(void) {
     int i = 42;
     ullong n1 = alignof(int);
@@ -976,39 +838,29 @@ void test1_test_alignof(void) {
     ullong n4 = alignof(int *);
 }
 
-#line 744
 void test1_test_offsetof(void) {
     ullong n = offsetof(test1_BufHdr, buf);
 }
 
-#line 647
 void test1_test_complete(void) {
     int x = 0;
-    #line 651
     int y = 0;
-    #line 653
     if ((x) == (0)) {
         y = 1;
     } else if ((x) == (1)) {
         y = 2;
     } else {
-        #line 652
         assert("@complete if/elseif chain failed to handle case" && 0);
     }
-    #line 659
     x = 1;
-    #line 661
     assert((x) >= (0));
-    #line 663
     x = 0;
-    #line 667
     switch (x) {
     case 0: {
         y = 3;
         break;
     }
     case 1: {
-        #line 671
         y = 4;
         break;
     }
@@ -1018,7 +870,6 @@ void test1_test_complete(void) {
     }
 }
 
-#line 629
 void test1_test_compound_literals(void) {
     test1_Vector (*w) = {0};
     w = &((test1_Vector){1, 2});
@@ -1027,20 +878,16 @@ void test1_test_compound_literals(void) {
     Any const (x) = {&(i), TYPEID(8, TYPE_INT, int)};
     Any y = {&(i), TYPEID(8, TYPE_INT, int)};
     test1_Ints v = {.num_ints = 3, .int_ptr = (int []){1, 2, 3}, .int_arr = {1, 2, 3}};
-    #line 641
     test1_Ints (ints_of_ints[]) = {{.num_ints = 3, .int_arr = {1, 2, 3}}, {.num_ints = 2, .int_ptr = (int [2]){-(1), -(2)}}};
 }
 
-#line 98
 void test1_test_loops(void) {
-    #line 101
     switch (0) {
     case 1: {
         break;
         break;
     }
     default: {
-        #line 105
         if (1) {
             break;
         }
@@ -1071,7 +918,6 @@ void test1_test_loops(void) {
     }
 }
 
-#line 489
 void test1_test_sizeof(void) {
     int i = 0;
     ullong n = sizeof(i);
@@ -1080,7 +926,6 @@ void test1_test_sizeof(void) {
     n = sizeof(int *);
 }
 
-#line 325
 void test1_test_assign(void) {
     int i = 0;
     float f = 3.14f;
@@ -1100,7 +945,6 @@ void test1_test_assign(void) {
     i ^= 0xff0;
 }
 
-#line 311
 void test1_test_enum(void) {
     test1_Color a = TEST1_COLOR_RED;
     test1_Color b = TEST1_COLOR_RED;
@@ -1110,40 +954,31 @@ void test1_test_enum(void) {
     printf("%d %d %d %d\n", TEST1_COLOR_NONE, TEST1_COLOR_RED, TEST1_COLOR_GREEN, TEST1_COLOR_BLUE);
     int d = TEST1_BAR;
     test1_TypedEnum e = TEST1_QUUX;
-    #line 321
     test1_TypedEnum f = {0};
     f = TEST1_BAZ;
 }
 
-#line 89
 void test1_test_arrays(void) {
     wchar_t (a[]) = {1, 2, 3};
-    #line 92
     test1_f10(a);
     ushort (*b) = a;
     wchar_t w1 = {0};
     ushort w2 = w1;
 }
 
-#line 497
 void test1_test_cast(void) {
     int (*p) = 0;
     uint64_t a = 0;
-    #line 501
     a = (uint64_t)(p);
-    #line 503
     p = (int *)(a);
 }
 
-#line 473
 void test1_test_init(void) {
     int x = (int const )(0);
-    #line 476
     int y = {0};
     y = 0;
     int z = 42;
     int (a[]) = {1, 2, 3};
-    #line 482
     for (ullong i = 0; (i) < (10); (i)++) {
         printf("%llu\n", i);
     }
@@ -1151,7 +986,6 @@ void test1_test_init(void) {
     b[0] = a[2];
 }
 
-#line 359
 void test1_test_lits(void) {
     float f = 3.14f;
     double d = 3.14;
@@ -1167,15 +1001,11 @@ void test1_test_lits(void) {
     int x4 = (0xaa) + (0x55);
 }
 
-#line 447
 void test1_test_const(void) {
     test1_ConstVector cv2 = {1, 2};
-    #line 450
     int i = 0;
     i = 1;
-    #line 454
     int x = test1_cv.x;
-    #line 456
     char c = test1_escape_to_char[0];
     c = test1_char_to_escape[c];
     c = test1_esc_test_str[0];
@@ -1184,13 +1014,10 @@ void test1_test_const(void) {
     p = (test1_escape_to_char) + (1);
     char (*q) = (char *)(test1_escape_to_char);
     c = q['n'];
-    #line 465
     p = (char const (*))(1);
-    #line 468
     i = (int)((ullong)(p));
 }
 
-#line 408
 void test1_test_bool(void) {
     bool b = false;
     b = true;
@@ -1198,7 +1025,6 @@ void test1_test_bool(void) {
     i = TEST1_IS_DEBUG;
 }
 
-#line 376
 void test1_test_ops(void) {
     float pi = 3.14f;
     float f = 0.0f;
@@ -1229,38 +1055,31 @@ void test1_test_ops(void) {
     b = (p) && (pi);
 }
 
-#line 587
 void test1_test_typeinfo(void) {
     int i = 42;
     float f = 3.14f;
     void (*p) = NULL;
-    #line 592
     test1_println_any((Any){&(i), TYPEID(8, TYPE_INT, int)});
     test1_println_any((Any){&(f), TYPEID(14, TYPE_FLOAT, float)});
     test1_println_any((Any){&(p), TYPEID(16, TYPE_PTR, void *)});
-    #line 596
     test1_println_type(TYPEID(8, TYPE_INT, int));
     test1_println_type(TYPEID(96, TYPE_PTR, int const (*)));
     test1_println_type(TYPEID(97, TYPE_ARRAY, int const (*[42])));
     test1_println_type(TYPEID(98, TYPE_STRUCT, test1_UartCtrl));
-    #line 601
     test1_println_typeinfo(TYPEID(8, TYPE_INT, int));
     test1_println_typeinfo(TYPEID(98, TYPE_STRUCT, test1_UartCtrl));
     test1_println_typeinfo(TYPEID(100, TYPE_PTR, test1_IntOrPtr *));
     test1_println_typeinfo(TYPEID(99, TYPE_UNION, test1_IntOrPtr));
 }
 
-#line 783
 void test1_test_reachable(void) {
 }
 
-#line 21 "C:\\Users\\Tom\\Documents\\projects\\ion\\tests\\test1\\subtest1\\subtest1.ion"
 int test1_subtest1_func1(void) {
     test1_subtest1_func2();
     return 42;
 }
 
-#line 755 "C:\\Users\\Tom\\Documents\\projects\\ion\\tests\\test1\\test1.ion"
 test1_Thing (*test1_returns_ptr(void)) {
     return &(test1_thing);
 }
@@ -1269,7 +1088,6 @@ test1_Thing const ((*test1_returns_ptr_to_const(void))) {
     return &(test1_thing);
 }
 
-#line 85
 void test1_f10(wchar_t (a[3])) {
     a[1] = 42;
 }
@@ -1280,36 +1098,30 @@ char const ((test1_char_to_escape[256])) = {['\0'] = '0', ['\n'] = 'n', ['\r'] =
 char (*test1_esc_test_str) = "Hello\n"
 "world\n"
 "Hex: \x1\x10\xFHello\xFF";
-#line 429
 void test1_f4(char const ((*x))) {
 }
 
-#line 519
 void test1_println_any(Any any) {
     test1_print_any(any);
     printf("\n");
 }
 
-#line 554
 void test1_println_type(typeid type) {
     test1_print_type(type);
     printf("\n");
 }
 
-#line 582
 void test1_println_typeinfo(typeid type) {
     test1_print_typeinfo(type);
     printf("\n");
 }
 
-#line 16 "C:\\Users\\Tom\\Documents\\projects\\ion\\tests\\test1\\subtest1\\subtest1.ion"
 void test1_subtest1_func2(void) {
     test1_subtest1_func3();
     test1_subtest1_func4();
 }
 
 test1_Thing test1_thing;
-#line 506 "C:\\Users\\Tom\\Documents\\projects\\ion\\tests\\test1\\test1.ion"
 void test1_print_any(Any any) {
     switch (any.type) {
     case TYPEID(8, TYPE_INT, int): {
@@ -1317,22 +1129,18 @@ void test1_print_any(Any any) {
         break;
     }
     case TYPEID(14, TYPE_FLOAT, float): {
-        #line 511
         printf("%f", *((float const (*))(any.ptr)));
         break;
     }
     default: {
-        #line 513
         printf("<unknown>");
         break;
     }
     }
-    #line 515
     printf(": ");
     test1_print_type(any.type);
 }
 
-#line 529
 void test1_print_type(typeid type) {
     TypeInfo const ((*typeinfo)) = get_typeinfo(type);
     if (!(typeinfo)) {
@@ -1346,19 +1154,16 @@ void test1_print_type(typeid type) {
         break;
     }
     case TYPE_CONST: {
-        #line 540
         test1_print_type(typeinfo->base);
         printf(" const");
         break;
     }
     case TYPE_ARRAY: {
-        #line 543
         test1_print_type(typeinfo->base);
         printf("[%d]", typeinfo->count);
         break;
     }
     default: {
-        #line 546
         if (typeinfo->name) {
             printf("%s", typeinfo->name);
         } else {
@@ -1369,7 +1174,6 @@ void test1_print_type(typeid type) {
     }
 }
 
-#line 559
 void test1_print_typeinfo(typeid type) {
     TypeInfo const ((*typeinfo)) = get_typeinfo(type);
     if (!(typeinfo)) {
@@ -1382,7 +1186,6 @@ void test1_print_typeinfo(typeid type) {
     switch (typeinfo->kind) {
     case TYPE_STRUCT:
     case TYPE_UNION: {
-        #line 570
         printf(" %s={ ", ((typeinfo->kind) == (TYPE_STRUCT) ? "struct" : "union"));
         for (int i = 0; (i) < (typeinfo->num_fields); (i)++) {
             TypeFieldInfo field = typeinfo->fields[i];
@@ -1394,11 +1197,9 @@ void test1_print_typeinfo(typeid type) {
         break;
     }
     }
-    #line 579
     printf(">");
 }
 
-#line 9 "C:\\Users\\Tom\\Documents\\projects\\ion\\tests\\test1\\subtest1\\subtest1.ion"
 void test1_subtest1_func3(void) {
     printf("func3\n");
 }
@@ -1406,7 +1207,6 @@ void test1_subtest1_func3(void) {
 void test1_subtest1_func4(void) {
 }
 
-#line 524 "C:\\Users\\Tom\\Documents\\projects\\ion\\tests\\test1\\test1.ion"
 void test1_print_typeid(typeid type) {
     int index = typeid_index(type);
     printf("typeid(%d)", index);

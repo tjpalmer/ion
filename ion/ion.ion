@@ -82,6 +82,7 @@ func ion_main(argc: int, argv: char const**, gen_all: func(), extension: char co
     add_flag_enum("arch", &target_arch, "Target machine architecture", arch_names, NUM_ARCHES);
     add_flag_bool("check", &flag_check, "Semantic checking with no code generation");
     add_flag_bool("lazy", &flag_lazy, "Only compile what's reachable from the main package");
+    add_flag_bool("nosourcemap", &flag_nosourcemap, "Don't generate any source map information");
     add_flag_bool("notypeinfo", &flag_notypeinfo, "Don't generate any typeinfo tables");
     add_flag_bool("fullgen", &flag_fullgen, "Force full code generation even for non-reachable symbols");
     add_flag_bool("verbose", &flag_verbose, "Extra diagnostic information");

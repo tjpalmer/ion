@@ -67,87 +67,60 @@ typedef struct TypeFieldInfo TypeFieldInfo;
 typedef struct Any Any;
 
 // Sorted declarations
-#line 3 "C:\\Users\\Tom\\Documents\\projects\\ion\\tests\\test2\\main.ion"
 int main(int argc, char (*(*argv)));
 
-#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\config_win32.ion"
 extern char const ((*IONOS));
 
-#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\config_x64.ion"
 extern char const ((*IONARCH));
 
-#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\typeinfo.ion"
 typedef ullong typeid;
 
 typedef int TypeKind;
 
-#line 4
 #define TYPE_NONE ((TypeKind)(0))
 
-#line 5
 #define TYPE_VOID ((TypeKind)((TYPE_NONE) + (1)))
 
-#line 6
 #define TYPE_BOOL ((TypeKind)((TYPE_VOID) + (1)))
 
-#line 7
 #define TYPE_CHAR ((TypeKind)((TYPE_BOOL) + (1)))
 
-#line 8
 #define TYPE_UCHAR ((TypeKind)((TYPE_CHAR) + (1)))
 
-#line 9
 #define TYPE_SCHAR ((TypeKind)((TYPE_UCHAR) + (1)))
 
-#line 10
 #define TYPE_SHORT ((TypeKind)((TYPE_SCHAR) + (1)))
 
-#line 11
 #define TYPE_USHORT ((TypeKind)((TYPE_SHORT) + (1)))
 
-#line 12
 #define TYPE_INT ((TypeKind)((TYPE_USHORT) + (1)))
 
-#line 13
 #define TYPE_UINT ((TypeKind)((TYPE_INT) + (1)))
 
-#line 14
 #define TYPE_LONG ((TypeKind)((TYPE_UINT) + (1)))
 
-#line 15
 #define TYPE_ULONG ((TypeKind)((TYPE_LONG) + (1)))
 
-#line 16
 #define TYPE_LLONG ((TypeKind)((TYPE_ULONG) + (1)))
 
-#line 17
 #define TYPE_ULLONG ((TypeKind)((TYPE_LLONG) + (1)))
 
-#line 18
 #define TYPE_FLOAT ((TypeKind)((TYPE_ULLONG) + (1)))
 
-#line 19
 #define TYPE_DOUBLE ((TypeKind)((TYPE_FLOAT) + (1)))
 
-#line 20
 #define TYPE_CONST ((TypeKind)((TYPE_DOUBLE) + (1)))
 
-#line 21
 #define TYPE_PTR ((TypeKind)((TYPE_CONST) + (1)))
 
-#line 22
 #define TYPE_ARRAY ((TypeKind)((TYPE_PTR) + (1)))
 
-#line 23
 #define TYPE_STRUCT ((TypeKind)((TYPE_ARRAY) + (1)))
 
-#line 24
 #define TYPE_UNION ((TypeKind)((TYPE_STRUCT) + (1)))
 
-#line 25
 #define TYPE_FUNC ((TypeKind)((TYPE_UNION) + (1)))
 
-#line 34
 struct TypeInfo {
     TypeKind kind;
     int size;
@@ -159,72 +132,51 @@ struct TypeInfo {
     int num_fields;
 };
 
-#line 51
 TypeKind typeid_kind(typeid type);
 
-#line 55
 int typeid_index(typeid type);
 
-#line 59
 size_t typeid_size(typeid type);
 
-#line 63
 TypeInfo const ((*get_typeinfo(typeid type)));
 
-#line 65 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\types.ion"
 #define UCHAR_MIN ((uchar)(0))
 
-#line 88
 #define USHORT_MIN ((short)(0))
 
-#line 99
 #define UINT_MIN ((uint)(0))
 
-#line 110
 #define ULLONG_MIN ((ullong)(0))
 
-#line 115
 #define UINT8_MIN (UCHAR_MIN)
 
-#line 126
 #define UINT16_MIN (USHORT_MIN)
 
-#line 137
 #define UINT32_MIN (UINT_MIN)
 
-#line 148
 #define UINT64_MIN (ULLONG_MIN)
 
-#line 19 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\types_win32.ion"
 #define ULONG_MIN ((ulong)(INT32_MIN))
 
-#line 15 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\types_x64.ion"
 #define USIZE_MIN (UINT64_MIN)
 
-#line 26
 #define UINTPTR_MIN (UINT64_MIN)
 
-#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\tests\\test2\\test2.ion"
 struct test2_vec2 {
     float x;
-    #line 2
     float y;
 };
 
-#line 45
 test2_vec2 test2_rot2(float a, test2_vec2 b);
 
-#line 5
 test2_vec2 test2_add2(test2_vec2 a, test2_vec2 b);
 
-#line 28 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\typeinfo.ion"
 struct TypeFieldInfo {
     char const ((*name));
     typeid type;
     int offset;
 };
 
-#line 72
 struct Any {
     void (*ptr);
     typeid type;
@@ -438,7 +390,6 @@ int num_typeinfos = 178;
 const TypeInfo **typeinfos = (const TypeInfo **)typeinfo_table;
 
 // Definitions
-#line 3 "C:\\Users\\Tom\\Documents\\projects\\ion\\tests\\test2\\main.ion"
 int main(int argc, char (*(*argv))) {
     printf("Hello, world!\n");
     int a = 0;
@@ -451,7 +402,6 @@ int main(int argc, char (*(*argv))) {
 
 char const ((*IONOS)) = "win32";
 char const ((*IONARCH)) = "x64";
-#line 51 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\typeinfo.ion"
 TypeKind typeid_kind(typeid type) {
     return (TypeKind)((((type) >> (24))) & (0xff));
 }
@@ -473,14 +423,12 @@ TypeInfo const ((*get_typeinfo(typeid type))) {
     }
 }
 
-#line 45 "C:\\Users\\Tom\\Documents\\projects\\ion\\tests\\test2\\test2.ion"
 test2_vec2 test2_rot2(float a, test2_vec2 b) {
     float c = cosf(a);
     float s = sinf(a);
     return (test2_vec2){((c) * (b.x)) - ((s) * (b.y)), ((s) * (b.x)) + ((c) * (b.y))};
 }
 
-#line 5
 test2_vec2 test2_add2(test2_vec2 a, test2_vec2 b) {
     return (test2_vec2){(a.x) + (b.x), (a.y) + (b.y)};
 }

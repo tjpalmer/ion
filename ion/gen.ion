@@ -183,6 +183,9 @@ func gen_str(str: char const*, multiline: bool) {
 }
 
 func gen_sync_pos(pos: SrcPos) {
+    if (flag_nosourcemap) {
+        return;
+    }
     if (gen_pos.line != pos.line || gen_pos.name != pos.name) {
         genln(); buf_printf(&gen_buf, "#line %d", pos.line);
         if (gen_pos.name != pos.name) {

@@ -134,87 +134,60 @@ typedef struct ion_CachedArrayType ion_CachedArrayType;
 typedef struct ion_CachedFuncType ion_CachedFuncType;
 
 // Sorted declarations
-#line 12 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\main.ion"
 int main(int argc, char const ((*(*argv))));
 
-#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\config_win32.ion"
 extern char const ((*IONOS));
 
-#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\config_x64.ion"
 extern char const ((*IONARCH));
 
-#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\typeinfo.ion"
 typedef ullong typeid;
 
 typedef int TypeKind;
 
-#line 4
 #define TYPE_NONE ((TypeKind)(0))
 
-#line 5
 #define TYPE_VOID ((TypeKind)((TYPE_NONE) + (1)))
 
-#line 6
 #define TYPE_BOOL ((TypeKind)((TYPE_VOID) + (1)))
 
-#line 7
 #define TYPE_CHAR ((TypeKind)((TYPE_BOOL) + (1)))
 
-#line 8
 #define TYPE_UCHAR ((TypeKind)((TYPE_CHAR) + (1)))
 
-#line 9
 #define TYPE_SCHAR ((TypeKind)((TYPE_UCHAR) + (1)))
 
-#line 10
 #define TYPE_SHORT ((TypeKind)((TYPE_SCHAR) + (1)))
 
-#line 11
 #define TYPE_USHORT ((TypeKind)((TYPE_SHORT) + (1)))
 
-#line 12
 #define TYPE_INT ((TypeKind)((TYPE_USHORT) + (1)))
 
-#line 13
 #define TYPE_UINT ((TypeKind)((TYPE_INT) + (1)))
 
-#line 14
 #define TYPE_LONG ((TypeKind)((TYPE_UINT) + (1)))
 
-#line 15
 #define TYPE_ULONG ((TypeKind)((TYPE_LONG) + (1)))
 
-#line 16
 #define TYPE_LLONG ((TypeKind)((TYPE_ULONG) + (1)))
 
-#line 17
 #define TYPE_ULLONG ((TypeKind)((TYPE_LLONG) + (1)))
 
-#line 18
 #define TYPE_FLOAT ((TypeKind)((TYPE_ULLONG) + (1)))
 
-#line 19
 #define TYPE_DOUBLE ((TypeKind)((TYPE_FLOAT) + (1)))
 
-#line 20
 #define TYPE_CONST ((TypeKind)((TYPE_DOUBLE) + (1)))
 
-#line 21
 #define TYPE_PTR ((TypeKind)((TYPE_CONST) + (1)))
 
-#line 22
 #define TYPE_ARRAY ((TypeKind)((TYPE_PTR) + (1)))
 
-#line 23
 #define TYPE_STRUCT ((TypeKind)((TYPE_ARRAY) + (1)))
 
-#line 24
 #define TYPE_UNION ((TypeKind)((TYPE_STRUCT) + (1)))
 
-#line 25
 #define TYPE_FUNC ((TypeKind)((TYPE_UNION) + (1)))
 
-#line 34
 struct TypeInfo {
     TypeKind kind;
     int size;
@@ -226,73 +199,53 @@ struct TypeInfo {
     int num_fields;
 };
 
-#line 51
 TypeKind typeid_kind(typeid type);
 
-#line 55
 int typeid_index(typeid type);
 
-#line 59
 size_t typeid_size(typeid type);
 
-#line 63
 TypeInfo const ((*get_typeinfo(typeid type)));
 
-#line 65 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\types.ion"
 #define UCHAR_MIN ((uchar)(0))
 
-#line 88
 #define USHORT_MIN ((short)(0))
 
-#line 99
 #define UINT_MIN ((uint)(0))
 
-#line 110
 #define ULLONG_MIN ((ullong)(0))
 
-#line 115
 #define UINT8_MIN (UCHAR_MIN)
 
-#line 126
 #define UINT16_MIN (USHORT_MIN)
 
-#line 137
 #define UINT32_MIN (UINT_MIN)
 
-#line 148
 #define UINT64_MIN (ULLONG_MIN)
 
-#line 19 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\types_win32.ion"
 #define ULONG_MIN ((ulong)(INT32_MIN))
 
-#line 15 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\types_x64.ion"
 #define USIZE_MIN (UINT64_MIN)
 
-#line 26
 #define UINTPTR_MIN (UINT64_MIN)
 
-#line 246 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\common.ion"
 struct ion_Arena {
     char (*ptr);
     char (*end);
     char (*(*blocks));
 };
 
-#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast.ion"
 extern ion_Arena ion_ast_arena;
 
 void (*ion_ast_alloc(size_t size));
 
-#line 10
 void (*ion_ast_dup(void const ((*src)), size_t size));
 
-#line 273 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\lex.ion"
 struct ion_SrcPos {
     char const ((*name));
     int line;
 };
 
-#line 9 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 struct ion_Note {
     ion_SrcPos pos;
     char const ((*name));
@@ -300,569 +253,383 @@ struct ion_Note {
     size_t num_args;
 };
 
-#line 21 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast.ion"
 ion_Note ion_new_note(ion_SrcPos pos, char const ((*name)), ion_NoteArg (*args), size_t num_args);
 
-#line 16 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 struct ion_Notes {
     ion_Note (*notes);
     size_t num_notes;
 };
 
-#line 25 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast.ion"
 ion_Notes ion_new_notes(ion_Note (*notes), size_t num_notes);
 
-#line 21 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 struct ion_StmtList {
     ion_SrcPos pos;
     ion_Stmt (*(*stmts));
     size_t num_stmts;
 };
 
-#line 29 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast.ion"
 ion_StmtList ion_new_stmt_list(ion_SrcPos pos, ion_Stmt (*(*stmts)), size_t num_stmts);
 
-#line 27 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 typedef int ion_TypespecKind;
 
-#line 33 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast.ion"
 ion_Typespec (*ion_new_typespec(ion_TypespecKind kind, ion_SrcPos pos));
 
-#line 40
 ion_Typespec (*ion_new_typespec_name(ion_SrcPos pos, char const ((*name))));
 
-#line 46
 ion_Typespec (*ion_new_typespec_ptr(ion_SrcPos pos, ion_Typespec (*base)));
 
-#line 52
 ion_Typespec (*ion_new_typespec_const(ion_SrcPos pos, ion_Typespec (*base)));
 
-#line 58
 ion_Typespec (*ion_new_typespec_array(ion_SrcPos pos, ion_Typespec (*elem), ion_Expr (*size)));
 
-#line 65
 ion_Typespec (*ion_new_typespec_func(ion_SrcPos pos, ion_Typespec (*(*args)), size_t num_args, ion_Typespec (*ret), bool has_varargs));
 
-#line 74
 ion_Decls (*ion_new_decls(ion_Decl (*(*decls)), size_t num_decls));
 
-#line 90 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 typedef int ion_DeclKind;
 
-#line 81 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast.ion"
 ion_Decl (*ion_new_decl(ion_DeclKind kind, ion_SrcPos pos, char const ((*name))));
 
-#line 89
 ion_Note (*ion_get_decl_note(ion_Decl (*decl), char const ((*name))));
 
-#line 99
 bool ion_is_decl_foreign(ion_Decl (*decl));
 
-#line 103
 ion_Decl (*ion_new_decl_enum(ion_SrcPos pos, char const ((*name)), ion_Typespec (*type), ion_EnumItem (*items), size_t num_items));
 
-#line 103 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 typedef int ion_AggregateKind;
 
-#line 111 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast.ion"
 ion_Aggregate (*ion_new_aggregate(ion_SrcPos pos, ion_AggregateKind kind, ion_AggregateItem (*items), size_t num_items));
 
-#line 120
 ion_Decl (*ion_new_decl_aggregate(ion_SrcPos pos, ion_DeclKind kind, char const ((*name)), ion_Aggregate (*aggregate)));
 
-#line 127
 ion_Decl (*ion_new_decl_var(ion_SrcPos pos, char const ((*name)), ion_Typespec (*type), ion_Expr (*expr)));
 
-#line 134
 ion_Decl (*ion_new_decl_func(ion_SrcPos pos, char const ((*name)), ion_FuncParam (*params), size_t num_params, ion_Typespec (*ret_type), bool has_varargs, ion_StmtList block));
 
-#line 144
 ion_Decl (*ion_new_decl_const(ion_SrcPos pos, char const ((*name)), ion_Typespec (*type), ion_Expr (*expr)));
 
-#line 151
 ion_Decl (*ion_new_decl_typedef(ion_SrcPos pos, char const ((*name)), ion_Typespec (*type)));
 
-#line 157
 ion_Decl (*ion_new_decl_note(ion_SrcPos pos, ion_Note note));
 
-#line 163
 ion_Decl (*ion_new_decl_import(ion_SrcPos pos, char const ((*rename_name)), bool is_relative, char const ((*(*names))), size_t num_names, bool import_all, ion_ImportItem (*items), size_t num_items));
 
-#line 172 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 typedef int ion_ExprKind;
 
-#line 175 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast.ion"
 ion_Expr (*ion_new_expr(ion_ExprKind kind, ion_SrcPos pos));
 
-#line 182
 ion_Expr (*ion_new_expr_paren(ion_SrcPos pos, ion_Expr (*expr)));
 
-#line 188
 ion_Expr (*ion_new_expr_sizeof_expr(ion_SrcPos pos, ion_Expr (*expr)));
 
-#line 194
 ion_Expr (*ion_new_expr_sizeof_type(ion_SrcPos pos, ion_Typespec (*type)));
 
-#line 200
 ion_Expr (*ion_new_expr_typeof_expr(ion_SrcPos pos, ion_Expr (*expr)));
 
-#line 206
 ion_Expr (*ion_new_expr_typeof_type(ion_SrcPos pos, ion_Typespec (*type)));
 
-#line 212
 ion_Expr (*ion_new_expr_alignof_expr(ion_SrcPos pos, ion_Expr (*expr)));
 
-#line 218
 ion_Expr (*ion_new_expr_alignof_type(ion_SrcPos pos, ion_Typespec (*type)));
 
-#line 224
 ion_Expr (*ion_new_expr_offsetof(ion_SrcPos pos, ion_Typespec (*type), char const ((*name))));
 
-#line 96 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\lex.ion"
 typedef int ion_TokenKind;
 
-#line 231 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast.ion"
 ion_Expr (*ion_new_expr_modify(ion_SrcPos pos, ion_TokenKind op, bool post, ion_Expr (*expr)));
 
-#line 166 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\lex.ion"
 typedef int ion_TokenMod;
 
-#line 175
 typedef int ion_TokenSuffix;
 
-#line 239 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast.ion"
 ion_Expr (*ion_new_expr_int(ion_SrcPos pos, ullong val, ion_TokenMod mod, ion_TokenSuffix suffix));
 
-#line 247
 ion_Expr (*ion_new_expr_float(ion_SrcPos pos, char const ((*start)), char const ((*end)), double val, ion_TokenSuffix suffix));
 
-#line 256
 ion_Expr (*ion_new_expr_str(ion_SrcPos pos, char const ((*val)), ion_TokenMod mod));
 
-#line 263
 ion_Expr (*ion_new_expr_name(ion_SrcPos pos, char const ((*name))));
 
-#line 269
 ion_Expr (*ion_new_expr_compound(ion_SrcPos pos, ion_Typespec (*type), ion_CompoundField (*fields), size_t num_fields));
 
-#line 277
 ion_Expr (*ion_new_expr_cast(ion_SrcPos pos, ion_Typespec (*type), ion_Expr (*expr)));
 
-#line 284
 ion_Expr (*ion_new_expr_call(ion_SrcPos pos, ion_Expr (*expr), ion_Expr (*(*args)), size_t num_args));
 
-#line 292
 ion_Expr (*ion_new_expr_index(ion_SrcPos pos, ion_Expr (*expr), ion_Expr (*index)));
 
-#line 299
 ion_Expr (*ion_new_expr_field(ion_SrcPos pos, ion_Expr (*expr), char const ((*name))));
 
-#line 306
 ion_Expr (*ion_new_expr_unary(ion_SrcPos pos, ion_TokenKind op, ion_Expr (*expr)));
 
-#line 313
 ion_Expr (*ion_new_expr_binary(ion_SrcPos pos, ion_TokenKind op, ion_Expr (*left), ion_Expr (*right)));
 
-#line 321
 ion_Expr (*ion_new_expr_ternary(ion_SrcPos pos, ion_Expr (*cond), ion_Expr (*then_expr), ion_Expr (*else_expr)));
 
-#line 329
 ion_Note (*ion_get_stmt_note(ion_Stmt (*stmt), char const ((*name))));
 
-#line 335 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 typedef int ion_StmtKind;
 
-#line 339 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast.ion"
 ion_Stmt (*ion_new_stmt(ion_StmtKind kind, ion_SrcPos pos));
 
-#line 346
 ion_Stmt (*ion_new_stmt_label(ion_SrcPos pos, char const ((*label))));
 
-#line 352
 ion_Stmt (*ion_new_stmt_goto(ion_SrcPos pos, char const ((*label))));
 
-#line 358
 ion_Stmt (*ion_new_stmt_note(ion_SrcPos pos, ion_Note note));
 
-#line 364
 ion_Stmt (*ion_new_stmt_decl(ion_SrcPos pos, ion_Decl (*decl)));
 
-#line 370
 ion_Stmt (*ion_new_stmt_return(ion_SrcPos pos, ion_Expr (*expr)));
 
-#line 376
 ion_Stmt (*ion_new_stmt_break(ion_SrcPos pos));
 
-#line 380
 ion_Stmt (*ion_new_stmt_continue(ion_SrcPos pos));
 
-#line 384
 ion_Stmt (*ion_new_stmt_block(ion_SrcPos pos, ion_StmtList block));
 
-#line 390
 ion_Stmt (*ion_new_stmt_if(ion_SrcPos pos, ion_Stmt (*init), ion_Expr (*cond), ion_StmtList then_block, ion_ElseIf (*elseifs), size_t num_elseifs, ion_StmtList else_block));
 
-#line 401
 ion_Stmt (*ion_new_stmt_while(ion_SrcPos pos, ion_Expr (*cond), ion_StmtList block));
 
-#line 408
 ion_Stmt (*ion_new_stmt_do_while(ion_SrcPos pos, ion_Expr (*cond), ion_StmtList block));
 
-#line 415
 ion_Stmt (*ion_new_stmt_for(ion_SrcPos pos, ion_Stmt (*init), ion_Expr (*cond), ion_Stmt (*next), ion_StmtList block));
 
-#line 424
 ion_Stmt (*ion_new_stmt_switch(ion_SrcPos pos, ion_Expr (*expr), ion_SwitchCase (*cases), size_t num_cases));
 
-#line 432
 ion_Stmt (*ion_new_stmt_assign(ion_SrcPos pos, ion_TokenKind op, ion_Expr (*left), ion_Expr (*right)));
 
-#line 440
 ion_Stmt (*ion_new_stmt_init(ion_SrcPos pos, char const ((*name)), ion_Typespec (*type), ion_Expr (*expr)));
 
-#line 448
 ion_Stmt (*ion_new_stmt_expr(ion_SrcPos pos, ion_Expr (*expr)));
 
-#line 28 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 #define ION_TYPESPEC_NONE ((ion_TypespecKind)(0))
 
-#line 29
 #define ION_TYPESPEC_NAME ((ion_TypespecKind)((ION_TYPESPEC_NONE) + (1)))
 
-#line 30
 #define ION_TYPESPEC_FUNC ((ion_TypespecKind)((ION_TYPESPEC_NAME) + (1)))
 
-#line 31
 #define ION_TYPESPEC_ARRAY ((ion_TypespecKind)((ION_TYPESPEC_FUNC) + (1)))
 
-#line 32
 #define ION_TYPESPEC_PTR ((ion_TypespecKind)((ION_TYPESPEC_ARRAY) + (1)))
 
-#line 33
 #define ION_TYPESPEC_CONST ((ion_TypespecKind)((ION_TYPESPEC_PTR) + (1)))
 
-#line 60
 typedef int ion_AggregateItemKind;
 
-#line 61
 #define ION_AGGREGATE_ITEM_NONE ((ion_AggregateItemKind)(0))
 
-#line 62
 #define ION_AGGREGATE_ITEM_FIELD ((ion_AggregateItemKind)((ION_AGGREGATE_ITEM_NONE) + (1)))
 
-#line 63
 #define ION_AGGREGATE_ITEM_SUBAGGREGATE ((ion_AggregateItemKind)((ION_AGGREGATE_ITEM_FIELD) + (1)))
 
-#line 91
 #define ION_DECL_NONE ((ion_DeclKind)(0))
 
-#line 92
 #define ION_DECL_ENUM ((ion_DeclKind)((ION_DECL_NONE) + (1)))
 
-#line 93
 #define ION_DECL_STRUCT ((ion_DeclKind)((ION_DECL_ENUM) + (1)))
 
-#line 94
 #define ION_DECL_UNION ((ion_DeclKind)((ION_DECL_STRUCT) + (1)))
 
-#line 95
 #define ION_DECL_VAR ((ion_DeclKind)((ION_DECL_UNION) + (1)))
 
-#line 96
 #define ION_DECL_CONST ((ion_DeclKind)((ION_DECL_VAR) + (1)))
 
-#line 97
 #define ION_DECL_TYPEDEF ((ion_DeclKind)((ION_DECL_CONST) + (1)))
 
-#line 98
 #define ION_DECL_FUNC ((ion_DeclKind)((ION_DECL_TYPEDEF) + (1)))
 
-#line 99
 #define ION_DECL_NOTE ((ion_DeclKind)((ION_DECL_FUNC) + (1)))
 
-#line 100
 #define ION_DECL_IMPORT ((ion_DeclKind)((ION_DECL_NOTE) + (1)))
 
-#line 104
 #define ION_AGGREGATE_NONE ((ion_AggregateKind)(0))
 
-#line 105
 #define ION_AGGREGATE_STRUCT ((ion_AggregateKind)((ION_AGGREGATE_NONE) + (1)))
 
-#line 106
 #define ION_AGGREGATE_UNION ((ion_AggregateKind)((ION_AGGREGATE_STRUCT) + (1)))
 
-#line 173
 #define ION_EXPR_NONE ((ion_ExprKind)(0))
 
-#line 174
 #define ION_EXPR_PAREN ((ion_ExprKind)((ION_EXPR_NONE) + (1)))
 
-#line 175
 #define ION_EXPR_INT ((ion_ExprKind)((ION_EXPR_PAREN) + (1)))
 
-#line 176
 #define ION_EXPR_FLOAT ((ion_ExprKind)((ION_EXPR_INT) + (1)))
 
-#line 177
 #define ION_EXPR_STR ((ion_ExprKind)((ION_EXPR_FLOAT) + (1)))
 
-#line 178
 #define ION_EXPR_NAME ((ion_ExprKind)((ION_EXPR_STR) + (1)))
 
-#line 179
 #define ION_EXPR_CAST ((ion_ExprKind)((ION_EXPR_NAME) + (1)))
 
-#line 180
 #define ION_EXPR_CALL ((ion_ExprKind)((ION_EXPR_CAST) + (1)))
 
-#line 181
 #define ION_EXPR_INDEX ((ion_ExprKind)((ION_EXPR_CALL) + (1)))
 
-#line 182
 #define ION_EXPR_FIELD ((ion_ExprKind)((ION_EXPR_INDEX) + (1)))
 
-#line 183
 #define ION_EXPR_COMPOUND ((ion_ExprKind)((ION_EXPR_FIELD) + (1)))
 
-#line 184
 #define ION_EXPR_UNARY ((ion_ExprKind)((ION_EXPR_COMPOUND) + (1)))
 
-#line 185
 #define ION_EXPR_BINARY ((ion_ExprKind)((ION_EXPR_UNARY) + (1)))
 
-#line 186
 #define ION_EXPR_TERNARY ((ion_ExprKind)((ION_EXPR_BINARY) + (1)))
 
-#line 187
 #define ION_EXPR_MODIFY ((ion_ExprKind)((ION_EXPR_TERNARY) + (1)))
 
-#line 188
 #define ION_EXPR_SIZEOF_EXPR ((ion_ExprKind)((ION_EXPR_MODIFY) + (1)))
 
-#line 189
 #define ION_EXPR_SIZEOF_TYPE ((ion_ExprKind)((ION_EXPR_SIZEOF_EXPR) + (1)))
 
-#line 190
 #define ION_EXPR_TYPEOF_EXPR ((ion_ExprKind)((ION_EXPR_SIZEOF_TYPE) + (1)))
 
-#line 191
 #define ION_EXPR_TYPEOF_TYPE ((ion_ExprKind)((ION_EXPR_TYPEOF_EXPR) + (1)))
 
-#line 192
 #define ION_EXPR_ALIGNOF_EXPR ((ion_ExprKind)((ION_EXPR_TYPEOF_TYPE) + (1)))
 
-#line 193
 #define ION_EXPR_ALIGNOF_TYPE ((ion_ExprKind)((ION_EXPR_ALIGNOF_EXPR) + (1)))
 
-#line 194
 #define ION_EXPR_OFFSETOF ((ion_ExprKind)((ION_EXPR_ALIGNOF_TYPE) + (1)))
 
-#line 197
 typedef int ion_CompoundFieldKind;
 
-#line 198
 #define ION_FIELD_DEFAULT ((ion_CompoundFieldKind)(0))
 
-#line 199
 #define ION_FIELD_NAME ((ion_CompoundFieldKind)((ION_FIELD_DEFAULT) + (1)))
 
-#line 200
 #define ION_FIELD_INDEX ((ion_CompoundFieldKind)((ION_FIELD_NAME) + (1)))
 
-#line 336
 #define ION_STMT_NONE ((ion_StmtKind)(0))
 
-#line 337
 #define ION_STMT_DECL ((ion_StmtKind)((ION_STMT_NONE) + (1)))
 
-#line 338
 #define ION_STMT_RETURN ((ion_StmtKind)((ION_STMT_DECL) + (1)))
 
-#line 339
 #define ION_STMT_BREAK ((ion_StmtKind)((ION_STMT_RETURN) + (1)))
 
-#line 340
 #define ION_STMT_CONTINUE ((ion_StmtKind)((ION_STMT_BREAK) + (1)))
 
-#line 341
 #define ION_STMT_BLOCK ((ion_StmtKind)((ION_STMT_CONTINUE) + (1)))
 
-#line 342
 #define ION_STMT_IF ((ion_StmtKind)((ION_STMT_BLOCK) + (1)))
 
-#line 343
 #define ION_STMT_WHILE ((ion_StmtKind)((ION_STMT_IF) + (1)))
 
-#line 344
 #define ION_STMT_DO_WHILE ((ion_StmtKind)((ION_STMT_WHILE) + (1)))
 
-#line 345
 #define ION_STMT_FOR ((ion_StmtKind)((ION_STMT_DO_WHILE) + (1)))
 
-#line 346
 #define ION_STMT_SWITCH ((ion_StmtKind)((ION_STMT_FOR) + (1)))
 
-#line 347
 #define ION_STMT_ASSIGN ((ion_StmtKind)((ION_STMT_SWITCH) + (1)))
 
-#line 348
 #define ION_STMT_INIT ((ion_StmtKind)((ION_STMT_ASSIGN) + (1)))
 
-#line 349
 #define ION_STMT_EXPR ((ion_StmtKind)((ION_STMT_INIT) + (1)))
 
-#line 350
 #define ION_STMT_NOTE ((ion_StmtKind)((ION_STMT_EXPR) + (1)))
 
-#line 351
 #define ION_STMT_LABEL ((ion_StmtKind)((ION_STMT_NOTE) + (1)))
 
-#line 352
 #define ION_STMT_GOTO ((ion_StmtKind)((ION_STMT_LABEL) + (1)))
 
-#line 2 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\common.ion"
 size_t ion_min(size_t x, size_t y);
 
-#line 7
 size_t ion_max(size_t x, size_t y);
 
-#line 12
 size_t ion_clamp_max(size_t x, size_t max);
 
-#line 17
 size_t ion_clamp_min(size_t x, size_t min);
 
-#line 22
 size_t ion_is_pow2(size_t x);
 
-#line 27
 uintptr_t ion_align_down(uintptr_t n, size_t a);
 
-#line 32
 uintptr_t ion_align_up(uintptr_t n, size_t a);
 
-#line 37
 void (*ion_align_down_ptr(void (*p), size_t a));
 
-#line 42
 void (*ion_align_up_ptr(void (*p), size_t a));
 
-#line 46
 void ion_fatal(char const ((*fmt)), ...);
 
-#line 56
 void (*ion_xcalloc(size_t num_elems, size_t elem_size));
 
-#line 65
 void (*ion_xrealloc(void (*ptr), size_t num_bytes));
 
-#line 74
 void (*ion_xmalloc(size_t num_bytes));
 
-#line 83
 void (*ion_memdup(void (*src), size_t size));
 
-#line 89
 char (*ion_strf(char const ((*fmt)), ...));
 
-#line 101
 char (*ion_read_file(char const ((*path))));
 
-#line 120
 bool ion_write_file(char const ((*path)), char const ((*buf)), size_t len);
 
-#line 140
 ion_BufHdr (*ion_buf__hdr(void (*b)));
 
-#line 145
 size_t ion_buf_len(void (*b));
 
-#line 150
 size_t ion_buf_cap(void const ((*b)));
 
-#line 155
 void (*ion_buf_end(void (*b), size_t elem_size));
 
-#line 160
 size_t ion_buf_sizeof(void (*b), size_t elem_size);
 
-#line 165
 void ion_buf_free(void (*(*b)));
 
-#line 173
 void ion_buf_fit(void (*(*b)), size_t new_len, size_t elem_size);
 
-#line 181
 void ion_buf_push(void (*(*b)), void (*elem), size_t elem_size);
 
-#line 189
 void (*ion_buf__grow(void const ((*buf)), size_t new_len, size_t elem_size));
 
-#line 206
 void ion_buf_printf(char (*(*buf)), char const ((*fmt)), ...);
 
-#line 244
 extern ion_Arena ion_allocator;
 
-#line 252
 #define ION_ARENA_ALIGNMENT (8)
 
-#line 253
 #define ION_ARENA_BLOCK_SIZE ((1024) * (1024))
 
-#line 256
 void ion_arena_grow(ion_Arena (*arena), size_t min_size);
 
-#line 264
 void (*ion_arena_alloc(ion_Arena (*arena), size_t size));
 
-#line 276
 void ion_arena_free(ion_Arena (*arena));
 
-#line 286
 uint64_t ion_hash_uint64(uint64_t x);
 
-#line 292
 uint64_t ion_hash_ptr(void const ((*ptr)));
 
-#line 296
 uint64_t ion_hash_mix(uint64_t x, uint64_t y);
 
-#line 303
 uint64_t ion_hash_bytes(void const ((*ptr)), size_t len);
 
-#line 321
 uint64_t ion_map_get_uint64_from_uint64(ion_Map (*map), uint64_t key);
 
-#line 340
 void ion_map_grow(ion_Map (*map), size_t new_cap);
 
-#line 357
 void ion_map_put_uint64_from_uint64(ion_Map (*map), uint64_t key, uint64_t val);
 
-#line 383
 void (*ion_map_get(ion_Map (*map), void const ((*key))));
 
-#line 387
 void ion_map_put(ion_Map (*map), void const ((*key)), void (*val));
 
-#line 391
 void (*ion_map_get_from_uint64(ion_Map (*map), uint64_t key));
 
-#line 395
 void ion_map_put_from_uint64(ion_Map (*map), uint64_t key, void (*val));
 
-#line 399
 uint64_t ion_map_get_uint64(ion_Map (*map), void (*key));
 
-#line 403
 void ion_map_put_uint64(ion_Map (*map), void (*key), uint64_t val);
 
-#line 427
 extern ion_Arena ion_intern_arena;
 
-#line 314
 struct ion_Map {
     uint64_t (*keys);
     uint64_t (*vals);
@@ -870,648 +637,444 @@ struct ion_Map {
     size_t cap;
 };
 
-#line 428
 extern ion_Map ion_interns;
 
 char const ((*ion_str_intern_range(char const ((*start)), char const ((*end)))));
 
-#line 449
 char const ((*ion_str_intern(char const ((*str)))));
 
-#line 453
 bool ion_str_islower(char const ((*str)));
 
-#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\gen.ion"
 extern char (*ion_gen_buf);
 
-#line 6
 extern int ion_gen_indent;
 
-#line 7
 extern ion_SrcPos ion_gen_pos;
 
 extern char const ((*(*ion_gen_headers_buf)));
 
 extern char (*ion_gen_preamble_str);
 
-#line 59
 extern char (*ion_gen_postamble_str);
 
-#line 119
 void ion_genln(void);
 
-#line 124
 bool ion_is_incomplete_array_typespec(ion_Typespec (*typespec));
 
-#line 128
 extern char (ion_char_to_escape[256]);
 
-#line 141
 void ion_gen_char(char c);
 
-#line 151
 void ion_gen_str(char const ((*str)), bool multiline);
 
-#line 185
 void ion_gen_sync_pos(ion_SrcPos pos);
 
-#line 196
 char const ((*ion_cdecl_paren(char const ((*str)), char c)));
 
-#line 200
 char const ((*ion_cdecl_name(ion_Type (*type))));
 
-#line 210
 char (*ion_type_to_cdecl(ion_Type (*type), char const ((*str))));
 
-#line 243
 char const ((*ion_gen_expr_str(ion_Expr (*expr))));
 
-#line 252
 extern ion_Map ion_gen_name_map;
 
 char const ((*ion_get_gen_name_or_default(void const ((*ptr)), char const ((*default_name)))));
 
-#line 288
 char const ((*ion_get_gen_name(void const ((*ptr)))));
 
-#line 292
 char (*ion_typespec_to_cdecl(ion_Typespec (*typespec), char const ((*str))));
 
-#line 331
 void ion_gen_func_decl(ion_Decl (*decl));
 
-#line 358
 bool ion_gen_reachable(ion_Sym (*sym));
 
-#line 362
 void ion_gen_forward_decls(void);
 
-#line 386
 void ion_gen_aggregate_items(ion_Aggregate (*aggregate));
 
-#line 406
 void ion_gen_aggregate(ion_Decl (*decl));
 
-#line 416
 void ion_gen_paren_expr(ion_Expr (*expr));
 
-#line 422
 void ion_gen_expr_compound(ion_Expr (*expr));
 
-#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\type.ion"
 typedef int ion_CompilerTypeKind;
 
-#line 2
 #define ION_CMPL_TYPE_NONE ((ion_CompilerTypeKind)(0))
 
-#line 3
 #define ION_CMPL_TYPE_INCOMPLETE ((ion_CompilerTypeKind)((ION_CMPL_TYPE_NONE) + (1)))
 
-#line 4
 #define ION_CMPL_TYPE_COMPLETING ((ion_CompilerTypeKind)((ION_CMPL_TYPE_INCOMPLETE) + (1)))
 
-#line 5
 #define ION_CMPL_TYPE_VOID ((ion_CompilerTypeKind)((ION_CMPL_TYPE_COMPLETING) + (1)))
 
-#line 6
 #define ION_CMPL_TYPE_BOOL ((ion_CompilerTypeKind)((ION_CMPL_TYPE_VOID) + (1)))
 
-#line 7
 #define ION_CMPL_TYPE_CHAR ((ion_CompilerTypeKind)((ION_CMPL_TYPE_BOOL) + (1)))
 
-#line 8
 #define ION_CMPL_TYPE_SCHAR ((ion_CompilerTypeKind)((ION_CMPL_TYPE_CHAR) + (1)))
 
-#line 9
 #define ION_CMPL_TYPE_UCHAR ((ion_CompilerTypeKind)((ION_CMPL_TYPE_SCHAR) + (1)))
 
-#line 10
 #define ION_CMPL_TYPE_SHORT ((ion_CompilerTypeKind)((ION_CMPL_TYPE_UCHAR) + (1)))
 
-#line 11
 #define ION_CMPL_TYPE_USHORT ((ion_CompilerTypeKind)((ION_CMPL_TYPE_SHORT) + (1)))
 
-#line 12
 #define ION_CMPL_TYPE_INT ((ion_CompilerTypeKind)((ION_CMPL_TYPE_USHORT) + (1)))
 
-#line 13
 #define ION_CMPL_TYPE_UINT ((ion_CompilerTypeKind)((ION_CMPL_TYPE_INT) + (1)))
 
-#line 14
 #define ION_CMPL_TYPE_LONG ((ion_CompilerTypeKind)((ION_CMPL_TYPE_UINT) + (1)))
 
-#line 15
 #define ION_CMPL_TYPE_ULONG ((ion_CompilerTypeKind)((ION_CMPL_TYPE_LONG) + (1)))
 
-#line 16
 #define ION_CMPL_TYPE_LLONG ((ion_CompilerTypeKind)((ION_CMPL_TYPE_ULONG) + (1)))
 
-#line 17
 #define ION_CMPL_TYPE_ULLONG ((ion_CompilerTypeKind)((ION_CMPL_TYPE_LLONG) + (1)))
 
-#line 18
 #define ION_CMPL_TYPE_ENUM ((ion_CompilerTypeKind)((ION_CMPL_TYPE_ULLONG) + (1)))
 
-#line 19
 #define ION_CMPL_TYPE_FLOAT ((ion_CompilerTypeKind)((ION_CMPL_TYPE_ENUM) + (1)))
 
-#line 20
 #define ION_CMPL_TYPE_DOUBLE ((ion_CompilerTypeKind)((ION_CMPL_TYPE_FLOAT) + (1)))
 
-#line 21
 #define ION_CMPL_TYPE_PTR ((ion_CompilerTypeKind)((ION_CMPL_TYPE_DOUBLE) + (1)))
 
-#line 22
 #define ION_CMPL_TYPE_FUNC ((ion_CompilerTypeKind)((ION_CMPL_TYPE_PTR) + (1)))
 
-#line 23
 #define ION_CMPL_TYPE_ARRAY ((ion_CompilerTypeKind)((ION_CMPL_TYPE_FUNC) + (1)))
 
-#line 24
 #define ION_CMPL_TYPE_STRUCT ((ion_CompilerTypeKind)((ION_CMPL_TYPE_ARRAY) + (1)))
 
-#line 25
 #define ION_CMPL_TYPE_UNION ((ion_CompilerTypeKind)((ION_CMPL_TYPE_STRUCT) + (1)))
 
-#line 26
 #define ION_CMPL_TYPE_CONST ((ion_CompilerTypeKind)((ION_CMPL_TYPE_UNION) + (1)))
 
-#line 27
 #define ION_NUM_CMPL_TYPE_KINDS ((ion_CompilerTypeKind)((ION_CMPL_TYPE_CONST) + (1)))
 
-#line 451 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\gen.ion"
 extern char const ((*(ion_typeid_kind_names[ION_NUM_CMPL_TYPE_KINDS])));
 
-#line 476
 char const ((*ion_typeid_kind_name(ion_Type (*type))));
 
-#line 486
 bool ion_is_excluded_typeinfo(ion_Type (*type));
 
-#line 497
 void ion_gen_typeid(ion_Type (*type));
 
-#line 505
 void ion_gen_expr(ion_Expr (*expr));
 
-#line 624
 void ion_gen_stmt_block(ion_StmtList block);
 
-#line 634
 void ion_gen_simple_stmt(ion_Stmt (*stmt));
 
-#line 664
 bool ion_is_char_lit(ion_Expr (*expr));
 
-#line 668
 void ion_gen_stmt(ion_Stmt (*stmt));
 
-#line 833
 void ion_gen_decl(ion_Sym (*sym));
 
-#line 881
 void ion_gen_sorted_decls(void);
 
-#line 889
 void ion_gen_defs(void);
 
-#line 916
 extern ion_Map ion_gen_foreign_headers_map;
 
-#line 917
 extern char const ((*(*ion_gen_foreign_headers_buf)));
 
 void ion_add_foreign_header(char const ((*name)));
 
-#line 927
 extern char const ((*(*ion_gen_foreign_sources_buf)));
 
 void ion_add_foreign_source(char const ((*name)));
 
-#line 934
 void ion_gen_include(char const ((*path)));
 
-#line 943
 void ion_gen_foreign_headers(void);
 
-#line 952
 void ion_gen_foreign_sources(void);
 
-#line 958
 extern char const ((*(*ion_gen_sources_buf)));
 
 void ion_put_include_path(char (path[MAX_PATH]), ion_Package (*package), char const ((*filename)));
 
-#line 970
 extern char (*ion_gen_preamble_buf);
 
-#line 971
 extern char (*ion_gen_postamble_buf);
 
 void ion_preprocess_package(ion_Package (*package));
 
-#line 1020
 void ion_preprocess_packages(void);
 
-#line 1026
 void ion_gen_typeinfo_header(char const ((*kind)), ion_Type (*type));
 
-#line 1035
 void ion_gen_typeinfo_fields(ion_Type (*type));
 
-#line 1054
 void ion_gen_typeinfo(ion_Type (*type));
 
-#line 1153
 void ion_gen_typeinfos(void);
 
-#line 1181
 void ion_gen_package_external_names(void);
 
-#line 1186
 void ion_gen_preamble(void);
 
-#line 1195
 void ion_gen_postamble(void);
 
-#line 1204
 void ion_gen_all(void);
 
-#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ion.ion"
 #define ION_MAX_SEARCH_PATHS ((int)(256))
 
-#line 2
 extern char const ((*(ion_static_package_search_paths[ION_MAX_SEARCH_PATHS])));
 
-#line 3
 extern char const ((*(*ion_package_search_paths)));
 
-#line 4
 extern int ion_num_package_search_paths;
 
 void ion_add_package_search_path(char const ((*path)));
 
-#line 13
 void ion_add_package_search_path_range(char const ((*start)), char const ((*end)));
 
-#line 21
 void ion_init_package_search_paths(void);
 
-#line 47
 void ion_init_compiler(void);
 
-#line 55
 void ion_parse_env_vars(void);
 
-#line 76
 int ion_ion_main(int argc, char const ((*(*argv))), void (*gen_all)(void), char const ((*extension)));
 
-#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\lex.ion"
 extern char const ((*ion_typedef_keyword));
 
-#line 2
 extern char const ((*ion_enum_keyword));
 
-#line 3
 extern char const ((*ion_struct_keyword));
 
-#line 4
 extern char const ((*ion_union_keyword));
 
-#line 5
 extern char const ((*ion_var_keyword));
 
-#line 6
 extern char const ((*ion_const_keyword));
 
-#line 7
 extern char const ((*ion_func_keyword));
 
-#line 8
 extern char const ((*ion_sizeof_keyword));
 
-#line 9
 extern char const ((*ion_alignof_keyword));
 
-#line 10
 extern char const ((*ion_typeof_keyword));
 
-#line 11
 extern char const ((*ion_offsetof_keyword));
 
-#line 12
 extern char const ((*ion_break_keyword));
 
-#line 13
 extern char const ((*ion_continue_keyword));
 
-#line 14
 extern char const ((*ion_return_keyword));
 
-#line 15
 extern char const ((*ion_if_keyword));
 
-#line 16
 extern char const ((*ion_else_keyword));
 
-#line 17
 extern char const ((*ion_while_keyword));
 
-#line 18
 extern char const ((*ion_do_keyword));
 
-#line 19
 extern char const ((*ion_for_keyword));
 
-#line 20
 extern char const ((*ion_switch_keyword));
 
-#line 21
 extern char const ((*ion_case_keyword));
 
-#line 22
 extern char const ((*ion_default_keyword));
 
-#line 23
 extern char const ((*ion_import_keyword));
 
-#line 24
 extern char const ((*ion_goto_keyword));
 
 extern char const ((*ion_first_keyword));
 
-#line 27
 extern char const ((*ion_last_keyword));
 
-#line 28
 extern char const ((*(*ion_keywords)));
 
 extern char const ((*ion_always_name));
 
-#line 31
 extern char const ((*ion_foreign_name));
 
-#line 32
 extern char const ((*ion_complete_name));
 
-#line 33
 extern char const ((*ion_assert_name));
 
-#line 34
 extern char const ((*ion_declare_note_name));
 
-#line 35
 extern char const ((*ion_static_assert_name));
 
-#line 38
 char const ((*ion_init_keyword(char const ((*keyword)))));
 
-#line 45
 extern bool ion_keywords_inited;
 
 void ion_init_keywords(void);
 
-#line 92
 bool ion_is_keyword_name(char const ((*name)));
 
-#line 97
 #define ION_TOKEN_EOF ((ion_TokenKind)(0))
 
-#line 98
 #define ION_TOKEN_COLON ((ion_TokenKind)((ION_TOKEN_EOF) + (1)))
 
-#line 99
 #define ION_TOKEN_LPAREN ((ion_TokenKind)((ION_TOKEN_COLON) + (1)))
 
-#line 100
 #define ION_TOKEN_RPAREN ((ion_TokenKind)((ION_TOKEN_LPAREN) + (1)))
 
-#line 101
 #define ION_TOKEN_LBRACE ((ion_TokenKind)((ION_TOKEN_RPAREN) + (1)))
 
-#line 102
 #define ION_TOKEN_RBRACE ((ion_TokenKind)((ION_TOKEN_LBRACE) + (1)))
 
-#line 103
 #define ION_TOKEN_LBRACKET ((ion_TokenKind)((ION_TOKEN_RBRACE) + (1)))
 
-#line 104
 #define ION_TOKEN_RBRACKET ((ion_TokenKind)((ION_TOKEN_LBRACKET) + (1)))
 
-#line 105
 #define ION_TOKEN_COMMA ((ion_TokenKind)((ION_TOKEN_RBRACKET) + (1)))
 
-#line 106
 #define ION_TOKEN_DOT ((ion_TokenKind)((ION_TOKEN_COMMA) + (1)))
 
-#line 107
 #define ION_TOKEN_AT ((ion_TokenKind)((ION_TOKEN_DOT) + (1)))
 
-#line 108
 #define ION_TOKEN_POUND ((ion_TokenKind)((ION_TOKEN_AT) + (1)))
 
-#line 109
 #define ION_TOKEN_ELLIPSIS ((ion_TokenKind)((ION_TOKEN_POUND) + (1)))
 
-#line 110
 #define ION_TOKEN_QUESTION ((ion_TokenKind)((ION_TOKEN_ELLIPSIS) + (1)))
 
-#line 111
 #define ION_TOKEN_SEMICOLON ((ion_TokenKind)((ION_TOKEN_QUESTION) + (1)))
 
-#line 112
 #define ION_TOKEN_KEYWORD ((ion_TokenKind)((ION_TOKEN_SEMICOLON) + (1)))
 
-#line 113
 #define ION_TOKEN_INT ((ion_TokenKind)((ION_TOKEN_KEYWORD) + (1)))
 
-#line 114
 #define ION_TOKEN_FLOAT ((ion_TokenKind)((ION_TOKEN_INT) + (1)))
 
-#line 115
 #define ION_TOKEN_STR ((ion_TokenKind)((ION_TOKEN_FLOAT) + (1)))
 
-#line 116
 #define ION_TOKEN_NAME ((ion_TokenKind)((ION_TOKEN_STR) + (1)))
 
-#line 117
 #define ION_TOKEN_NEG ((ion_TokenKind)((ION_TOKEN_NAME) + (1)))
 
-#line 118
 #define ION_TOKEN_NOT ((ion_TokenKind)((ION_TOKEN_NEG) + (1)))
 
 #define ION_TOKEN_FIRST_MUL ((ion_TokenKind)((ION_TOKEN_NOT) + (1)))
 
-#line 121
 #define ION_TOKEN_MUL ((ion_TokenKind)(ION_TOKEN_FIRST_MUL))
 
-#line 122
 #define ION_TOKEN_DIV ((ion_TokenKind)((ION_TOKEN_MUL) + (1)))
 
-#line 123
 #define ION_TOKEN_MOD ((ion_TokenKind)((ION_TOKEN_DIV) + (1)))
 
-#line 124
 #define ION_TOKEN_AND ((ion_TokenKind)((ION_TOKEN_MOD) + (1)))
 
-#line 125
 #define ION_TOKEN_LSHIFT ((ion_TokenKind)((ION_TOKEN_AND) + (1)))
 
-#line 126
 #define ION_TOKEN_RSHIFT ((ion_TokenKind)((ION_TOKEN_LSHIFT) + (1)))
 
-#line 127
 #define ION_TOKEN_LAST_MUL ((ion_TokenKind)(ION_TOKEN_RSHIFT))
 
 #define ION_TOKEN_FIRST_ADD ((ion_TokenKind)((ION_TOKEN_LAST_MUL) + (1)))
 
-#line 130
 #define ION_TOKEN_ADD ((ion_TokenKind)(ION_TOKEN_FIRST_ADD))
 
-#line 131
 #define ION_TOKEN_SUB ((ion_TokenKind)((ION_TOKEN_ADD) + (1)))
 
-#line 132
 #define ION_TOKEN_XOR ((ion_TokenKind)((ION_TOKEN_SUB) + (1)))
 
-#line 133
 #define ION_TOKEN_OR ((ion_TokenKind)((ION_TOKEN_XOR) + (1)))
 
-#line 134
 #define ION_TOKEN_LAST_ADD ((ion_TokenKind)(ION_TOKEN_OR))
 
 #define ION_TOKEN_FIRST_CMP ((ion_TokenKind)((ION_TOKEN_LAST_ADD) + (1)))
 
-#line 137
 #define ION_TOKEN_EQ ((ion_TokenKind)(ION_TOKEN_FIRST_CMP))
 
-#line 138
 #define ION_TOKEN_NOTEQ ((ion_TokenKind)((ION_TOKEN_EQ) + (1)))
 
-#line 139
 #define ION_TOKEN_LT ((ion_TokenKind)((ION_TOKEN_NOTEQ) + (1)))
 
-#line 140
 #define ION_TOKEN_GT ((ion_TokenKind)((ION_TOKEN_LT) + (1)))
 
-#line 141
 #define ION_TOKEN_LTEQ ((ion_TokenKind)((ION_TOKEN_GT) + (1)))
 
-#line 142
 #define ION_TOKEN_GTEQ ((ion_TokenKind)((ION_TOKEN_LTEQ) + (1)))
 
-#line 143
 #define ION_TOKEN_LAST_CMP ((ion_TokenKind)(ION_TOKEN_GTEQ))
 
-#line 144
 #define ION_TOKEN_AND_AND ((ion_TokenKind)((ION_TOKEN_LAST_CMP) + (1)))
 
-#line 145
 #define ION_TOKEN_OR_OR ((ion_TokenKind)((ION_TOKEN_AND_AND) + (1)))
 
 #define ION_TOKEN_FIRST_ASSIGN ((ion_TokenKind)((ION_TOKEN_OR_OR) + (1)))
 
-#line 148
 #define ION_TOKEN_ASSIGN ((ion_TokenKind)(ION_TOKEN_FIRST_ASSIGN))
 
-#line 149
 #define ION_TOKEN_ADD_ASSIGN ((ion_TokenKind)((ION_TOKEN_ASSIGN) + (1)))
 
-#line 150
 #define ION_TOKEN_SUB_ASSIGN ((ion_TokenKind)((ION_TOKEN_ADD_ASSIGN) + (1)))
 
-#line 151
 #define ION_TOKEN_OR_ASSIGN ((ion_TokenKind)((ION_TOKEN_SUB_ASSIGN) + (1)))
 
-#line 152
 #define ION_TOKEN_AND_ASSIGN ((ion_TokenKind)((ION_TOKEN_OR_ASSIGN) + (1)))
 
-#line 153
 #define ION_TOKEN_XOR_ASSIGN ((ion_TokenKind)((ION_TOKEN_AND_ASSIGN) + (1)))
 
-#line 154
 #define ION_TOKEN_LSHIFT_ASSIGN ((ion_TokenKind)((ION_TOKEN_XOR_ASSIGN) + (1)))
 
-#line 155
 #define ION_TOKEN_RSHIFT_ASSIGN ((ion_TokenKind)((ION_TOKEN_LSHIFT_ASSIGN) + (1)))
 
-#line 156
 #define ION_TOKEN_MUL_ASSIGN ((ion_TokenKind)((ION_TOKEN_RSHIFT_ASSIGN) + (1)))
 
-#line 157
 #define ION_TOKEN_DIV_ASSIGN ((ion_TokenKind)((ION_TOKEN_MUL_ASSIGN) + (1)))
 
-#line 158
 #define ION_TOKEN_MOD_ASSIGN ((ion_TokenKind)((ION_TOKEN_DIV_ASSIGN) + (1)))
 
-#line 159
 #define ION_TOKEN_LAST_ASSIGN ((ion_TokenKind)(ION_TOKEN_MOD_ASSIGN))
 
-#line 160
 #define ION_TOKEN_INC ((ion_TokenKind)((ION_TOKEN_LAST_ASSIGN) + (1)))
 
-#line 161
 #define ION_TOKEN_DEC ((ion_TokenKind)((ION_TOKEN_INC) + (1)))
 
-#line 162
 #define ION_TOKEN_COLON_ASSIGN ((ion_TokenKind)((ION_TOKEN_DEC) + (1)))
 
-#line 163
 #define ION_NUM_TOKEN_KINDS ((ion_TokenKind)((ION_TOKEN_COLON_ASSIGN) + (1)))
 
-#line 167
 #define ION_MOD_NONE ((ion_TokenMod)(0))
 
-#line 168
 #define ION_MOD_HEX ((ion_TokenMod)((ION_MOD_NONE) + (1)))
 
-#line 169
 #define ION_MOD_BIN ((ion_TokenMod)((ION_MOD_HEX) + (1)))
 
-#line 170
 #define ION_MOD_OCT ((ion_TokenMod)((ION_MOD_BIN) + (1)))
 
-#line 171
 #define ION_MOD_CHAR ((ion_TokenMod)((ION_MOD_OCT) + (1)))
 
-#line 172
 #define ION_MOD_MULTILINE ((ion_TokenMod)((ION_MOD_CHAR) + (1)))
 
-#line 176
 #define ION_SUFFIX_NONE ((ion_TokenSuffix)(0))
 
-#line 177
 #define ION_SUFFIX_D ((ion_TokenSuffix)((ION_SUFFIX_NONE) + (1)))
 
-#line 178
 #define ION_SUFFIX_U ((ion_TokenSuffix)((ION_SUFFIX_D) + (1)))
 
-#line 179
 #define ION_SUFFIX_L ((ion_TokenSuffix)((ION_SUFFIX_U) + (1)))
 
-#line 180
 #define ION_SUFFIX_UL ((ion_TokenSuffix)((ION_SUFFIX_L) + (1)))
 
-#line 181
 #define ION_SUFFIX_LL ((ion_TokenSuffix)((ION_SUFFIX_UL) + (1)))
 
-#line 182
 #define ION_SUFFIX_ULL ((ion_TokenSuffix)((ION_SUFFIX_LL) + (1)))
 
-#line 185
 extern char const ((*(ion_token_suffix_names[7])));
 
-#line 195
 extern char const ((*(ion_token_kind_names[54])));
 
-#line 252
 char const ((*ion_token_kind_name(ion_TokenKind kind)));
 
-#line 260
 extern ion_TokenKind (ion_assign_token_to_binary_token[ION_NUM_TOKEN_KINDS]);
 
-#line 278
 extern ion_SrcPos ion_pos_builtin;
 
 struct ion_Token {
@@ -1531,173 +1094,120 @@ struct ion_Token {
 
 extern ion_Token ion_token;
 
-#line 296
 extern char const ((*ion_stream));
 
-#line 297
 extern char const ((*ion_line_start));
 
 void ion_vnotice(char const ((*level)), ion_SrcPos pos, char const ((*fmt)), va_list args);
 
-#line 308
 void ion_warning(ion_SrcPos pos, char const ((*fmt)), ...);
 
-#line 315
 void ion_verror(ion_SrcPos pos, char const ((*fmt)), va_list args);
 
-#line 319
 void ion_error(ion_SrcPos pos, char const ((*fmt)), ...);
 
-#line 326
 void ion_fatal_error(ion_SrcPos pos, char const ((*fmt)), ...);
 
-#line 339
 char const ((*ion_token_info(void)));
 
-#line 347
 extern uint8_t (ion_char_to_digit[256]);
 
-#line 366
 void ion_scan_int(void);
 
-#line 441
 void ion_scan_float(void);
 
-#line 476
 extern char (ion_escape_to_char[256]);
 
-#line 489
 int ion_scan_hex_escape(void);
 
-#line 510
 void ion_scan_char(void);
 
-#line 544
 void ion_scan_str(void);
 
-#line 632
 void ion_next_token(void);
 
-#line 881
 void ion_init_stream(char const ((*name)), char const ((*buf)));
 
-#line 889
 bool ion_is_token(ion_TokenKind kind);
 
-#line 893
 bool ion_is_token_eof(void);
 
-#line 897
 bool ion_is_token_name(char const ((*name)));
 
-#line 901
 bool ion_is_keyword(char const ((*name)));
 
-#line 905
 bool ion_match_keyword(char const ((*name)));
 
-#line 914
 bool ion_match_token(ion_TokenKind kind);
 
-#line 923
 bool ion_expect_token(ion_TokenKind kind);
 
-#line 7 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\main.ion"
 extern bool ion_flag_verbose;
 
-#line 8
 extern bool ion_flag_lazy;
 
-#line 9
+extern bool ion_flag_nosourcemap;
+
 extern bool ion_flag_notypeinfo;
 
-#line 10
 extern bool ion_flag_fullgen;
 
-#line 4 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\os.ion"
 void ion_path_normalize(char (*path));
 
-#line 16
 void ion_path_copy(char (path[MAX_PATH]), char const ((*src)));
 
-#line 22
 void ion_path_join(char (path[MAX_PATH]), char const ((*src)));
 
-#line 33
 char (*ion_path_file(char (path[MAX_PATH])));
 
-#line 43
 char (*ion_path_ext(char (path[MAX_PATH])));
 
-#line 64
 bool ion_dir_excluded(ion_DirListIter (*iter));
 
-#line 68
 bool ion_dir_list_subdir(ion_DirListIter (*iter));
 
-#line 80
 char const ((*(*ion_dir_list_buf(char const ((*filespec))))));
 
-#line 92
 typedef int ion_FlagKind;
 
-#line 93
 #define ION_FLAG_BOOL ((ion_FlagKind)(0))
 
-#line 94
 #define ION_FLAG_STR ((ion_FlagKind)((ION_FLAG_BOOL) + (1)))
 
-#line 95
 #define ION_FLAG_ENUM ((ion_FlagKind)((ION_FLAG_STR) + (1)))
 
-#line 114
 extern ion_FlagDef (*ion_flag_defs);
 
 void ion_add_flag_bool(char const ((*name)), bool (*ptr), char const ((*help)));
 
-#line 121
 void ion_add_flag_str(char const ((*name)), char const ((*(*ptr))), char const ((*arg_name)), char const ((*help)));
 
-#line 126
 void ion_add_flag_enum(char const ((*name)), int (*ptr), char const ((*help)), char const ((*(*options))), int num_options);
 
-#line 131
 ion_FlagDef (*ion_get_flag_def(char const ((*name))));
 
-#line 140
 void ion_print_flags_usage(void);
 
-#line 172
 char const ((*ion_parse_flags(int (*argc_ptr), char const ((*(*(*argv_ptr)))))));
 
-#line 35 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\os_win32.ion"
 void ion_path_absolute(char (path[MAX_PATH]));
 
-#line 41
 void ion_dir_list_free(ion_DirListIter (*iter));
 
-#line 49
 void ion_dir__update(ion_DirListIter (*iter), bool done, FindData (*fileinfo));
 
-#line 60
 void ion_dir_list_next(ion_DirListIter (*iter));
 
-#line 75
 void ion_dir_list(ion_DirListIter (*iter), char const ((*path)));
 
-#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
 ion_Typespec (*ion_parse_type_func_param(void));
 
-#line 12
 ion_Typespec (*ion_parse_type_func(void));
 
-#line 43
 ion_Typespec (*ion_parse_type_base(void));
 
-#line 61
 ion_Typespec (*ion_parse_type(void));
 
-#line 203 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 struct ion_CompoundField {
     ion_CompoundFieldKind kind;
     ion_SrcPos pos;
@@ -1708,91 +1218,63 @@ struct ion_CompoundField {
     };
 };
 
-#line 83 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
 ion_CompoundField ion_parse_expr_compound_field(void);
 
-#line 103
 ion_Expr (*ion_parse_expr_compound(ion_Typespec (*type)));
 
-#line 118
 ion_Expr (*ion_parse_expr_operand(void));
 
-#line 208
 ion_Expr (*ion_parse_expr_base(void));
 
-#line 242
 bool ion_is_unary_op(void);
 
-#line 254
 ion_Expr (*ion_parse_expr_unary(void));
 
-#line 269
 bool ion_is_mul_op(void);
 
-#line 273
 ion_Expr (*ion_parse_expr_mul(void));
 
-#line 284
 bool ion_is_add_op(void);
 
-#line 288
 ion_Expr (*ion_parse_expr_add(void));
 
-#line 299
 bool ion_is_cmp_op(void);
 
-#line 303
 ion_Expr (*ion_parse_expr_cmp(void));
 
-#line 314
 ion_Expr (*ion_parse_expr_and(void));
 
-#line 323
 ion_Expr (*ion_parse_expr_or(void));
 
-#line 332
 ion_Expr (*ion_parse_expr_ternary(void));
 
-#line 344
 ion_Expr (*ion_parse_expr(void));
 
-#line 348
 ion_Expr (*ion_parse_paren_expr(void));
 
-#line 355
 ion_StmtList ion_parse_stmt_block(void);
 
-#line 367
 ion_Stmt (*ion_parse_stmt_if(ion_SrcPos pos));
 
-#line 395
 ion_Stmt (*ion_parse_stmt_while(ion_SrcPos pos));
 
-#line 400
 ion_Stmt (*ion_parse_stmt_do_while(ion_SrcPos pos));
 
-#line 411
 bool ion_is_assign_op(void);
 
-#line 415
 ion_Stmt (*ion_parse_init_stmt(ion_Expr (*left)));
 
-#line 439
 ion_Stmt (*ion_parse_simple_stmt(void));
 
-#line 455
 ion_Stmt (*ion_parse_stmt_for(ion_SrcPos pos));
 
-#line 323 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 struct ion_SwitchCasePattern {
     ion_Expr (*start);
     ion_Expr (*end);
 };
 
-#line 479 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
 ion_SwitchCasePattern ion_parse_switch_case_pattern(void);
 
-#line 328 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 struct ion_SwitchCase {
     ion_SwitchCasePattern (*patterns);
     size_t num_patterns;
@@ -1800,32 +1282,24 @@ struct ion_SwitchCase {
     ion_StmtList block;
 };
 
-#line 488 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
 ion_SwitchCase ion_parse_stmt_switch_case(void);
 
-#line 523
 ion_Stmt (*ion_parse_stmt_switch(ion_SrcPos pos));
 
-#line 535
 ion_Stmt (*ion_parse_stmt(void));
 
-#line 581
 char const ((*ion_parse_name(void)));
 
-#line 79 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 struct ion_EnumItem {
     ion_SrcPos pos;
     char const ((*name));
     ion_Expr (*init);
 };
 
-#line 587 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
 ion_EnumItem ion_parse_decl_enum_item(void);
 
-#line 597
 ion_Decl (*ion_parse_decl_enum(ion_SrcPos pos));
 
-#line 66 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 struct ion_AggregateItem {
     ion_SrcPos pos;
     ion_AggregateItemKind kind;
@@ -1839,146 +1313,102 @@ struct ion_AggregateItem {
     };
 };
 
-#line 619 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
 ion_AggregateItem ion_parse_decl_aggregate_item(void);
 
-#line 654
 ion_Aggregate (*ion_parse_aggregate(ion_AggregateKind kind));
 
-#line 666
 ion_Decl (*ion_parse_decl_aggregate(ion_SrcPos pos, ion_DeclKind kind));
 
-#line 679
 ion_Decl (*ion_parse_decl_var(ion_SrcPos pos));
 
-#line 699
 ion_Decl (*ion_parse_decl_const(ion_SrcPos pos));
 
-#line 711
 ion_Decl (*ion_parse_decl_typedef(ion_SrcPos pos));
 
-#line 54 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 struct ion_FuncParam {
     ion_SrcPos pos;
     char const ((*name));
     ion_Typespec (*type);
 };
 
-#line 719 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
 ion_FuncParam ion_parse_decl_func_param(void);
 
-#line 727
 ion_Decl (*ion_parse_decl_func(ion_SrcPos pos));
 
-#line 3 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 struct ion_NoteArg {
     ion_SrcPos pos;
     char const ((*name));
     ion_Expr (*expr);
 };
 
-#line 768 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
 ion_NoteArg ion_parse_note_arg(void);
 
-#line 782
 ion_Note ion_parse_note(void);
 
-#line 798
 ion_Notes ion_parse_notes(void);
 
-#line 807
 ion_Decl (*ion_parse_decl_note(ion_SrcPos pos));
 
-#line 811
 ion_Decl (*ion_parse_decl_import(ion_SrcPos pos));
 
-#line 859
 ion_Decl (*ion_parse_decl_opt(void));
 
-#line 884
 ion_Decl (*ion_parse_decl(void));
 
-#line 894
 ion_Decls (*ion_parse_decls(void));
 
-#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\resolve.ion"
 typedef int ion_SymKind;
 
-#line 2
 #define ION_SYM_NONE ((ion_SymKind)(0))
 
-#line 3
 #define ION_SYM_VAR ((ion_SymKind)((ION_SYM_NONE) + (1)))
 
-#line 4
 #define ION_SYM_CONST ((ion_SymKind)((ION_SYM_VAR) + (1)))
 
-#line 5
 #define ION_SYM_FUNC ((ion_SymKind)((ION_SYM_CONST) + (1)))
 
-#line 6
 #define ION_SYM_TYPE ((ion_SymKind)((ION_SYM_FUNC) + (1)))
 
-#line 7
 #define ION_SYM_PACKAGE ((ion_SymKind)((ION_SYM_TYPE) + (1)))
 
-#line 10
 typedef int ion_SymState;
 
-#line 11
 #define ION_SYM_UNRESOLVED ((ion_SymState)(0))
 
-#line 12
 #define ION_SYM_RESOLVING ((ion_SymState)((ION_SYM_UNRESOLVED) + (1)))
 
-#line 13
 #define ION_SYM_RESOLVED ((ion_SymState)((ION_SYM_RESOLVING) + (1)))
 
-#line 45
 #define ION_MAX_LOCAL_SYMS ((int)(1024))
 
-#line 48
 extern ion_Package (*ion_current_package);
 
-#line 49
 extern ion_Package (*ion_builtin_package);
 
-#line 50
 extern ion_Map ion_package_map;
 
-#line 51
 extern ion_Package (*(*ion_package_list));
 
-#line 54
 #define ION_REACHABLE_NONE ((int)(0))
 
-#line 55
 #define ION_REACHABLE_NATURAL ((int)((ION_REACHABLE_NONE) + (1)))
 
-#line 56
 #define ION_REACHABLE_FORCED ((int)((ION_REACHABLE_NATURAL) + (1)))
 
-#line 59
 extern uint8_t ion_reachable_phase;
 
 ion_Sym (*ion_get_package_sym(ion_Package (*package), char const ((*name))));
 
-#line 65
 void ion_add_package(ion_Package (*package));
 
-#line 74
 ion_Package (*ion_enter_package(ion_Package (*new_package)));
 
-#line 80
 void ion_leave_package(ion_Package (*old_package));
 
-#line 84
 extern ion_Sym (*(*ion_reachable_syms));
 
-#line 85
 extern ion_Sym (*(*ion_sorted_syms));
 
-#line 465 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\common.ion"
 union ion_Val {
     bool b;
     char c;
@@ -1995,7 +1425,6 @@ union ion_Val {
     uintptr_t p;
 };
 
-#line 16 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\resolve.ion"
 struct ion_Sym {
     char const ((*name));
     ion_Package (*home_package);
@@ -2013,54 +1442,38 @@ struct ion_Sym {
     };
 };
 
-#line 86
 extern ion_Sym (ion_local_syms[ION_MAX_LOCAL_SYMS]);
 
-#line 87
 extern ion_Sym (*ion_local_syms_end);
 
 bool ion_is_local_sym(ion_Sym (*sym));
 
-#line 93
 ion_Sym (*ion_sym_new(ion_SymKind kind, char const ((*name)), ion_Decl (*decl)));
 
-#line 103
 void ion_process_decl_notes(ion_Decl (*decl), ion_Sym (*sym));
 
-#line 123
 ion_Sym (*ion_sym_decl(ion_Decl (*decl)));
 
-#line 146
 ion_Sym (*ion_sym_get_local(char const ((*name))));
 
-#line 156
 ion_Sym (*ion_sym_get(char const ((*name))));
 
-#line 161
 bool ion_sym_push_var(char const ((*name)), ion_Type (*type));
 
-#line 177
 ion_Sym (*ion_sym_enter(void));
 
-#line 181
 void ion_sym_leave(ion_Sym (*sym));
 
-#line 185
 void ion_sym_global_put(char const ((*name)), ion_Sym (*sym));
 
-#line 204
 ion_Sym (*ion_sym_global_type(char const ((*name)), ion_Type (*type)));
 
-#line 214
 ion_Sym (*ion_sym_global_decl(ion_Decl (*decl)));
 
-#line 242
 void ion_put_type_name(char (*(*buf)), ion_Type (*type));
 
-#line 285
 char (*ion_get_type_name(ion_Type (*type)));
 
-#line 291
 struct ion_Operand {
     ion_Type (*type);
     bool is_lvalue;
@@ -2072,105 +1485,74 @@ extern ion_Operand ion_operand_null;
 
 ion_Operand ion_operand_rvalue(ion_Type (*type));
 
-#line 306
 ion_Operand ion_operand_lvalue(ion_Type (*type));
 
-#line 313
 ion_Operand ion_operand_const(ion_Type (*type), ion_Val val);
 
-#line 321
 ion_Type (*ion_type_decay(ion_Type (*type)));
 
-#line 329
 ion_Operand ion_operand_decay(ion_Operand operand);
 
-#line 337
 bool ion_is_convertible(ion_Operand (*operand), ion_Type (*dest));
 
-#line 364
 bool ion_is_castable(ion_Operand (*operand), ion_Type (*dest));
 
-#line 382
 bool ion_convert_operand(ion_Operand (*operand), ion_Type (*type));
 
-#line 394
 bool ion_is_null_ptr(ion_Operand operand);
 
-#line 403
 void ion_promote_operand(ion_Operand (*operand));
 
-#line 418
 void ion_unify_arithmetic_operands(ion_Operand (*left), ion_Operand (*right));
 
-#line 457
 extern ion_Map ion_resolved_val_map;
 
 ion_Val ion_get_resolved_val(void (*ptr));
 
-#line 467
 void ion_set_resolved_val(void (*ptr), ion_Val val);
 
-#line 474
 extern ion_Map ion_resolved_type_map;
 
 ion_Type (*ion_get_resolved_type(void (*ptr)));
 
-#line 480
 void ion_set_resolved_type(void (*ptr), ion_Type (*type));
 
-#line 484
 extern ion_Map ion_resolved_sym_map;
 
 ion_Sym (*ion_get_resolved_sym(void const ((*ptr))));
 
-#line 490
 void ion_set_resolved_sym(void const ((*ptr)), ion_Sym (*sym));
 
-#line 496
 extern ion_Map ion_resolved_expected_type_map;
 
 ion_Type (*ion_get_resolved_expected_type(ion_Expr (*expr)));
 
-#line 502
 void ion_set_resolved_expected_type(ion_Expr (*expr), ion_Type (*type));
 
-#line 508
 ion_Operand ion_resolve_expr(ion_Expr (*expr));
 
-#line 512
 ion_Operand ion_resolve_expr_rvalue(ion_Expr (*expr));
 
-#line 516
 ion_Operand ion_resolve_expected_expr_rvalue(ion_Expr (*expr), ion_Type (*expected_type));
 
-#line 520
 ion_Type (*ion_resolve_typespec(ion_Typespec (*typespec)));
 
-#line 583
 ion_Type (*ion_complete_aggregate(ion_Type (*type), ion_Aggregate (*aggregate)));
 
-#line 623
 void ion_complete_type(ion_Type (*type));
 
-#line 643
 ion_Type (*ion_resolve_typed_init(ion_SrcPos pos, ion_Type (*type), ion_Expr (*expr)));
 
-#line 660
 ion_Type (*ion_resolve_init(ion_SrcPos pos, ion_Typespec (*typespec), ion_Expr (*expr)));
 
-#line 687
 ion_Type (*ion_resolve_decl_var(ion_Decl (*decl)));
 
-#line 692
 ion_Type (*ion_resolve_decl_const(ion_Decl (*decl), ion_Val (*val)));
 
-#line 708
 ion_Type (*ion_resolve_decl_func(ion_Decl (*decl)));
 
-#line 742
 #define ION_MAX_LABELS (256)
 
-#line 735
 struct ion_Label {
     char const ((*name));
     ion_SrcPos pos;
@@ -2178,220 +1560,151 @@ struct ion_Label {
     bool defined;
 };
 
-#line 744
 extern ion_Label (ion_labels[ION_MAX_LABELS]);
 
-#line 745
 extern ion_Label (*ion_labels_end);
 
 ion_Label (*ion_get_label(ion_SrcPos pos, char const ((*name))));
 
-#line 762
 void ion_reference_label(ion_SrcPos pos, char const ((*name)));
 
-#line 767
 void ion_define_label(ion_SrcPos pos, char const ((*name)));
 
-#line 775
 void ion_resolve_labels(void);
 
-#line 787
 bool ion_is_cond_operand(ion_Operand operand);
 
-#line 792
 void ion_resolve_cond_expr(ion_Expr (*expr));
 
-#line 730
 struct ion_StmtCtx {
     bool is_break_legal;
     bool is_continue_legal;
 };
 
-#line 799
 bool ion_resolve_stmt_block(ion_StmtList block, ion_Type (*ret_type), ion_StmtCtx ctx);
 
-#line 809
 void ion_resolve_stmt_assign(ion_Stmt (*stmt));
 
-#line 843
 void ion_resolve_stmt_init(ion_Stmt (*stmt));
 
-#line 851
 void ion_resolve_static_assert(ion_Note note);
 
-#line 861
 bool ion_resolve_stmt(ion_Stmt (*stmt), ion_Type (*ret_type), ion_StmtCtx ctx);
 
-#line 1017
 void ion_resolve_func_body(ion_Sym (*sym));
 
-#line 1045
 void ion_resolve_sym(ion_Sym (*sym));
 
-#line 1093
 void ion_finalize_sym(ion_Sym (*sym));
 
-#line 1104
 ion_Sym (*ion_resolve_name(char const ((*name))));
 
-#line 1113
 ion_Package (*ion_try_resolve_package(ion_Expr (*expr)));
 
-#line 1131
 ion_Operand ion_resolve_expr_field(ion_Expr (*expr));
 
-#line 1170
 llong ion_eval_unary_op_ll(ion_TokenKind op, llong val);
 
-#line 1186
 ullong ion_eval_unary_op_ull(ion_TokenKind op, ullong val);
 
-#line 1202
 llong ion_eval_binary_op_ll(ion_TokenKind op, llong left, llong right);
 
-#line 1242
 ullong ion_eval_binary_op_ull(ion_TokenKind op, ullong left, ullong right);
 
-#line 1282
 ion_Val ion_eval_unary_op(ion_TokenKind op, ion_Type (*type), ion_Val val);
 
-#line 1299
 ion_Val ion_eval_binary_op(ion_TokenKind op, ion_Type (*type), ion_Val left, ion_Val right);
 
-#line 1320
 ion_Operand ion_resolve_name_operand(ion_SrcPos pos, char const ((*name)));
 
-#line 1341
 ion_Operand ion_resolve_expr_name(ion_Expr (*expr));
 
-#line 1346
 ion_Operand ion_resolve_unary_op(ion_TokenKind op, ion_Operand operand);
 
-#line 1355
 ion_Operand ion_resolve_expr_unary(ion_Expr (*expr));
 
-#line 1386
 ion_Operand ion_resolve_binary_op(ion_TokenKind op, ion_Operand left, ion_Operand right);
 
-#line 1394
 ion_Operand ion_resolve_binary_arithmetic_op(ion_TokenKind op, ion_Operand left, ion_Operand right);
 
-#line 1399
 ion_Operand ion_resolve_expr_binary_op(ion_TokenKind op, char const ((*op_name)), ion_SrcPos pos, ion_Operand left, ion_Operand right);
 
-#line 1539
 ion_Operand ion_resolve_expr_binary(ion_Expr (*expr));
 
-#line 1548
 ion_Operand ion_resolve_expr_compound(ion_Expr (*expr), ion_Type (*expected_type));
 
-#line 1632
 ion_Operand ion_resolve_expr_call(ion_Expr (*expr));
 
-#line 1675
 ion_Operand ion_resolve_expr_ternary(ion_Expr (*expr), ion_Type (*expected_type));
 
-#line 1704
 ion_Operand ion_resolve_expr_index(ion_Expr (*expr));
 
-#line 1717
 ion_Operand ion_resolve_expr_cast(ion_Expr (*expr));
 
-#line 1727
 ion_Operand ion_resolve_expr_int(ion_Expr (*expr));
 
-#line 1837
 ion_Operand ion_resolve_expr_modify(ion_Expr (*expr));
 
-#line 1853
 ion_Operand ion_resolve_expected_expr(ion_Expr (*expr), ion_Type (*expected_type));
 
-#line 1975
 ion_Operand ion_resolve_const_expr(ion_Expr (*expr));
 
-#line 1983
 extern ion_Map ion_decl_note_names;
 
 void ion_init_builtin_syms(void);
 
-#line 2004
 void ion_add_package_decls(ion_Package (*package));
 
-#line 2034
 bool ion_is_package_dir(char const ((*search_path)), char const ((*package_path)));
 
-#line 2049
 bool ion_copy_package_full_path(char (dest[MAX_PATH]), char const ((*package_path)));
 
-#line 2060
 ion_Package (*ion_import_package(char const ((*package_path))));
 
-#line 2080
 void ion_import_all_package_symbols(ion_Package (*package));
 
-#line 2090
 void ion_import_package_symbols(ion_Decl (*decl), ion_Package (*package));
 
-#line 2101
 void ion_process_package_imports(ion_Package (*package));
 
-#line 2136
 bool ion_parse_package(ion_Package (*package));
 
-#line 2172
 bool ion_compile_package(ion_Package (*package));
 
-#line 2189
 void ion_resolve_package_syms(ion_Package (*package));
 
-#line 2199
 void ion_finalize_reachable_syms(void);
 
-#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\targets.ion"
 typedef int ion_Os;
 
-#line 2
 #define ION_OS_WIN32 ((ion_Os)(0))
 
-#line 3
 #define ION_OS_LINUX ((ion_Os)((ION_OS_WIN32) + (1)))
 
-#line 4
 #define ION_OS_OSX ((ion_Os)((ION_OS_LINUX) + (1)))
 
-#line 5
 #define ION_NUM_OSES ((ion_Os)((ION_OS_OSX) + (1)))
 
-#line 8
 extern char const ((*(ion_os_names[ION_NUM_OSES])));
 
-#line 14
 typedef int ion_Arch;
 
-#line 15
 #define ION_ARCH_X64 ((ion_Arch)(0))
 
-#line 16
 #define ION_ARCH_X86 ((ion_Arch)((ION_ARCH_X64) + (1)))
 
-#line 17
 #define ION_NUM_ARCHES ((ion_Arch)((ION_ARCH_X86) + (1)))
 
-#line 20
 extern char const ((*(ion_arch_names[ION_NUM_ARCHES])));
 
-#line 25
 extern int ion_target_os;
 
-#line 26
 extern int ion_target_arch;
 
 int ion_get_os(char const ((*name)));
 
-#line 37
 int ion_get_arch(char const ((*name)));
 
-#line 63 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\type.ion"
 struct ion_TypeMetrics {
     size_t size;
     size_t align;
@@ -2399,31 +1712,22 @@ struct ion_TypeMetrics {
     ullong max;
 };
 
-#line 46 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\targets.ion"
 void ion_init_default_type_metrics(ion_TypeMetrics (metrics[ION_NUM_CMPL_TYPE_KINDS]));
 
-#line 61
 extern ion_TypeMetrics (ion_win32_x86_metrics[ION_NUM_CMPL_TYPE_KINDS]);
 
-#line 68
 extern ion_TypeMetrics (ion_win32_x64_metrics[ION_NUM_CMPL_TYPE_KINDS]);
 
-#line 75
 extern ion_TypeMetrics (ion_ilp32_metrics[ION_NUM_CMPL_TYPE_KINDS]);
 
-#line 82
 extern ion_TypeMetrics (ion_lp64_metrics[ION_NUM_CMPL_TYPE_KINDS]);
 
-#line 89
 void ion_init_target(void);
 
-#line 133
 bool ion_is_excluded_target_filename(char const ((*name)));
 
-#line 70 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\type.ion"
 extern ion_TypeMetrics (*ion_type_metrics);
 
-#line 51
 struct ion_TypeAggregate {
     ion_TypeField (*fields);
     size_t num_fields;
@@ -2436,7 +1740,6 @@ struct ion_TypeFunc {
     ion_Type (*ret);
 };
 
-#line 36
 struct ion_Type {
     ion_CompilerTypeKind kind;
     size_t size;
@@ -2452,197 +1755,140 @@ struct ion_Type {
     };
 };
 
-#line 72
 extern ion_Type (*ion_type_void);
 
-#line 73
 extern ion_Type (*ion_type_bool);
 
-#line 74
 extern ion_Type (*ion_type_char);
 
-#line 75
 extern ion_Type (*ion_type_uchar);
 
-#line 76
 extern ion_Type (*ion_type_schar);
 
-#line 77
 extern ion_Type (*ion_type_short);
 
-#line 78
 extern ion_Type (*ion_type_ushort);
 
-#line 79
 extern ion_Type (*ion_type_int);
 
-#line 80
 extern ion_Type (*ion_type_uint);
 
-#line 81
 extern ion_Type (*ion_type_long);
 
-#line 82
 extern ion_Type (*ion_type_ulong);
 
-#line 83
 extern ion_Type (*ion_type_llong);
 
-#line 84
 extern ion_Type (*ion_type_ullong);
 
-#line 85
 extern ion_Type (*ion_type_float);
 
-#line 86
 extern ion_Type (*ion_type_double);
 
 extern int ion_next_typeid;
 
 extern ion_Type (*ion_type_uintptr);
 
-#line 91
 extern ion_Type (*ion_type_usize);
 
-#line 92
 extern ion_Type (*ion_type_ssize);
 
 extern ion_Map ion_typeid_map;
 
 ion_Type (*ion_get_type_from_typeid(int typeid));
 
-#line 103
 void ion_register_typeid(ion_Type (*type));
 
-#line 107
 ion_Type (*ion_type_alloc(TypeKind kind));
 
-#line 115
 bool ion_is_ptr_type(ion_Type (*type));
 
-#line 119
 bool ion_is_func_type(ion_Type (*type));
 
-#line 123
 bool ion_is_ptr_like_type(ion_Type (*type));
 
-#line 127
 bool ion_is_const_type(ion_Type (*type));
 
-#line 131
 bool ion_is_array_type(ion_Type (*type));
 
-#line 135
 bool ion_is_incomplete_array_type(ion_Type (*type));
 
-#line 139
 bool ion_is_integer_type(ion_Type (*type));
 
-#line 143
 bool ion_is_floating_type(ion_Type (*type));
 
-#line 147
 bool ion_is_arithmetic_type(ion_Type (*type));
 
-#line 151
 bool ion_is_scalar_type(ion_Type (*type));
 
-#line 155
 bool ion_is_aggregate_type(ion_Type (*type));
 
-#line 159
 bool ion_is_signed_type(ion_Type (*type));
 
-#line 174
 extern char const ((*(ion_type_names[ION_NUM_CMPL_TYPE_KINDS])));
 
-#line 192
 extern int (ion_type_ranks[ION_NUM_CMPL_TYPE_KINDS]);
 
-#line 207
 int ion_type_rank(ion_Type (*type));
 
-#line 213
 ion_Type (*ion_unsigned_type(ion_Type (*type)));
 
-#line 239
 size_t ion_type_sizeof(ion_Type (*type));
 
-#line 244
 size_t ion_type_alignof(ion_Type (*type));
 
-#line 249
 extern ion_Map ion_cached_ptr_types;
 
 ion_Type (*ion_type_ptr(ion_Type (*base)));
 
-#line 263
 extern ion_Map ion_cached_const_types;
 
 ion_Type (*ion_type_const(ion_Type (*base)));
 
-#line 282
 ion_Type (*ion_unqualify_type(ion_Type (*type)));
 
-#line 295
 extern ion_Map ion_cached_array_types;
 
 ion_Type (*ion_type_array(ion_Type (*base), size_t num_elems));
 
-#line 326
 extern ion_Map ion_cached_func_types;
 
 ion_Type (*ion_type_func(ion_Type (*(*params)), size_t num_params, ion_Type (*ret), bool has_varargs));
 
-#line 355
 bool ion_has_duplicate_fields(ion_Type (*type));
 
-#line 366
 void ion_add_type_fields(ion_TypeField (*(*fields)), ion_Type (*type), size_t offset);
 
-#line 375
 void ion_type_complete_struct(ion_Type (*type), ion_TypeField (*fields), size_t num_fields);
 
-#line 400
 void ion_type_complete_union(ion_Type (*type), ion_TypeField (*fields), size_t num_fields);
 
-#line 425
 ion_Type (*ion_type_incomplete(ion_Sym (*sym)));
 
-#line 431
 ion_Type (*ion_type_enum(ion_Sym (*sym), ion_Type (*base)));
 
-#line 440
 void ion_init_builtin_type(ion_Type (*type));
 
-#line 447
 void ion_init_builtin_types(void);
 
-#line 465
 int ion_aggregate_item_field_index(ion_Type (*type), char const ((*name)));
 
-#line 475
 ion_Type (*ion_aggregate_item_field_type_from_index(ion_Type (*type), int index));
 
-#line 481
 ion_Type (*ion_aggregate_item_field_type_from_name(ion_Type (*type), char const ((*name))));
 
-#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\main.ion"
 
-#line 28 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\typeinfo.ion"
 struct TypeFieldInfo {
     char const ((*name));
     typeid type;
     int offset;
 };
 
-#line 72
 struct Any {
     void (*ptr);
     typeid type;
 };
 
-#line 374 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast_h.ion"
 struct ion_StmtIf {
     ion_Stmt (*init);
     ion_Expr (*cond);
@@ -2682,7 +1928,6 @@ struct ion_StmtInit {
     ion_Expr (*expr);
 };
 
-#line 355
 struct ion_Stmt {
     ion_StmtKind kind;
     ion_Notes notes;
@@ -2702,7 +1947,6 @@ struct ion_Stmt {
     };
 };
 
-#line 47
 struct ion_TypespecFunc {
     ion_Typespec (*(*args));
     size_t num_args;
@@ -2710,7 +1954,6 @@ struct ion_TypespecFunc {
     ion_Typespec (*ret);
 };
 
-#line 36
 struct ion_Typespec {
     ion_TypespecKind kind;
     ion_SrcPos pos;
@@ -2722,7 +1965,6 @@ struct ion_Typespec {
     };
 };
 
-#line 241
 struct ion_ExprParen {
     ion_Expr (*expr);
 };
@@ -2800,7 +2042,6 @@ struct ion_ExprField {
     char const ((*name));
 };
 
-#line 213
 struct ion_Expr {
     ion_ExprKind kind;
     ion_SrcPos pos;
@@ -2829,13 +2070,11 @@ struct ion_Expr {
     };
 };
 
-#line 167
 struct ion_Decls {
     ion_Decl (*(*decls));
     size_t num_decls;
 };
 
-#line 135
 struct ion_DeclEnum {
     ion_Typespec (*type);
     ion_EnumItem (*items);
@@ -2868,7 +2107,6 @@ struct ion_DeclImport {
     size_t num_items;
 };
 
-#line 116
 struct ion_Decl {
     ion_DeclKind kind;
     ion_SrcPos pos;
@@ -2887,7 +2125,6 @@ struct ion_Decl {
     };
 };
 
-#line 109
 struct ion_Aggregate {
     ion_SrcPos pos;
     ion_AggregateKind kind;
@@ -2895,34 +2132,28 @@ struct ion_Aggregate {
     size_t num_items;
 };
 
-#line 85
 struct ion_ImportItem {
     char const ((*name));
     char const ((*rename));
 };
 
-#line 318
 struct ion_ElseIf {
     ion_Expr (*cond);
     ion_StmtList block;
 };
 
-#line 132 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\common.ion"
 struct ion_BufHdr {
     size_t len;
     size_t cap;
-    #line 136
     char (buf[1]);
 };
 
-#line 421
 struct ion_Intern {
     size_t len;
     ion_Intern (*next);
     char (str[1]);
 };
 
-#line 33 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\resolve.ion"
 struct ion_Package {
     char const ((*path));
     char (full_path[MAX_PATH]);
@@ -2934,34 +2165,28 @@ struct ion_Package {
     bool always_reachable;
 };
 
-#line 30 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\type.ion"
 struct ion_TypeField {
     char const ((*name));
     ion_Type (*type);
     size_t offset;
 };
 
-#line 52 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\os.ion"
 struct ion_DirListIter {
     bool valid;
     bool error;
-    #line 56
     char (base[MAX_PATH]);
     char (name[MAX_PATH]);
     size_t size;
     bool is_dir;
-    #line 61
     void (*handle);
 };
 
-#line 108
 struct ion_FlagDefPtr {
     int (*i);
     bool (*b);
     char const ((*(*s)));
 };
 
-#line 98
 struct ion_FlagDef {
     ion_FlagKind kind;
     char const ((*name));
@@ -2972,13 +2197,11 @@ struct ion_FlagDef {
     ion_FlagDefPtr ptr;
 };
 
-#line 290 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\type.ion"
 struct ion_CachedArrayType {
     ion_Type (*type);
     ion_CachedArrayType (*next);
 };
 
-#line 321
 struct ion_CachedFuncType {
     ion_Type (*type);
     ion_CachedFuncType (*next);
@@ -2988,1043 +2211,16 @@ struct ion_CachedFuncType {
 #define TYPEID0(index, kind) ((ullong)(index) | ((ullong)(kind) << 24))
 #define TYPEID(index, kind, ...) ((ullong)(index) | ((ullong)sizeof(__VA_ARGS__) << 32) | ((ullong)(kind) << 24))
 
-const TypeInfo *typeinfo_table[647] = {
-    [0] = NULL, // No associated type
-    [1] = &(TypeInfo){TYPE_VOID, .name = "void", .size = 0, .align = 0},
-    [2] = &(TypeInfo){TYPE_BOOL, .size = sizeof(bool), .align = sizeof(bool), .name = "bool"},
-    [3] = &(TypeInfo){TYPE_CHAR, .size = sizeof(char), .align = sizeof(char), .name = "char"},
-    [4] = &(TypeInfo){TYPE_UCHAR, .size = sizeof(uchar), .align = sizeof(uchar), .name = "uchar"},
-    [5] = &(TypeInfo){TYPE_SCHAR, .size = sizeof(schar), .align = sizeof(schar), .name = "schar"},
-    [6] = &(TypeInfo){TYPE_SHORT, .size = sizeof(short), .align = sizeof(short), .name = "short"},
-    [7] = &(TypeInfo){TYPE_USHORT, .size = sizeof(ushort), .align = sizeof(ushort), .name = "ushort"},
-    [8] = &(TypeInfo){TYPE_INT, .size = sizeof(int), .align = sizeof(int), .name = "int"},
-    [9] = &(TypeInfo){TYPE_UINT, .size = sizeof(uint), .align = sizeof(uint), .name = "uint"},
-    [10] = &(TypeInfo){TYPE_LONG, .size = sizeof(long), .align = sizeof(long), .name = "long"},
-    [11] = &(TypeInfo){TYPE_ULONG, .size = sizeof(ulong), .align = sizeof(ulong), .name = "ulong"},
-    [12] = &(TypeInfo){TYPE_LLONG, .size = sizeof(llong), .align = sizeof(llong), .name = "llong"},
-    [13] = &(TypeInfo){TYPE_ULLONG, .size = sizeof(ullong), .align = sizeof(ullong), .name = "ullong"},
-    [14] = &(TypeInfo){TYPE_FLOAT, .size = sizeof(float), .align = sizeof(float), .name = "float"},
-    [15] = &(TypeInfo){TYPE_DOUBLE, .size = sizeof(double), .align = sizeof(double), .name = "double"},
-    [16] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID0(1, TYPE_VOID)},
-    [17] = &(TypeInfo){TYPE_CONST, .size = sizeof(char const ), .align = alignof(char const ), .base = TYPEID(3, TYPE_CHAR, char)},
-    [18] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(17, TYPE_CONST, char const )},
-    [19] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(18, TYPE_PTR, char const (*))},
-    [20] = NULL, // Func
-    [21] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [6]), .align = alignof(char [6]), .base = TYPEID(3, TYPE_CHAR, char), .count = 6},
-    [22] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(3, TYPE_CHAR, char)},
-    [23] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [4]), .align = alignof(char [4]), .base = TYPEID(3, TYPE_CHAR, char), .count = 4},
-    [24] = NULL, // Enum
-    [25] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(TypeFieldInfo), .align = alignof(TypeFieldInfo), .name = "TypeFieldInfo", .num_fields = 3, .fields = (TypeFieldInfo[]) {
-        {"name", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(TypeFieldInfo, name)},
-        {"type", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(TypeFieldInfo, type)},
-        {"offset", .type = TYPEID(8, TYPE_INT, int), .offset = offsetof(TypeFieldInfo, offset)},
-    }},
-    [26] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(TypeInfo), .align = alignof(TypeInfo), .name = "TypeInfo", .num_fields = 8, .fields = (TypeFieldInfo[]) {
-        {"kind", .type = TYPEID(24, TYPE_NONE, TypeKind), .offset = offsetof(TypeInfo, kind)},
-        {"size", .type = TYPEID(8, TYPE_INT, int), .offset = offsetof(TypeInfo, size)},
-        {"align", .type = TYPEID(8, TYPE_INT, int), .offset = offsetof(TypeInfo, align)},
-        {"name", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(TypeInfo, name)},
-        {"count", .type = TYPEID(8, TYPE_INT, int), .offset = offsetof(TypeInfo, count)},
-        {"base", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(TypeInfo, base)},
-        {"fields", .type = TYPEID(27, TYPE_PTR, TypeFieldInfo *), .offset = offsetof(TypeInfo, fields)},
-        {"num_fields", .type = TYPEID(8, TYPE_INT, int), .offset = offsetof(TypeInfo, num_fields)},
-    }},
-    [27] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(25, TYPE_STRUCT, TypeFieldInfo)},
-    [28] = &(TypeInfo){TYPE_CONST, .size = sizeof(TypeInfo const ), .align = alignof(TypeInfo const ), .base = TYPEID(26, TYPE_STRUCT, TypeInfo)},
-    [29] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(28, TYPE_CONST, TypeInfo const )},
-    [30] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(29, TYPE_PTR, TypeInfo const (*))},
-    [31] = NULL, // Func
-    [32] = NULL, // Func
-    [33] = NULL, // Func
-    [34] = NULL, // Func
-    [35] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(Any), .align = alignof(Any), .name = "Any", .num_fields = 2, .fields = (TypeFieldInfo[]) {
-        {"ptr", .type = TYPEID(16, TYPE_PTR, void *), .offset = offsetof(Any, ptr)},
-        {"type", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(Any, type)},
-    }},
-    [36] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_Arena), .align = alignof(ion_Arena), .name = "ion_Arena", .num_fields = 3, .fields = (TypeFieldInfo[]) {
-        {"ptr", .type = TYPEID(22, TYPE_PTR, char *), .offset = offsetof(ion_Arena, ptr)},
-        {"end", .type = TYPEID(22, TYPE_PTR, char *), .offset = offsetof(ion_Arena, end)},
-        {"blocks", .type = TYPEID(37, TYPE_PTR, char (**)), .offset = offsetof(ion_Arena, blocks)},
-    }},
-    [37] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(22, TYPE_PTR, char *)},
-    [38] = NULL, // Func
-    [39] = &(TypeInfo){TYPE_CONST, .size = 0, .align = 0, .base = TYPEID0(1, TYPE_VOID)},
-    [40] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID0(39, TYPE_CONST)},
-    [41] = NULL, // Func
-    [42] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_SrcPos), .align = alignof(ion_SrcPos), .name = "ion_SrcPos", .num_fields = 2, .fields = (TypeFieldInfo[]) {
-        {"name", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_SrcPos, name)},
-        {"line", .type = TYPEID(8, TYPE_INT, int), .offset = offsetof(ion_SrcPos, line)},
-    }},
-    [43] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_NoteArg), .align = alignof(ion_NoteArg), .name = "ion_NoteArg", .num_fields = 3, .fields = (TypeFieldInfo[]) {
-        {"pos", .type = TYPEID(42, TYPE_STRUCT, ion_SrcPos), .offset = offsetof(ion_NoteArg, pos)},
-        {"name", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_NoteArg, name)},
-        {"expr", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_NoteArg, expr)},
-    }},
-    [44] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(43, TYPE_STRUCT, ion_NoteArg)},
-    [45] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_Note), .align = alignof(ion_Note), .name = "ion_Note", .num_fields = 4, .fields = (TypeFieldInfo[]) {
-        {"pos", .type = TYPEID(42, TYPE_STRUCT, ion_SrcPos), .offset = offsetof(ion_Note, pos)},
-        {"name", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_Note, name)},
-        {"args", .type = TYPEID(44, TYPE_PTR, ion_NoteArg *), .offset = offsetof(ion_Note, args)},
-        {"num_args", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_Note, num_args)},
-    }},
-    [46] = NULL, // Func
-    [47] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(45, TYPE_STRUCT, ion_Note)},
-    [48] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_Notes), .align = alignof(ion_Notes), .name = "ion_Notes", .num_fields = 2, .fields = (TypeFieldInfo[]) {
-        {"notes", .type = TYPEID(47, TYPE_PTR, ion_Note *), .offset = offsetof(ion_Notes, notes)},
-        {"num_notes", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_Notes, num_notes)},
-    }},
-    [49] = NULL, // Func
-    [50] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_Stmt), .align = alignof(ion_Stmt), .name = "ion_Stmt", .num_fields = 14, .fields = (TypeFieldInfo[]) {
-        {"kind", .type = TYPEID(120, TYPE_NONE, ion_StmtKind), .offset = offsetof(ion_Stmt, kind)},
-        {"notes", .type = TYPEID(48, TYPE_STRUCT, ion_Notes), .offset = offsetof(ion_Stmt, notes)},
-        {"pos", .type = TYPEID(42, TYPE_STRUCT, ion_SrcPos), .offset = offsetof(ion_Stmt, pos)},
-        {"note", .type = TYPEID(45, TYPE_STRUCT, ion_Note), .offset = offsetof(ion_Stmt, note)},
-        {"expr", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_Stmt, expr)},
-        {"decl", .type = TYPEID(67, TYPE_PTR, ion_Decl *), .offset = offsetof(ion_Stmt, decl)},
-        {"if_stmt", .type = TYPEID(161, TYPE_STRUCT, ion_StmtIf), .offset = offsetof(ion_Stmt, if_stmt)},
-        {"while_stmt", .type = TYPEID(162, TYPE_STRUCT, ion_StmtWhile), .offset = offsetof(ion_Stmt, while_stmt)},
-        {"for_stmt", .type = TYPEID(163, TYPE_STRUCT, ion_StmtFor), .offset = offsetof(ion_Stmt, for_stmt)},
-        {"switch_stmt", .type = TYPEID(164, TYPE_STRUCT, ion_StmtSwitch), .offset = offsetof(ion_Stmt, switch_stmt)},
-        {"block", .type = TYPEID(53, TYPE_STRUCT, ion_StmtList), .offset = offsetof(ion_Stmt, block)},
-        {"assign", .type = TYPEID(165, TYPE_STRUCT, ion_StmtAssign), .offset = offsetof(ion_Stmt, assign)},
-        {"init", .type = TYPEID(166, TYPE_STRUCT, ion_StmtInit), .offset = offsetof(ion_Stmt, init)},
-        {"label", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_Stmt, label)},
-    }},
-    [51] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(50, TYPE_STRUCT, ion_Stmt)},
-    [52] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(51, TYPE_PTR, ion_Stmt *)},
-    [53] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_StmtList), .align = alignof(ion_StmtList), .name = "ion_StmtList", .num_fields = 3, .fields = (TypeFieldInfo[]) {
-        {"pos", .type = TYPEID(42, TYPE_STRUCT, ion_SrcPos), .offset = offsetof(ion_StmtList, pos)},
-        {"stmts", .type = TYPEID(52, TYPE_PTR, ion_Stmt (**)), .offset = offsetof(ion_StmtList, stmts)},
-        {"num_stmts", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_StmtList, num_stmts)},
-    }},
-    [54] = NULL, // Func
-    [55] = NULL, // Enum
-    [56] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_Typespec), .align = alignof(ion_Typespec), .name = "ion_Typespec", .num_fields = 6, .fields = (TypeFieldInfo[]) {
-        {"kind", .type = TYPEID(55, TYPE_NONE, ion_TypespecKind), .offset = offsetof(ion_Typespec, kind)},
-        {"pos", .type = TYPEID(42, TYPE_STRUCT, ion_SrcPos), .offset = offsetof(ion_Typespec, pos)},
-        {"base", .type = TYPEID(57, TYPE_PTR, ion_Typespec *), .offset = offsetof(ion_Typespec, base)},
-        {"name", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_Typespec, name)},
-        {"function", .type = TYPEID(138, TYPE_STRUCT, ion_TypespecFunc), .offset = offsetof(ion_Typespec, function)},
-        {"num_elems", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_Typespec, num_elems)},
-    }},
-    [57] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(56, TYPE_STRUCT, ion_Typespec)},
-    [58] = NULL, // Func
-    [59] = NULL, // Func
-    [60] = NULL, // Func
-    [61] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_Expr), .align = alignof(ion_Expr), .name = "ion_Expr", .num_fields = 23, .fields = (TypeFieldInfo[]) {
-        {"kind", .type = TYPEID(95, TYPE_NONE, ion_ExprKind), .offset = offsetof(ion_Expr, kind)},
-        {"pos", .type = TYPEID(42, TYPE_STRUCT, ion_SrcPos), .offset = offsetof(ion_Expr, pos)},
-        {"paren", .type = TYPEID(146, TYPE_STRUCT, ion_ExprParen), .offset = offsetof(ion_Expr, paren)},
-        {"int_lit", .type = TYPEID(147, TYPE_STRUCT, ion_ExprIntLit), .offset = offsetof(ion_Expr, int_lit)},
-        {"float_lit", .type = TYPEID(148, TYPE_STRUCT, ion_ExprFloatLit), .offset = offsetof(ion_Expr, float_lit)},
-        {"str_lit", .type = TYPEID(149, TYPE_STRUCT, ion_ExprStrLit), .offset = offsetof(ion_Expr, str_lit)},
-        {"name", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_Expr, name)},
-        {"sizeof_expr", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_Expr, sizeof_expr)},
-        {"sizeof_type", .type = TYPEID(57, TYPE_PTR, ion_Typespec *), .offset = offsetof(ion_Expr, sizeof_type)},
-        {"typeof_expr", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_Expr, typeof_expr)},
-        {"typeof_type", .type = TYPEID(57, TYPE_PTR, ion_Typespec *), .offset = offsetof(ion_Expr, typeof_type)},
-        {"alignof_expr", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_Expr, alignof_expr)},
-        {"alignof_type", .type = TYPEID(57, TYPE_PTR, ion_Typespec *), .offset = offsetof(ion_Expr, alignof_type)},
-        {"offsetof_field", .type = TYPEID(150, TYPE_STRUCT, ion_ExprOffsetofField), .offset = offsetof(ion_Expr, offsetof_field)},
-        {"compound", .type = TYPEID(151, TYPE_STRUCT, ion_ExprCompound), .offset = offsetof(ion_Expr, compound)},
-        {"cast", .type = TYPEID(152, TYPE_STRUCT, ion_ExprCast), .offset = offsetof(ion_Expr, cast)},
-        {"modify", .type = TYPEID(153, TYPE_STRUCT, ion_ExprModify), .offset = offsetof(ion_Expr, modify)},
-        {"unary", .type = TYPEID(154, TYPE_STRUCT, ion_ExprUnary), .offset = offsetof(ion_Expr, unary)},
-        {"binary", .type = TYPEID(155, TYPE_STRUCT, ion_ExprBinary), .offset = offsetof(ion_Expr, binary)},
-        {"ternary", .type = TYPEID(156, TYPE_STRUCT, ion_ExprTernary), .offset = offsetof(ion_Expr, ternary)},
-        {"call", .type = TYPEID(157, TYPE_STRUCT, ion_ExprCall), .offset = offsetof(ion_Expr, call)},
-        {"index", .type = TYPEID(158, TYPE_STRUCT, ion_ExprIndex), .offset = offsetof(ion_Expr, index)},
-        {"field", .type = TYPEID(159, TYPE_STRUCT, ion_ExprField), .offset = offsetof(ion_Expr, field)},
-    }},
-    [62] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(61, TYPE_STRUCT, ion_Expr)},
-    [63] = NULL, // Func
-    [64] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(57, TYPE_PTR, ion_Typespec *)},
-    [65] = NULL, // Func
-    [66] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_Decl), .align = alignof(ion_Decl), .name = "ion_Decl", .num_fields = 13, .fields = (TypeFieldInfo[]) {
-        {"kind", .type = TYPEID(72, TYPE_NONE, ion_DeclKind), .offset = offsetof(ion_Decl, kind)},
-        {"pos", .type = TYPEID(42, TYPE_STRUCT, ion_SrcPos), .offset = offsetof(ion_Decl, pos)},
-        {"name", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_Decl, name)},
-        {"notes", .type = TYPEID(48, TYPE_STRUCT, ion_Notes), .offset = offsetof(ion_Decl, notes)},
-        {"is_incomplete", .type = TYPEID(2, TYPE_BOOL, bool), .offset = offsetof(ion_Decl, is_incomplete)},
-        {"note", .type = TYPEID(45, TYPE_STRUCT, ion_Note), .offset = offsetof(ion_Decl, note)},
-        {"enum_decl", .type = TYPEID(140, TYPE_STRUCT, ion_DeclEnum), .offset = offsetof(ion_Decl, enum_decl)},
-        {"aggregate", .type = TYPEID(83, TYPE_PTR, ion_Aggregate *), .offset = offsetof(ion_Decl, aggregate)},
-        {"function", .type = TYPEID(141, TYPE_STRUCT, ion_DeclFunc), .offset = offsetof(ion_Decl, function)},
-        {"typedef_decl", .type = TYPEID(142, TYPE_STRUCT, ion_DeclTypedef), .offset = offsetof(ion_Decl, typedef_decl)},
-        {"var_decl", .type = TYPEID(143, TYPE_STRUCT, ion_DeclVar), .offset = offsetof(ion_Decl, var_decl)},
-        {"const_decl", .type = TYPEID(143, TYPE_STRUCT, ion_DeclVar), .offset = offsetof(ion_Decl, const_decl)},
-        {"import_decl", .type = TYPEID(144, TYPE_STRUCT, ion_DeclImport), .offset = offsetof(ion_Decl, import_decl)},
-    }},
-    [67] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(66, TYPE_STRUCT, ion_Decl)},
-    [68] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(67, TYPE_PTR, ion_Decl *)},
-    [69] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_Decls), .align = alignof(ion_Decls), .name = "ion_Decls", .num_fields = 2, .fields = (TypeFieldInfo[]) {
-        {"decls", .type = TYPEID(68, TYPE_PTR, ion_Decl (**)), .offset = offsetof(ion_Decls, decls)},
-        {"num_decls", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_Decls, num_decls)},
-    }},
-    [70] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(69, TYPE_STRUCT, ion_Decls)},
-    [71] = NULL, // Func
-    [72] = NULL, // Enum
-    [73] = NULL, // Func
-    [74] = NULL, // Func
-    [75] = NULL, // Func
-    [76] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_EnumItem), .align = alignof(ion_EnumItem), .name = "ion_EnumItem", .num_fields = 3, .fields = (TypeFieldInfo[]) {
-        {"pos", .type = TYPEID(42, TYPE_STRUCT, ion_SrcPos), .offset = offsetof(ion_EnumItem, pos)},
-        {"name", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_EnumItem, name)},
-        {"init", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_EnumItem, init)},
-    }},
-    [77] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(76, TYPE_STRUCT, ion_EnumItem)},
-    [78] = NULL, // Func
-    [79] = NULL, // Enum
-    [80] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_AggregateItem), .align = alignof(ion_AggregateItem), .name = "ion_AggregateItem", .num_fields = 6, .fields = (TypeFieldInfo[]) {
-        {"pos", .type = TYPEID(42, TYPE_STRUCT, ion_SrcPos), .offset = offsetof(ion_AggregateItem, pos)},
-        {"kind", .type = TYPEID(139, TYPE_NONE, ion_AggregateItemKind), .offset = offsetof(ion_AggregateItem, kind)},
-        {"names", .type = TYPEID(19, TYPE_PTR, char const ((**))), .offset = offsetof(ion_AggregateItem, names)},
-        {"num_names", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_AggregateItem, num_names)},
-        {"type", .type = TYPEID(57, TYPE_PTR, ion_Typespec *), .offset = offsetof(ion_AggregateItem, type)},
-        {"subaggregate", .type = TYPEID(83, TYPE_PTR, ion_Aggregate *), .offset = offsetof(ion_AggregateItem, subaggregate)},
-    }},
-    [81] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(80, TYPE_STRUCT, ion_AggregateItem)},
-    [82] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_Aggregate), .align = alignof(ion_Aggregate), .name = "ion_Aggregate", .num_fields = 4, .fields = (TypeFieldInfo[]) {
-        {"pos", .type = TYPEID(42, TYPE_STRUCT, ion_SrcPos), .offset = offsetof(ion_Aggregate, pos)},
-        {"kind", .type = TYPEID(79, TYPE_NONE, ion_AggregateKind), .offset = offsetof(ion_Aggregate, kind)},
-        {"items", .type = TYPEID(81, TYPE_PTR, ion_AggregateItem *), .offset = offsetof(ion_Aggregate, items)},
-        {"num_items", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_Aggregate, num_items)},
-    }},
-    [83] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(82, TYPE_STRUCT, ion_Aggregate)},
-    [84] = NULL, // Func
-    [85] = NULL, // Func
-    [86] = NULL, // Func
-    [87] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_FuncParam), .align = alignof(ion_FuncParam), .name = "ion_FuncParam", .num_fields = 3, .fields = (TypeFieldInfo[]) {
-        {"pos", .type = TYPEID(42, TYPE_STRUCT, ion_SrcPos), .offset = offsetof(ion_FuncParam, pos)},
-        {"name", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_FuncParam, name)},
-        {"type", .type = TYPEID(57, TYPE_PTR, ion_Typespec *), .offset = offsetof(ion_FuncParam, type)},
-    }},
-    [88] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(87, TYPE_STRUCT, ion_FuncParam)},
-    [89] = NULL, // Func
-    [90] = NULL, // Func
-    [91] = NULL, // Func
-    [92] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_ImportItem), .align = alignof(ion_ImportItem), .name = "ion_ImportItem", .num_fields = 2, .fields = (TypeFieldInfo[]) {
-        {"name", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_ImportItem, name)},
-        {"rename", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_ImportItem, rename)},
-    }},
-    [93] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(92, TYPE_STRUCT, ion_ImportItem)},
-    [94] = NULL, // Func
-    [95] = NULL, // Enum
-    [96] = NULL, // Func
-    [97] = NULL, // Func
-    [98] = NULL, // Func
-    [99] = NULL, // Func
-    [100] = NULL, // Enum
-    [101] = NULL, // Func
-    [102] = NULL, // Enum
-    [103] = NULL, // Enum
-    [104] = NULL, // Func
-    [105] = NULL, // Func
-    [106] = NULL, // Func
-    [107] = NULL, // Func
-    [108] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_CompoundField), .align = alignof(ion_CompoundField), .name = "ion_CompoundField", .num_fields = 5, .fields = (TypeFieldInfo[]) {
-        {"kind", .type = TYPEID(145, TYPE_NONE, ion_CompoundFieldKind), .offset = offsetof(ion_CompoundField, kind)},
-        {"pos", .type = TYPEID(42, TYPE_STRUCT, ion_SrcPos), .offset = offsetof(ion_CompoundField, pos)},
-        {"init", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_CompoundField, init)},
-        {"name", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_CompoundField, name)},
-        {"index", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_CompoundField, index)},
-    }},
-    [109] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(108, TYPE_STRUCT, ion_CompoundField)},
-    [110] = NULL, // Func
-    [111] = NULL, // Func
-    [112] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(62, TYPE_PTR, ion_Expr *)},
-    [113] = NULL, // Func
-    [114] = NULL, // Func
-    [115] = NULL, // Func
-    [116] = NULL, // Func
-    [117] = NULL, // Func
-    [118] = NULL, // Func
-    [119] = NULL, // Func
-    [120] = NULL, // Enum
-    [121] = NULL, // Func
-    [122] = NULL, // Func
-    [123] = NULL, // Func
-    [124] = NULL, // Func
-    [125] = NULL, // Func
-    [126] = NULL, // Func
-    [127] = NULL, // Func
-    [128] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_ElseIf), .align = alignof(ion_ElseIf), .name = "ion_ElseIf", .num_fields = 2, .fields = (TypeFieldInfo[]) {
-        {"cond", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_ElseIf, cond)},
-        {"block", .type = TYPEID(53, TYPE_STRUCT, ion_StmtList), .offset = offsetof(ion_ElseIf, block)},
-    }},
-    [129] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(128, TYPE_STRUCT, ion_ElseIf)},
-    [130] = NULL, // Func
-    [131] = NULL, // Func
-    [132] = NULL, // Func
-    [133] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_SwitchCase), .align = alignof(ion_SwitchCase), .name = "ion_SwitchCase", .num_fields = 4, .fields = (TypeFieldInfo[]) {
-        {"patterns", .type = TYPEID(311, TYPE_PTR, ion_SwitchCasePattern *), .offset = offsetof(ion_SwitchCase, patterns)},
-        {"num_patterns", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_SwitchCase, num_patterns)},
-        {"is_default", .type = TYPEID(2, TYPE_BOOL, bool), .offset = offsetof(ion_SwitchCase, is_default)},
-        {"block", .type = TYPEID(53, TYPE_STRUCT, ion_StmtList), .offset = offsetof(ion_SwitchCase, block)},
-    }},
-    [134] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(133, TYPE_STRUCT, ion_SwitchCase)},
-    [135] = NULL, // Func
-    [136] = NULL, // Func
-    [137] = NULL, // Func
-    [138] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_TypespecFunc), .align = alignof(ion_TypespecFunc), .name = "ion_TypespecFunc", .num_fields = 4, .fields = (TypeFieldInfo[]) {
-        {"args", .type = TYPEID(64, TYPE_PTR, ion_Typespec (**)), .offset = offsetof(ion_TypespecFunc, args)},
-        {"num_args", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_TypespecFunc, num_args)},
-        {"has_varargs", .type = TYPEID(2, TYPE_BOOL, bool), .offset = offsetof(ion_TypespecFunc, has_varargs)},
-        {"ret", .type = TYPEID(57, TYPE_PTR, ion_Typespec *), .offset = offsetof(ion_TypespecFunc, ret)},
-    }},
-    [139] = NULL, // Enum
-    [140] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_DeclEnum), .align = alignof(ion_DeclEnum), .name = "ion_DeclEnum", .num_fields = 3, .fields = (TypeFieldInfo[]) {
-        {"type", .type = TYPEID(57, TYPE_PTR, ion_Typespec *), .offset = offsetof(ion_DeclEnum, type)},
-        {"items", .type = TYPEID(77, TYPE_PTR, ion_EnumItem *), .offset = offsetof(ion_DeclEnum, items)},
-        {"num_items", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_DeclEnum, num_items)},
-    }},
-    [141] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_DeclFunc), .align = alignof(ion_DeclFunc), .name = "ion_DeclFunc", .num_fields = 5, .fields = (TypeFieldInfo[]) {
-        {"params", .type = TYPEID(88, TYPE_PTR, ion_FuncParam *), .offset = offsetof(ion_DeclFunc, params)},
-        {"num_params", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_DeclFunc, num_params)},
-        {"ret_type", .type = TYPEID(57, TYPE_PTR, ion_Typespec *), .offset = offsetof(ion_DeclFunc, ret_type)},
-        {"has_varargs", .type = TYPEID(2, TYPE_BOOL, bool), .offset = offsetof(ion_DeclFunc, has_varargs)},
-        {"block", .type = TYPEID(53, TYPE_STRUCT, ion_StmtList), .offset = offsetof(ion_DeclFunc, block)},
-    }},
-    [142] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_DeclTypedef), .align = alignof(ion_DeclTypedef), .name = "ion_DeclTypedef", .num_fields = 1, .fields = (TypeFieldInfo[]) {
-        {"type", .type = TYPEID(57, TYPE_PTR, ion_Typespec *), .offset = offsetof(ion_DeclTypedef, type)},
-    }},
-    [143] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_DeclVar), .align = alignof(ion_DeclVar), .name = "ion_DeclVar", .num_fields = 2, .fields = (TypeFieldInfo[]) {
-        {"type", .type = TYPEID(57, TYPE_PTR, ion_Typespec *), .offset = offsetof(ion_DeclVar, type)},
-        {"expr", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_DeclVar, expr)},
-    }},
-    [144] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_DeclImport), .align = alignof(ion_DeclImport), .name = "ion_DeclImport", .num_fields = 6, .fields = (TypeFieldInfo[]) {
-        {"is_relative", .type = TYPEID(2, TYPE_BOOL, bool), .offset = offsetof(ion_DeclImport, is_relative)},
-        {"names", .type = TYPEID(19, TYPE_PTR, char const ((**))), .offset = offsetof(ion_DeclImport, names)},
-        {"num_names", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_DeclImport, num_names)},
-        {"import_all", .type = TYPEID(2, TYPE_BOOL, bool), .offset = offsetof(ion_DeclImport, import_all)},
-        {"items", .type = TYPEID(93, TYPE_PTR, ion_ImportItem *), .offset = offsetof(ion_DeclImport, items)},
-        {"num_items", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_DeclImport, num_items)},
-    }},
-    [145] = NULL, // Enum
-    [146] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_ExprParen), .align = alignof(ion_ExprParen), .name = "ion_ExprParen", .num_fields = 1, .fields = (TypeFieldInfo[]) {
-        {"expr", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_ExprParen, expr)},
-    }},
-    [147] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_ExprIntLit), .align = alignof(ion_ExprIntLit), .name = "ion_ExprIntLit", .num_fields = 3, .fields = (TypeFieldInfo[]) {
-        {"val", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_ExprIntLit, val)},
-        {"mod", .type = TYPEID(102, TYPE_NONE, ion_TokenMod), .offset = offsetof(ion_ExprIntLit, mod)},
-        {"suffix", .type = TYPEID(103, TYPE_NONE, ion_TokenSuffix), .offset = offsetof(ion_ExprIntLit, suffix)},
-    }},
-    [148] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_ExprFloatLit), .align = alignof(ion_ExprFloatLit), .name = "ion_ExprFloatLit", .num_fields = 4, .fields = (TypeFieldInfo[]) {
-        {"start", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_ExprFloatLit, start)},
-        {"end", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_ExprFloatLit, end)},
-        {"val", .type = TYPEID(15, TYPE_DOUBLE, double), .offset = offsetof(ion_ExprFloatLit, val)},
-        {"suffix", .type = TYPEID(103, TYPE_NONE, ion_TokenSuffix), .offset = offsetof(ion_ExprFloatLit, suffix)},
-    }},
-    [149] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_ExprStrLit), .align = alignof(ion_ExprStrLit), .name = "ion_ExprStrLit", .num_fields = 2, .fields = (TypeFieldInfo[]) {
-        {"val", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_ExprStrLit, val)},
-        {"mod", .type = TYPEID(102, TYPE_NONE, ion_TokenMod), .offset = offsetof(ion_ExprStrLit, mod)},
-    }},
-    [150] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_ExprOffsetofField), .align = alignof(ion_ExprOffsetofField), .name = "ion_ExprOffsetofField", .num_fields = 2, .fields = (TypeFieldInfo[]) {
-        {"type", .type = TYPEID(57, TYPE_PTR, ion_Typespec *), .offset = offsetof(ion_ExprOffsetofField, type)},
-        {"name", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_ExprOffsetofField, name)},
-    }},
-    [151] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_ExprCompound), .align = alignof(ion_ExprCompound), .name = "ion_ExprCompound", .num_fields = 3, .fields = (TypeFieldInfo[]) {
-        {"type", .type = TYPEID(57, TYPE_PTR, ion_Typespec *), .offset = offsetof(ion_ExprCompound, type)},
-        {"fields", .type = TYPEID(109, TYPE_PTR, ion_CompoundField *), .offset = offsetof(ion_ExprCompound, fields)},
-        {"num_fields", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_ExprCompound, num_fields)},
-    }},
-    [152] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_ExprCast), .align = alignof(ion_ExprCast), .name = "ion_ExprCast", .num_fields = 2, .fields = (TypeFieldInfo[]) {
-        {"type", .type = TYPEID(57, TYPE_PTR, ion_Typespec *), .offset = offsetof(ion_ExprCast, type)},
-        {"expr", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_ExprCast, expr)},
-    }},
-    [153] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_ExprModify), .align = alignof(ion_ExprModify), .name = "ion_ExprModify", .num_fields = 3, .fields = (TypeFieldInfo[]) {
-        {"op", .type = TYPEID(100, TYPE_NONE, ion_TokenKind), .offset = offsetof(ion_ExprModify, op)},
-        {"post", .type = TYPEID(2, TYPE_BOOL, bool), .offset = offsetof(ion_ExprModify, post)},
-        {"expr", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_ExprModify, expr)},
-    }},
-    [154] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_ExprUnary), .align = alignof(ion_ExprUnary), .name = "ion_ExprUnary", .num_fields = 2, .fields = (TypeFieldInfo[]) {
-        {"op", .type = TYPEID(100, TYPE_NONE, ion_TokenKind), .offset = offsetof(ion_ExprUnary, op)},
-        {"expr", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_ExprUnary, expr)},
-    }},
-    [155] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_ExprBinary), .align = alignof(ion_ExprBinary), .name = "ion_ExprBinary", .num_fields = 3, .fields = (TypeFieldInfo[]) {
-        {"op", .type = TYPEID(100, TYPE_NONE, ion_TokenKind), .offset = offsetof(ion_ExprBinary, op)},
-        {"left", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_ExprBinary, left)},
-        {"right", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_ExprBinary, right)},
-    }},
-    [156] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_ExprTernary), .align = alignof(ion_ExprTernary), .name = "ion_ExprTernary", .num_fields = 3, .fields = (TypeFieldInfo[]) {
-        {"cond", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_ExprTernary, cond)},
-        {"then_expr", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_ExprTernary, then_expr)},
-        {"else_expr", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_ExprTernary, else_expr)},
-    }},
-    [157] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_ExprCall), .align = alignof(ion_ExprCall), .name = "ion_ExprCall", .num_fields = 3, .fields = (TypeFieldInfo[]) {
-        {"expr", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_ExprCall, expr)},
-        {"args", .type = TYPEID(112, TYPE_PTR, ion_Expr (**)), .offset = offsetof(ion_ExprCall, args)},
-        {"num_args", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_ExprCall, num_args)},
-    }},
-    [158] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_ExprIndex), .align = alignof(ion_ExprIndex), .name = "ion_ExprIndex", .num_fields = 2, .fields = (TypeFieldInfo[]) {
-        {"expr", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_ExprIndex, expr)},
-        {"index", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_ExprIndex, index)},
-    }},
-    [159] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_ExprField), .align = alignof(ion_ExprField), .name = "ion_ExprField", .num_fields = 2, .fields = (TypeFieldInfo[]) {
-        {"expr", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_ExprField, expr)},
-        {"name", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_ExprField, name)},
-    }},
-    [160] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_SwitchCasePattern), .align = alignof(ion_SwitchCasePattern), .name = "ion_SwitchCasePattern", .num_fields = 2, .fields = (TypeFieldInfo[]) {
-        {"start", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_SwitchCasePattern, start)},
-        {"end", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_SwitchCasePattern, end)},
-    }},
-    [161] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_StmtIf), .align = alignof(ion_StmtIf), .name = "ion_StmtIf", .num_fields = 6, .fields = (TypeFieldInfo[]) {
-        {"init", .type = TYPEID(51, TYPE_PTR, ion_Stmt *), .offset = offsetof(ion_StmtIf, init)},
-        {"cond", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_StmtIf, cond)},
-        {"then_block", .type = TYPEID(53, TYPE_STRUCT, ion_StmtList), .offset = offsetof(ion_StmtIf, then_block)},
-        {"elseifs", .type = TYPEID(129, TYPE_PTR, ion_ElseIf *), .offset = offsetof(ion_StmtIf, elseifs)},
-        {"num_elseifs", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_StmtIf, num_elseifs)},
-        {"else_block", .type = TYPEID(53, TYPE_STRUCT, ion_StmtList), .offset = offsetof(ion_StmtIf, else_block)},
-    }},
-    [162] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_StmtWhile), .align = alignof(ion_StmtWhile), .name = "ion_StmtWhile", .num_fields = 2, .fields = (TypeFieldInfo[]) {
-        {"cond", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_StmtWhile, cond)},
-        {"block", .type = TYPEID(53, TYPE_STRUCT, ion_StmtList), .offset = offsetof(ion_StmtWhile, block)},
-    }},
-    [163] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_StmtFor), .align = alignof(ion_StmtFor), .name = "ion_StmtFor", .num_fields = 4, .fields = (TypeFieldInfo[]) {
-        {"init", .type = TYPEID(51, TYPE_PTR, ion_Stmt *), .offset = offsetof(ion_StmtFor, init)},
-        {"cond", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_StmtFor, cond)},
-        {"next", .type = TYPEID(51, TYPE_PTR, ion_Stmt *), .offset = offsetof(ion_StmtFor, next)},
-        {"block", .type = TYPEID(53, TYPE_STRUCT, ion_StmtList), .offset = offsetof(ion_StmtFor, block)},
-    }},
-    [164] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_StmtSwitch), .align = alignof(ion_StmtSwitch), .name = "ion_StmtSwitch", .num_fields = 3, .fields = (TypeFieldInfo[]) {
-        {"expr", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_StmtSwitch, expr)},
-        {"cases", .type = TYPEID(134, TYPE_PTR, ion_SwitchCase *), .offset = offsetof(ion_StmtSwitch, cases)},
-        {"num_cases", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_StmtSwitch, num_cases)},
-    }},
-    [165] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_StmtAssign), .align = alignof(ion_StmtAssign), .name = "ion_StmtAssign", .num_fields = 3, .fields = (TypeFieldInfo[]) {
-        {"op", .type = TYPEID(100, TYPE_NONE, ion_TokenKind), .offset = offsetof(ion_StmtAssign, op)},
-        {"left", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_StmtAssign, left)},
-        {"right", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_StmtAssign, right)},
-    }},
-    [166] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_StmtInit), .align = alignof(ion_StmtInit), .name = "ion_StmtInit", .num_fields = 3, .fields = (TypeFieldInfo[]) {
-        {"name", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_StmtInit, name)},
-        {"type", .type = TYPEID(57, TYPE_PTR, ion_Typespec *), .offset = offsetof(ion_StmtInit, type)},
-        {"expr", .type = TYPEID(62, TYPE_PTR, ion_Expr *), .offset = offsetof(ion_StmtInit, expr)},
-    }},
-    [167] = NULL, // Func
-    [168] = NULL, // Func
-    [169] = NULL, // Func
-    [170] = NULL, // Func
-    [171] = NULL, // Func
-    [172] = NULL, // Func
-    [173] = NULL, // Func
-    [174] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_BufHdr), .align = alignof(ion_BufHdr), .name = "ion_BufHdr", .num_fields = 3, .fields = (TypeFieldInfo[]) {
-        {"len", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_BufHdr, len)},
-        {"cap", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_BufHdr, cap)},
-        {"buf", .type = TYPEID(253, TYPE_ARRAY, char [1]), .offset = offsetof(ion_BufHdr, buf)},
-    }},
-    [175] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(174, TYPE_STRUCT, ion_BufHdr)},
-    [176] = NULL, // Func
-    [177] = NULL, // Func
-    [178] = NULL, // Func
-    [179] = NULL, // Func
-    [180] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(16, TYPE_PTR, void *)},
-    [181] = NULL, // Func
-    [182] = NULL, // Func
-    [183] = NULL, // Func
-    [184] = NULL, // Func
-    [185] = NULL, // Func
-    [186] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(36, TYPE_STRUCT, ion_Arena)},
-    [187] = NULL, // Func
-    [188] = NULL, // Func
-    [189] = NULL, // Func
-    [190] = NULL, // Func
-    [191] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_Map), .align = alignof(ion_Map), .name = "ion_Map", .num_fields = 4, .fields = (TypeFieldInfo[]) {
-        {"keys", .type = TYPEID(203, TYPE_PTR, ullong *), .offset = offsetof(ion_Map, keys)},
-        {"vals", .type = TYPEID(203, TYPE_PTR, ullong *), .offset = offsetof(ion_Map, vals)},
-        {"len", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_Map, len)},
-        {"cap", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_Map, cap)},
-    }},
-    [192] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(191, TYPE_STRUCT, ion_Map)},
-    [193] = NULL, // Func
-    [194] = NULL, // Func
-    [195] = NULL, // Func
-    [196] = NULL, // Func
-    [197] = NULL, // Func
-    [198] = NULL, // Func
-    [199] = NULL, // Func
-    [200] = NULL, // Func
-    [201] = NULL, // Func
-    [202] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_Intern), .align = alignof(ion_Intern), .name = "ion_Intern", .num_fields = 3, .fields = (TypeFieldInfo[]) {
-        {"len", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_Intern, len)},
-        {"next", .type = TYPEID(453, TYPE_PTR, ion_Intern *), .offset = offsetof(ion_Intern, next)},
-        {"str", .type = TYPEID(253, TYPE_ARRAY, char [1]), .offset = offsetof(ion_Intern, str)},
-    }},
-    [203] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(13, TYPE_ULLONG, ullong)},
-    [204] = NULL, // Func
-    [205] = NULL, // Func
-    [206] = NULL, // Func
-    [207] = &(TypeInfo){TYPE_UNION, .size = sizeof(ion_Val), .align = alignof(ion_Val), .name = "ion_Val", .num_fields = 13, .fields = (TypeFieldInfo[]) {
-        {"b", .type = TYPEID(2, TYPE_BOOL, bool), .offset = offsetof(ion_Val, b)},
-        {"c", .type = TYPEID(3, TYPE_CHAR, char), .offset = offsetof(ion_Val, c)},
-        {"uc", .type = TYPEID(4, TYPE_UCHAR, uchar), .offset = offsetof(ion_Val, uc)},
-        {"sc", .type = TYPEID(5, TYPE_SCHAR, schar), .offset = offsetof(ion_Val, sc)},
-        {"s", .type = TYPEID(6, TYPE_SHORT, short), .offset = offsetof(ion_Val, s)},
-        {"us", .type = TYPEID(7, TYPE_USHORT, ushort), .offset = offsetof(ion_Val, us)},
-        {"i", .type = TYPEID(8, TYPE_INT, int), .offset = offsetof(ion_Val, i)},
-        {"u", .type = TYPEID(9, TYPE_UINT, uint), .offset = offsetof(ion_Val, u)},
-        {"l", .type = TYPEID(10, TYPE_LONG, long), .offset = offsetof(ion_Val, l)},
-        {"ul", .type = TYPEID(11, TYPE_ULONG, ulong), .offset = offsetof(ion_Val, ul)},
-        {"ll", .type = TYPEID(12, TYPE_LLONG, llong), .offset = offsetof(ion_Val, ll)},
-        {"ull", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_Val, ull)},
-        {"p", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_Val, p)},
-    }},
-    [208] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [1109]), .align = alignof(char [1109]), .base = TYPEID(3, TYPE_CHAR, char), .count = 1109},
-    [209] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [1565]), .align = alignof(char [1565]), .base = TYPEID(3, TYPE_CHAR, char), .count = 1565},
-    [210] = NULL, // Func
-    [211] = NULL, // Func
-    [212] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [256]), .align = alignof(char [256]), .base = TYPEID(3, TYPE_CHAR, char), .count = 256},
-    [213] = NULL, // Func
-    [214] = NULL, // Func
-    [215] = NULL, // Func
-    [216] = NULL, // Func
-    [217] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_Type), .align = alignof(ion_Type), .name = "ion_Type", .num_fields = 10, .fields = (TypeFieldInfo[]) {
-        {"kind", .type = TYPEID(231, TYPE_NONE, ion_CompilerTypeKind), .offset = offsetof(ion_Type, kind)},
-        {"size", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_Type, size)},
-        {"align", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_Type, align)},
-        {"sym", .type = TYPEID(227, TYPE_PTR, ion_Sym *), .offset = offsetof(ion_Type, sym)},
-        {"base", .type = TYPEID(218, TYPE_PTR, ion_Type *), .offset = offsetof(ion_Type, base)},
-        {"typeid", .type = TYPEID(8, TYPE_INT, int), .offset = offsetof(ion_Type, typeid)},
-        {"nonmodifiable", .type = TYPEID(2, TYPE_BOOL, bool), .offset = offsetof(ion_Type, nonmodifiable)},
-        {"num_elems", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_Type, num_elems)},
-        {"aggregate", .type = TYPEID(406, TYPE_STRUCT, ion_TypeAggregate), .offset = offsetof(ion_Type, aggregate)},
-        {"function", .type = TYPEID(407, TYPE_STRUCT, ion_TypeFunc), .offset = offsetof(ion_Type, function)},
-    }},
-    [218] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(217, TYPE_STRUCT, ion_Type)},
-    [219] = NULL, // Func
-    [220] = NULL, // Func
-    [221] = NULL, // Func
-    [222] = NULL, // Func
-    [223] = NULL, // Func
-    [224] = NULL, // Func
-    [225] = NULL, // Func
-    [226] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_Sym), .align = alignof(ion_Sym), .name = "ion_Sym", .num_fields = 10, .fields = (TypeFieldInfo[]) {
-        {"name", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_Sym, name)},
-        {"home_package", .type = TYPEID(245, TYPE_PTR, ion_Package *), .offset = offsetof(ion_Sym, home_package)},
-        {"kind", .type = TYPEID(326, TYPE_NONE, ion_SymKind), .offset = offsetof(ion_Sym, kind)},
-        {"state", .type = TYPEID(327, TYPE_NONE, ion_SymState), .offset = offsetof(ion_Sym, state)},
-        {"reachable", .type = TYPEID(4, TYPE_UCHAR, uchar), .offset = offsetof(ion_Sym, reachable)},
-        {"decl", .type = TYPEID(67, TYPE_PTR, ion_Decl *), .offset = offsetof(ion_Sym, decl)},
-        {"external_name", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_Sym, external_name)},
-        {"type", .type = TYPEID(218, TYPE_PTR, ion_Type *), .offset = offsetof(ion_Sym, type)},
-        {"val", .type = TYPEID(207, TYPE_UNION, ion_Val), .offset = offsetof(ion_Sym, val)},
-        {"package", .type = TYPEID(245, TYPE_PTR, ion_Package *), .offset = offsetof(ion_Sym, package)},
-    }},
-    [227] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(226, TYPE_STRUCT, ion_Sym)},
-    [228] = NULL, // Func
-    [229] = NULL, // Func
-    [230] = NULL, // Func
-    [231] = NULL, // Enum
-    [232] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char const (*[25])), .align = alignof(char const (*[25])), .base = TYPEID(18, TYPE_PTR, char const (*)), .count = 25},
-    [233] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [10]), .align = alignof(char [10]), .base = TYPEID(3, TYPE_CHAR, char), .count = 10},
-    [234] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [11]), .align = alignof(char [11]), .base = TYPEID(3, TYPE_CHAR, char), .count = 11},
-    [235] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [12]), .align = alignof(char [12]), .base = TYPEID(3, TYPE_CHAR, char), .count = 12},
-    [236] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [9]), .align = alignof(char [9]), .base = TYPEID(3, TYPE_CHAR, char), .count = 9},
-    [237] = NULL, // Func
-    [238] = NULL, // Func
-    [239] = NULL, // Func
-    [240] = NULL, // Func
-    [241] = NULL, // Func
-    [242] = NULL, // Func
-    [243] = NULL, // Func
-    [244] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_Package), .align = alignof(ion_Package), .name = "ion_Package", .num_fields = 8, .fields = (TypeFieldInfo[]) {
-        {"path", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_Package, path)},
-        {"full_path", .type = TYPEID(212, TYPE_ARRAY, char [256]), .offset = offsetof(ion_Package, full_path)},
-        {"decls", .type = TYPEID(68, TYPE_PTR, ion_Decl (**)), .offset = offsetof(ion_Package, decls)},
-        {"num_decls", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_Package, num_decls)},
-        {"syms_map", .type = TYPEID(191, TYPE_STRUCT, ion_Map), .offset = offsetof(ion_Package, syms_map)},
-        {"syms", .type = TYPEID(331, TYPE_PTR, ion_Sym (**)), .offset = offsetof(ion_Package, syms)},
-        {"external_name", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_Package, external_name)},
-        {"always_reachable", .type = TYPEID(2, TYPE_BOOL, bool), .offset = offsetof(ion_Package, always_reachable)},
-    }},
-    [245] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(244, TYPE_STRUCT, ion_Package)},
-    [246] = NULL, // Func
-    [247] = NULL, // Func
-    [248] = NULL, // Func
-    [249] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char const (*[256])), .align = alignof(char const (*[256])), .base = TYPEID(18, TYPE_PTR, char const (*)), .count = 256},
-    [250] = NULL, // Func
-    [251] = NULL, // Func
-    [252] = NULL, // Incomplete array type
-    [253] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [1]), .align = alignof(char [1]), .base = TYPEID(3, TYPE_CHAR, char), .count = 1},
-    [254] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [2]), .align = alignof(char [2]), .base = TYPEID(3, TYPE_CHAR, char), .count = 2},
-    [255] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [3]), .align = alignof(char [3]), .base = TYPEID(3, TYPE_CHAR, char), .count = 3},
-    [256] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char const (*[7])), .align = alignof(char const (*[7])), .base = TYPEID(18, TYPE_PTR, char const (*)), .count = 7},
-    [257] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [8]), .align = alignof(char [8]), .base = TYPEID(3, TYPE_CHAR, char), .count = 8},
-    [258] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [7]), .align = alignof(char [7]), .base = TYPEID(3, TYPE_CHAR, char), .count = 7},
-    [259] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [5]), .align = alignof(char [5]), .base = TYPEID(3, TYPE_CHAR, char), .count = 5},
-    [260] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char const (*[54])), .align = alignof(char const (*[54])), .base = TYPEID(18, TYPE_PTR, char const (*)), .count = 54},
-    [261] = NULL, // Func
-    [262] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(ion_TokenKind [54]), .align = alignof(ion_TokenKind [54]), .base = TYPEID(100, TYPE_NONE, ion_TokenKind), .count = 54},
-    [263] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_Token), .align = alignof(ion_Token), .name = "ion_Token", .num_fields = 10, .fields = (TypeFieldInfo[]) {
-        {"kind", .type = TYPEID(100, TYPE_NONE, ion_TokenKind), .offset = offsetof(ion_Token, kind)},
-        {"mod", .type = TYPEID(102, TYPE_NONE, ion_TokenMod), .offset = offsetof(ion_Token, mod)},
-        {"suffix", .type = TYPEID(103, TYPE_NONE, ion_TokenSuffix), .offset = offsetof(ion_Token, suffix)},
-        {"pos", .type = TYPEID(42, TYPE_STRUCT, ion_SrcPos), .offset = offsetof(ion_Token, pos)},
-        {"start", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_Token, start)},
-        {"end", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_Token, end)},
-        {"int_val", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_Token, int_val)},
-        {"float_val", .type = TYPEID(15, TYPE_DOUBLE, double), .offset = offsetof(ion_Token, float_val)},
-        {"str_val", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_Token, str_val)},
-        {"name", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_Token, name)},
-    }},
-    [264] = NULL, // No associated type
-    [265] = NULL, // Func
-    [266] = NULL, // Func
-    [267] = NULL, // Func
-    [268] = NULL, // Func
-    [269] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(uchar [256]), .align = alignof(uchar [256]), .base = TYPEID(4, TYPE_UCHAR, uchar), .count = 256},
-    [270] = NULL, // Func
-    [271] = NULL, // Func
-    [272] = NULL, // Func
-    [273] = NULL, // Func
-    [274] = NULL, // Func
-    [275] = NULL, // Func
-    [276] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_DirListIter), .align = alignof(ion_DirListIter), .name = "ion_DirListIter", .num_fields = 7, .fields = (TypeFieldInfo[]) {
-        {"valid", .type = TYPEID(2, TYPE_BOOL, bool), .offset = offsetof(ion_DirListIter, valid)},
-        {"error", .type = TYPEID(2, TYPE_BOOL, bool), .offset = offsetof(ion_DirListIter, error)},
-        {"base", .type = TYPEID(212, TYPE_ARRAY, char [256]), .offset = offsetof(ion_DirListIter, base)},
-        {"name", .type = TYPEID(212, TYPE_ARRAY, char [256]), .offset = offsetof(ion_DirListIter, name)},
-        {"size", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_DirListIter, size)},
-        {"is_dir", .type = TYPEID(2, TYPE_BOOL, bool), .offset = offsetof(ion_DirListIter, is_dir)},
-        {"handle", .type = TYPEID(16, TYPE_PTR, void *), .offset = offsetof(ion_DirListIter, handle)},
-    }},
-    [277] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(276, TYPE_STRUCT, ion_DirListIter)},
-    [278] = NULL, // Func
-    [279] = NULL, // Func
-    [280] = NULL, // Enum
-    [281] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_FlagDef), .align = alignof(ion_FlagDef), .name = "ion_FlagDef", .num_fields = 7, .fields = (TypeFieldInfo[]) {
-        {"kind", .type = TYPEID(280, TYPE_NONE, ion_FlagKind), .offset = offsetof(ion_FlagDef, kind)},
-        {"name", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_FlagDef, name)},
-        {"help", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_FlagDef, help)},
-        {"options", .type = TYPEID(19, TYPE_PTR, char const ((**))), .offset = offsetof(ion_FlagDef, options)},
-        {"arg_name", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_FlagDef, arg_name)},
-        {"num_options", .type = TYPEID(8, TYPE_INT, int), .offset = offsetof(ion_FlagDef, num_options)},
-        {"ptr", .type = TYPEID(282, TYPE_STRUCT, ion_FlagDefPtr), .offset = offsetof(ion_FlagDef, ptr)},
-    }},
-    [282] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_FlagDefPtr), .align = alignof(ion_FlagDefPtr), .name = "ion_FlagDefPtr", .num_fields = 3, .fields = (TypeFieldInfo[]) {
-        {"i", .type = TYPEID(287, TYPE_PTR, int *), .offset = offsetof(ion_FlagDefPtr, i)},
-        {"b", .type = TYPEID(284, TYPE_PTR, bool *), .offset = offsetof(ion_FlagDefPtr, b)},
-        {"s", .type = TYPEID(19, TYPE_PTR, char const ((**))), .offset = offsetof(ion_FlagDefPtr, s)},
-    }},
-    [283] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(281, TYPE_STRUCT, ion_FlagDef)},
-    [284] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(2, TYPE_BOOL, bool)},
-    [285] = NULL, // Func
-    [286] = NULL, // Func
-    [287] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(8, TYPE_INT, int)},
-    [288] = NULL, // Func
-    [289] = NULL, // Func
-    [290] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(19, TYPE_PTR, char const ((**)))},
-    [291] = NULL, // Func
-    [292] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(FindData), .align = alignof(FindData), .name = "FindData", .num_fields = 3, .fields = (TypeFieldInfo[]) {
-        {"attrib", .type = TYPEID(9, TYPE_UINT, uint), .offset = offsetof(FindData, attrib)},
-        {"size", .type = TYPEID(9, TYPE_UINT, uint), .offset = offsetof(FindData, size)},
-        {"name", .type = TYPEID(212, TYPE_ARRAY, char [256]), .offset = offsetof(FindData, name)},
-    }},
-    [293] = NULL, // Func
-    [294] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(292, TYPE_STRUCT, FindData)},
-    [295] = NULL, // Func
-    [296] = NULL, // Func
-    [297] = NULL, // Func
-    [298] = NULL, // Func
-    [299] = NULL, // Func
-    [300] = NULL, // Func
-    [301] = NULL, // Func
-    [302] = NULL, // Func
-    [303] = NULL, // No associated type
-    [304] = NULL, // Func
-    [305] = NULL, // Func
-    [306] = NULL, // Func
-    [307] = NULL, // Func
-    [308] = NULL, // Func
-    [309] = NULL, // Func
-    [310] = NULL, // Func
-    [311] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(160, TYPE_STRUCT, ion_SwitchCasePattern)},
-    [312] = NULL, // Func
-    [313] = NULL, // Func
-    [314] = NULL, // Func
-    [315] = NULL, // No associated type
-    [316] = NULL, // No associated type
-    [317] = NULL, // Func
-    [318] = NULL, // Func
-    [319] = NULL, // Func
-    [320] = NULL, // Func
-    [321] = NULL, // Func
-    [322] = NULL, // Func
-    [323] = NULL, // Func
-    [324] = NULL, // Func
-    [325] = NULL, // Func
-    [326] = NULL, // Enum
-    [327] = NULL, // Enum
-    [328] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(245, TYPE_PTR, ion_Package *)},
-    [329] = NULL, // Func
-    [330] = NULL, // Func
-    [331] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(227, TYPE_PTR, ion_Sym *)},
-    [332] = NULL, // No associated type
-    [333] = NULL, // No associated type
-    [334] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(ion_Sym [1024]), .align = alignof(ion_Sym [1024]), .base = TYPEID(226, TYPE_STRUCT, ion_Sym), .count = 1024},
-    [335] = NULL, // Func
-    [336] = NULL, // Func
-    [337] = NULL, // Func
-    [338] = NULL, // Func
-    [339] = NULL, // Func
-    [340] = NULL, // Func
-    [341] = NULL, // Func
-    [342] = NULL, // Func
-    [343] = NULL, // Func
-    [344] = NULL, // Func
-    [345] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_Operand), .align = alignof(ion_Operand), .name = "ion_Operand", .num_fields = 4, .fields = (TypeFieldInfo[]) {
-        {"type", .type = TYPEID(218, TYPE_PTR, ion_Type *), .offset = offsetof(ion_Operand, type)},
-        {"is_lvalue", .type = TYPEID(2, TYPE_BOOL, bool), .offset = offsetof(ion_Operand, is_lvalue)},
-        {"is_const", .type = TYPEID(2, TYPE_BOOL, bool), .offset = offsetof(ion_Operand, is_const)},
-        {"val", .type = TYPEID(207, TYPE_UNION, ion_Val), .offset = offsetof(ion_Operand, val)},
-    }},
-    [346] = NULL, // Func
-    [347] = NULL, // Func
-    [348] = NULL, // Func
-    [349] = NULL, // Func
-    [350] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(345, TYPE_STRUCT, ion_Operand)},
-    [351] = NULL, // Func
-    [352] = NULL, // Func
-    [353] = NULL, // Func
-    [354] = NULL, // Func
-    [355] = NULL, // Func
-    [356] = NULL, // Func
-    [357] = NULL, // Func
-    [358] = NULL, // Func
-    [359] = NULL, // Func
-    [360] = NULL, // Func
-    [361] = NULL, // Func
-    [362] = NULL, // Func
-    [363] = NULL, // Func
-    [364] = NULL, // Func
-    [365] = NULL, // Func
-    [366] = NULL, // Func
-    [367] = NULL, // Func
-    [368] = NULL, // Func
-    [369] = NULL, // Func
-    [370] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(207, TYPE_UNION, ion_Val)},
-    [371] = NULL, // Func
-    [372] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_StmtCtx), .align = alignof(ion_StmtCtx), .name = "ion_StmtCtx", .num_fields = 2, .fields = (TypeFieldInfo[]) {
-        {"is_break_legal", .type = TYPEID(2, TYPE_BOOL, bool), .offset = offsetof(ion_StmtCtx, is_break_legal)},
-        {"is_continue_legal", .type = TYPEID(2, TYPE_BOOL, bool), .offset = offsetof(ion_StmtCtx, is_continue_legal)},
-    }},
-    [373] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_Label), .align = alignof(ion_Label), .name = "ion_Label", .num_fields = 4, .fields = (TypeFieldInfo[]) {
-        {"name", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_Label, name)},
-        {"pos", .type = TYPEID(42, TYPE_STRUCT, ion_SrcPos), .offset = offsetof(ion_Label, pos)},
-        {"referenced", .type = TYPEID(2, TYPE_BOOL, bool), .offset = offsetof(ion_Label, referenced)},
-        {"defined", .type = TYPEID(2, TYPE_BOOL, bool), .offset = offsetof(ion_Label, defined)},
-    }},
-    [374] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(ion_Label [256]), .align = alignof(ion_Label [256]), .base = TYPEID(373, TYPE_STRUCT, ion_Label), .count = 256},
-    [375] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(373, TYPE_STRUCT, ion_Label)},
-    [376] = NULL, // Func
-    [377] = NULL, // Func
-    [378] = NULL, // Func
-    [379] = NULL, // Func
-    [380] = NULL, // Func
-    [381] = NULL, // Func
-    [382] = NULL, // Func
-    [383] = NULL, // Func
-    [384] = NULL, // Func
-    [385] = NULL, // Func
-    [386] = NULL, // Func
-    [387] = NULL, // Func
-    [388] = NULL, // Func
-    [389] = NULL, // Func
-    [390] = NULL, // Func
-    [391] = NULL, // Func
-    [392] = NULL, // Func
-    [393] = NULL, // Func
-    [394] = NULL, // Func
-    [395] = NULL, // Func
-    [396] = NULL, // Func
-    [397] = NULL, // Enum
-    [398] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char const (*[3])), .align = alignof(char const (*[3])), .base = TYPEID(18, TYPE_PTR, char const (*)), .count = 3},
-    [399] = NULL, // Enum
-    [400] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char const (*[2])), .align = alignof(char const (*[2])), .base = TYPEID(18, TYPE_PTR, char const (*)), .count = 2},
-    [401] = NULL, // Func
-    [402] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_TypeMetrics), .align = alignof(ion_TypeMetrics), .name = "ion_TypeMetrics", .num_fields = 4, .fields = (TypeFieldInfo[]) {
-        {"size", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_TypeMetrics, size)},
-        {"align", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_TypeMetrics, align)},
-        {"sign", .type = TYPEID(2, TYPE_BOOL, bool), .offset = offsetof(ion_TypeMetrics, sign)},
-        {"max", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_TypeMetrics, max)},
-    }},
-    [403] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(ion_TypeMetrics [25]), .align = alignof(ion_TypeMetrics [25]), .base = TYPEID(402, TYPE_STRUCT, ion_TypeMetrics), .count = 25},
-    [404] = NULL, // Func
-    [405] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_TypeField), .align = alignof(ion_TypeField), .name = "ion_TypeField", .num_fields = 3, .fields = (TypeFieldInfo[]) {
-        {"name", .type = TYPEID(18, TYPE_PTR, char const (*)), .offset = offsetof(ion_TypeField, name)},
-        {"type", .type = TYPEID(218, TYPE_PTR, ion_Type *), .offset = offsetof(ion_TypeField, type)},
-        {"offset", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_TypeField, offset)},
-    }},
-    [406] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_TypeAggregate), .align = alignof(ion_TypeAggregate), .name = "ion_TypeAggregate", .num_fields = 2, .fields = (TypeFieldInfo[]) {
-        {"fields", .type = TYPEID(409, TYPE_PTR, ion_TypeField *), .offset = offsetof(ion_TypeAggregate, fields)},
-        {"num_fields", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_TypeAggregate, num_fields)},
-    }},
-    [407] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_TypeFunc), .align = alignof(ion_TypeFunc), .name = "ion_TypeFunc", .num_fields = 4, .fields = (TypeFieldInfo[]) {
-        {"params", .type = TYPEID(410, TYPE_PTR, ion_Type (**)), .offset = offsetof(ion_TypeFunc, params)},
-        {"num_params", .type = TYPEID(13, TYPE_ULLONG, ullong), .offset = offsetof(ion_TypeFunc, num_params)},
-        {"has_varargs", .type = TYPEID(2, TYPE_BOOL, bool), .offset = offsetof(ion_TypeFunc, has_varargs)},
-        {"ret", .type = TYPEID(218, TYPE_PTR, ion_Type *), .offset = offsetof(ion_TypeFunc, ret)},
-    }},
-    [408] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(402, TYPE_STRUCT, ion_TypeMetrics)},
-    [409] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(405, TYPE_STRUCT, ion_TypeField)},
-    [410] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(218, TYPE_PTR, ion_Type *)},
-    [411] = NULL, // No associated type
-    [412] = NULL, // Func
-    [413] = NULL, // Func
-    [414] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(int [25]), .align = alignof(int [25]), .base = TYPEID(8, TYPE_INT, int), .count = 25},
-    [415] = NULL, // Func
-    [416] = NULL, // Func
-    [417] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_CachedArrayType), .align = alignof(ion_CachedArrayType), .name = "ion_CachedArrayType", .num_fields = 2, .fields = (TypeFieldInfo[]) {
-        {"type", .type = TYPEID(218, TYPE_PTR, ion_Type *), .offset = offsetof(ion_CachedArrayType, type)},
-        {"next", .type = TYPEID(547, TYPE_PTR, ion_CachedArrayType *), .offset = offsetof(ion_CachedArrayType, next)},
-    }},
-    [418] = NULL, // Func
-    [419] = &(TypeInfo){TYPE_STRUCT, .size = sizeof(ion_CachedFuncType), .align = alignof(ion_CachedFuncType), .name = "ion_CachedFuncType", .num_fields = 2, .fields = (TypeFieldInfo[]) {
-        {"type", .type = TYPEID(218, TYPE_PTR, ion_Type *), .offset = offsetof(ion_CachedFuncType, type)},
-        {"next", .type = TYPEID(548, TYPE_PTR, ion_CachedFuncType *), .offset = offsetof(ion_CachedFuncType, next)},
-    }},
-    [420] = NULL, // Func
-    [421] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(409, TYPE_PTR, ion_TypeField *)},
-    [422] = NULL, // Func
-    [423] = NULL, // Func
-    [424] = NULL, // Func
-    [425] = NULL, // Func
-    [426] = NULL, // Func
-    [427] = NULL, // Func
-    [428] = NULL, // Func
-    [429] = NULL, // Func
-    [430] = NULL, // Func
-    [431] = NULL, // No associated type
-    [432] = NULL, // No associated type
-    [433] = NULL, // No associated type
-    [434] = NULL, // No associated type
-    [435] = NULL, // Func
-    [436] = NULL, // Func
-    [437] = NULL, // Func
-    [438] = NULL, // Func
-    [439] = NULL, // Func
-    [440] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [15]), .align = alignof(char [15]), .base = TYPEID(3, TYPE_CHAR, char), .count = 15},
-    [441] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [16]), .align = alignof(char [16]), .base = TYPEID(3, TYPE_CHAR, char), .count = 16},
-    [442] = NULL, // Func
-    [443] = NULL, // Incomplete: FILE
-    [444] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID0(443, TYPE_NONE)},
-    [445] = NULL, // Func
-    [446] = NULL, // Func
-    [447] = NULL, // Func
-    [448] = NULL, // Func
-    [449] = NULL, // Func
-    [450] = NULL, // Func
-    [451] = NULL, // Func
-    [452] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(37, TYPE_PTR, char (**))},
-    [453] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(202, TYPE_STRUCT, ion_Intern)},
-    [454] = NULL, // Func
-    [455] = NULL, // Func
-    [456] = NULL, // Func
-    [457] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [67]), .align = alignof(char [67]), .base = TYPEID(3, TYPE_CHAR, char), .count = 67},
-    [458] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [18]), .align = alignof(char [18]), .base = TYPEID(3, TYPE_CHAR, char), .count = 18},
-    [459] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [19]), .align = alignof(char [19]), .base = TYPEID(3, TYPE_CHAR, char), .count = 19},
-    [460] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [17]), .align = alignof(char [17]), .base = TYPEID(3, TYPE_CHAR, char), .count = 17},
-    [461] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [64]), .align = alignof(char [64]), .base = TYPEID(3, TYPE_CHAR, char), .count = 64},
-    [462] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [55]), .align = alignof(char [55]), .base = TYPEID(3, TYPE_CHAR, char), .count = 55},
-    [463] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [13]), .align = alignof(char [13]), .base = TYPEID(3, TYPE_CHAR, char), .count = 13},
-    [464] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [24]), .align = alignof(char [24]), .base = TYPEID(3, TYPE_CHAR, char), .count = 24},
-    [465] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [35]), .align = alignof(char [35]), .base = TYPEID(3, TYPE_CHAR, char), .count = 35},
-    [466] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [37]), .align = alignof(char [37]), .base = TYPEID(3, TYPE_CHAR, char), .count = 37},
-    [467] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [38]), .align = alignof(char [38]), .base = TYPEID(3, TYPE_CHAR, char), .count = 38},
-    [468] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [57]), .align = alignof(char [57]), .base = TYPEID(3, TYPE_CHAR, char), .count = 57},
-    [469] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [31]), .align = alignof(char [31]), .base = TYPEID(3, TYPE_CHAR, char), .count = 31},
-    [470] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [77]), .align = alignof(char [77]), .base = TYPEID(3, TYPE_CHAR, char), .count = 77},
-    [471] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [80]), .align = alignof(char [80]), .base = TYPEID(3, TYPE_CHAR, char), .count = 80},
-    [472] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [83]), .align = alignof(char [83]), .base = TYPEID(3, TYPE_CHAR, char), .count = 83},
-    [473] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [74]), .align = alignof(char [74]), .base = TYPEID(3, TYPE_CHAR, char), .count = 74},
-    [474] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [63]), .align = alignof(char [63]), .base = TYPEID(3, TYPE_CHAR, char), .count = 63},
-    [475] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [81]), .align = alignof(char [81]), .base = TYPEID(3, TYPE_CHAR, char), .count = 81},
-    [476] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [50]), .align = alignof(char [50]), .base = TYPEID(3, TYPE_CHAR, char), .count = 50},
-    [477] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [14]), .align = alignof(char [14]), .base = TYPEID(3, TYPE_CHAR, char), .count = 14},
-    [478] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [72]), .align = alignof(char [72]), .base = TYPEID(3, TYPE_CHAR, char), .count = 72},
-    [479] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [114]), .align = alignof(char [114]), .base = TYPEID(3, TYPE_CHAR, char), .count = 114},
-    [480] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [28]), .align = alignof(char [28]), .base = TYPEID(3, TYPE_CHAR, char), .count = 28},
-    [481] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [39]), .align = alignof(char [39]), .base = TYPEID(3, TYPE_CHAR, char), .count = 39},
-    [482] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [20]), .align = alignof(char [20]), .base = TYPEID(3, TYPE_CHAR, char), .count = 20},
-    [483] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [21]), .align = alignof(char [21]), .base = TYPEID(3, TYPE_CHAR, char), .count = 21},
-    [484] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [23]), .align = alignof(char [23]), .base = TYPEID(3, TYPE_CHAR, char), .count = 23},
-    [485] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [106]), .align = alignof(char [106]), .base = TYPEID(3, TYPE_CHAR, char), .count = 106},
-    [486] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [65]), .align = alignof(char [65]), .base = TYPEID(3, TYPE_CHAR, char), .count = 65},
-    [487] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [44]), .align = alignof(char [44]), .base = TYPEID(3, TYPE_CHAR, char), .count = 44},
-    [488] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [42]), .align = alignof(char [42]), .base = TYPEID(3, TYPE_CHAR, char), .count = 42},
-    [489] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [52]), .align = alignof(char [52]), .base = TYPEID(3, TYPE_CHAR, char), .count = 52},
-    [490] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [58]), .align = alignof(char [58]), .base = TYPEID(3, TYPE_CHAR, char), .count = 58},
-    [491] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [29]), .align = alignof(char [29]), .base = TYPEID(3, TYPE_CHAR, char), .count = 29},
-    [492] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [34]), .align = alignof(char [34]), .base = TYPEID(3, TYPE_CHAR, char), .count = 34},
-    [493] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [25]), .align = alignof(char [25]), .base = TYPEID(3, TYPE_CHAR, char), .count = 25},
-    [494] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [45]), .align = alignof(char [45]), .base = TYPEID(3, TYPE_CHAR, char), .count = 45},
-    [495] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [54]), .align = alignof(char [54]), .base = TYPEID(3, TYPE_CHAR, char), .count = 54},
-    [496] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [48]), .align = alignof(char [48]), .base = TYPEID(3, TYPE_CHAR, char), .count = 48},
-    [497] = NULL, // Func
-    [498] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [33]), .align = alignof(char [33]), .base = TYPEID(3, TYPE_CHAR, char), .count = 33},
-    [499] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(4, TYPE_UCHAR, uchar)},
-    [500] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [36]), .align = alignof(char [36]), .base = TYPEID(3, TYPE_CHAR, char), .count = 36},
-    [501] = NULL, // Func
-    [502] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [30]), .align = alignof(char [30]), .base = TYPEID(3, TYPE_CHAR, char), .count = 30},
-    [503] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [56]), .align = alignof(char [56]), .base = TYPEID(3, TYPE_CHAR, char), .count = 56},
-    [504] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [26]), .align = alignof(char [26]), .base = TYPEID(3, TYPE_CHAR, char), .count = 26},
-    [505] = NULL, // Func
-    [506] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(283, TYPE_PTR, ion_FlagDef *)},
-    [507] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [27]), .align = alignof(char [27]), .base = TYPEID(3, TYPE_CHAR, char), .count = 27},
-    [508] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [62]), .align = alignof(char [62]), .base = TYPEID(3, TYPE_CHAR, char), .count = 62},
-    [509] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(64, TYPE_PTR, ion_Typespec (**))},
-    [510] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [49]), .align = alignof(char [49]), .base = TYPEID(3, TYPE_CHAR, char), .count = 49},
-    [511] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [69]), .align = alignof(char [69]), .base = TYPEID(3, TYPE_CHAR, char), .count = 69},
-    [512] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(109, TYPE_PTR, ion_CompoundField *)},
-    [513] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(112, TYPE_PTR, ion_Expr (**))},
-    [514] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(52, TYPE_PTR, ion_Stmt (**))},
-    [515] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(129, TYPE_PTR, ion_ElseIf *)},
-    [516] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [59]), .align = alignof(char [59]), .base = TYPEID(3, TYPE_CHAR, char), .count = 59},
-    [517] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(311, TYPE_PTR, ion_SwitchCasePattern *)},
-    [518] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [47]), .align = alignof(char [47]), .base = TYPEID(3, TYPE_CHAR, char), .count = 47},
-    [519] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(134, TYPE_PTR, ion_SwitchCase *)},
-    [520] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(77, TYPE_PTR, ion_EnumItem *)},
-    [521] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(81, TYPE_PTR, ion_AggregateItem *)},
-    [522] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(88, TYPE_PTR, ion_FuncParam *)},
-    [523] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [51]), .align = alignof(char [51]), .base = TYPEID(3, TYPE_CHAR, char), .count = 51},
-    [524] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(44, TYPE_PTR, ion_NoteArg *)},
-    [525] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(47, TYPE_PTR, ion_Note *)},
-    [526] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(93, TYPE_PTR, ion_ImportItem *)},
-    [527] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(68, TYPE_PTR, ion_Decl (**))},
-    [528] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(328, TYPE_PTR, ion_Package (**))},
-    [529] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(331, TYPE_PTR, ion_Sym (**))},
-    [530] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [22]), .align = alignof(char [22]), .base = TYPEID(3, TYPE_CHAR, char), .count = 22},
-    [531] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(410, TYPE_PTR, ion_Type (**))},
-    [532] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [41]), .align = alignof(char [41]), .base = TYPEID(3, TYPE_CHAR, char), .count = 41},
-    [533] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [53]), .align = alignof(char [53]), .base = TYPEID(3, TYPE_CHAR, char), .count = 53},
-    [534] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(100, TYPE_NONE, ion_TokenKind)},
-    [535] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [32]), .align = alignof(char [32]), .base = TYPEID(3, TYPE_CHAR, char), .count = 32},
-    [536] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [60]), .align = alignof(char [60]), .base = TYPEID(3, TYPE_CHAR, char), .count = 60},
-    [537] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [46]), .align = alignof(char [46]), .base = TYPEID(3, TYPE_CHAR, char), .count = 46},
-    [538] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [43]), .align = alignof(char [43]), .base = TYPEID(3, TYPE_CHAR, char), .count = 43},
-    [539] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [100]), .align = alignof(char [100]), .base = TYPEID(3, TYPE_CHAR, char), .count = 100},
-    [540] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [68]), .align = alignof(char [68]), .base = TYPEID(3, TYPE_CHAR, char), .count = 68},
-    [541] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [73]), .align = alignof(char [73]), .base = TYPEID(3, TYPE_CHAR, char), .count = 73},
-    [542] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [70]), .align = alignof(char [70]), .base = TYPEID(3, TYPE_CHAR, char), .count = 70},
-    [543] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [66]), .align = alignof(char [66]), .base = TYPEID(3, TYPE_CHAR, char), .count = 66},
-    [544] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [92]), .align = alignof(char [92]), .base = TYPEID(3, TYPE_CHAR, char), .count = 92},
-    [545] = NULL, // Func
-    [546] = &(TypeInfo){TYPE_ARRAY, .size = sizeof(char [40]), .align = alignof(char [40]), .base = TYPEID(3, TYPE_CHAR, char), .count = 40},
-    [547] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(417, TYPE_STRUCT, ion_CachedArrayType)},
-    [548] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(419, TYPE_STRUCT, ion_CachedFuncType)},
-    [549] = NULL, // Func
-    [550] = NULL, // Func
-    [551] = NULL, // Func
-    [552] = NULL, // Func
-    [553] = NULL, // Func
-    [554] = NULL, // Func
-    [555] = NULL, // Func
-    [556] = NULL, // Func
-    [557] = NULL, // Func
-    [558] = NULL, // Func
-    [559] = NULL, // Func
-    [560] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(14, TYPE_FLOAT, float)},
-    [561] = NULL, // Func
-    [562] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(15, TYPE_DOUBLE, double)},
-    [563] = NULL, // Func
-    [564] = NULL, // Func
-    [565] = NULL, // Func
-    [566] = NULL, // Func
-    [567] = NULL, // Func
-    [568] = NULL, // Func
-    [569] = NULL, // Func
-    [570] = NULL, // Func
-    [571] = NULL, // Func
-    [572] = NULL, // Func
-    [573] = NULL, // Func
-    [574] = NULL, // Func
-    [575] = NULL, // Func
-    [576] = NULL, // Func
-    [577] = &(TypeInfo){TYPE_CONST, .size = sizeof(char (*const )), .align = alignof(char (*const )), .base = TYPEID(22, TYPE_PTR, char *)},
-    [578] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(577, TYPE_CONST, char (*const ))},
-    [579] = NULL, // Func
-    [580] = NULL, // No associated type
-    [581] = NULL, // Func
-    [582] = NULL, // Func
-    [583] = NULL, // Func
-    [584] = NULL, // Func
-    [585] = NULL, // Func
-    [586] = NULL, // Func
-    [587] = NULL, // Func
-    [588] = NULL, // Func
-    [589] = NULL, // Func
-    [590] = NULL, // Func
-    [591] = NULL, // Func
-    [592] = NULL, // Func
-    [593] = NULL, // Func
-    [594] = NULL, // Func
-    [595] = NULL, // No associated type
-    [596] = NULL, // Func
-    [597] = NULL, // Func
-    [598] = NULL, // No associated type
-    [599] = NULL, // No associated type
-    [600] = NULL, // No associated type
-    [601] = NULL, // Func
-    [602] = NULL, // Func
-    [603] = NULL, // Func
-    [604] = NULL, // Func
-    [605] = NULL, // Func
-    [606] = NULL, // Func
-    [607] = NULL, // Func
-    [608] = NULL, // Func
-    [609] = NULL, // Func
-    [610] = NULL, // Func
-    [611] = NULL, // Func
-    [612] = NULL, // Func
-    [613] = NULL, // Func
-    [614] = NULL, // Func
-    [615] = NULL, // Func
-    [616] = NULL, // Func
-    [617] = NULL, // Func
-    [618] = NULL, // Func
-    [619] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(6, TYPE_SHORT, short)},
-    [620] = NULL, // Func
-    [621] = NULL, // Func
-    [622] = NULL, // Func
-    [623] = &(TypeInfo){TYPE_CONST, .size = sizeof(short const ), .align = alignof(short const ), .base = TYPEID(6, TYPE_SHORT, short)},
-    [624] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(623, TYPE_CONST, short const )},
-    [625] = NULL, // Func
-    [626] = NULL, // Func
-    [627] = NULL, // Func
-    [628] = NULL, // Func
-    [629] = NULL, // Func
-    [630] = NULL, // Func
-    [631] = NULL, // Func
-    [632] = NULL, // No associated type
-    [633] = NULL, // Func
-    [634] = NULL, // Func
-    [635] = NULL, // No associated type
-    [636] = NULL, // Func
-    [637] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(12, TYPE_LLONG, llong)},
-    [638] = NULL, // Func
-    [639] = NULL, // No associated type
-    [640] = NULL, // No associated type
-    [641] = NULL, // Func
-    [642] = &(TypeInfo){TYPE_CONST, .size = sizeof(llong const ), .align = alignof(llong const ), .base = TYPEID(12, TYPE_LLONG, llong)},
-    [643] = &(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = TYPEID(642, TYPE_CONST, llong const )},
-    [644] = NULL, // Func
-    [645] = NULL, // Func
-    [646] = NULL, // Func
-};
-
-int num_typeinfos = 647;
-const TypeInfo **typeinfos = (const TypeInfo **)typeinfo_table;
+int num_typeinfos;
+const TypeInfo **typeinfos;
 
 // Definitions
-#line 12 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\main.ion"
 int main(int argc, char const ((*(*argv)))) {
-    #line 14
     return ion_ion_main(argc, argv, ion_gen_all, "c");
 }
 
 char const ((*IONOS)) = "win32";
 char const ((*IONARCH)) = "x64";
-#line 51 "C:\\Users\\Tom\\Documents\\projects\\ion\\system_packages\\builtin\\typeinfo.ion"
 TypeKind typeid_kind(typeid type) {
     return (TypeKind)((((type) >> (24))) & (0xff));
 }
@@ -4047,7 +2243,6 @@ TypeInfo const ((*get_typeinfo(typeid type))) {
 }
 
 ion_Arena ion_ast_arena;
-#line 3 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ast.ion"
 void (*ion_ast_alloc(size_t size)) {
     assert((size) != (0));
     void (*ptr) = ion_arena_alloc(&(ion_ast_arena), size);
@@ -4064,7 +2259,6 @@ void (*ion_ast_dup(void const ((*src)), size_t size)) {
     return ptr;
 }
 
-#line 21
 ion_Note ion_new_note(ion_SrcPos pos, char const ((*name)), ion_NoteArg (*args), size_t num_args) {
     return (ion_Note){.pos = pos, .name = name, .args = ion_ast_dup(args, (num_args) * (sizeof(*(args)))), .num_args = num_args};
 }
@@ -4498,47 +2692,38 @@ ion_Stmt (*ion_new_stmt_expr(ion_SrcPos pos, ion_Expr (*expr))) {
     return s;
 }
 
-#line 2 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\common.ion"
 size_t ion_min(size_t x, size_t y) {
     return ((x) <= (y) ? x : y);
 }
 
-#line 7
 size_t ion_max(size_t x, size_t y) {
     return ((x) >= (y) ? x : y);
 }
 
-#line 12
 size_t ion_clamp_max(size_t x, size_t max) {
     return ion_min(x, max);
 }
 
-#line 17
 size_t ion_clamp_min(size_t x, size_t min) {
     return ion_max(x, min);
 }
 
-#line 22
 size_t ion_is_pow2(size_t x) {
     return ((x) != (0)) && (((x) & (((x) - (1)))) == (0));
 }
 
-#line 27
 uintptr_t ion_align_down(uintptr_t n, size_t a) {
     return (n) & (~(((a) - (1))));
 }
 
-#line 32
 uintptr_t ion_align_up(uintptr_t n, size_t a) {
     return ion_align_down(((n) + (a)) - (1), a);
 }
 
-#line 37
 void (*ion_align_down_ptr(void (*p), size_t a)) {
     return (void *)(ion_align_down((uintptr_t)(p), a));
 }
 
-#line 42
 void (*ion_align_up_ptr(void (*p), size_t a)) {
     return (void *)(ion_align_up((uintptr_t)(p), a));
 }
@@ -4627,32 +2812,26 @@ bool ion_write_file(char const ((*path)), char const ((*buf)), size_t len) {
     return (n) == (1);
 }
 
-#line 140
 ion_BufHdr (*ion_buf__hdr(void (*b))) {
     return (ion_BufHdr *)((((char *)(b)) - (offsetof(ion_BufHdr, buf))));
 }
 
-#line 145
 size_t ion_buf_len(void (*b)) {
     return (b ? ion_buf__hdr(b)->len : 0);
 }
 
-#line 150
 size_t ion_buf_cap(void const ((*b))) {
     return (b ? ion_buf__hdr((void *)(b))->cap : 0);
 }
 
-#line 155
 void (*ion_buf_end(void (*b), size_t elem_size)) {
     return ((char *)(b)) + ((elem_size) * (ion_buf_len(b)));
 }
 
-#line 160
 size_t ion_buf_sizeof(void (*b), size_t elem_size) {
     return (b ? (ion_buf_len(b)) * (elem_size) : 0);
 }
 
-#line 165
 void ion_buf_free(void (*(*b))) {
     if (b) {
         free(ion_buf__hdr(*(b)));
@@ -4660,20 +2839,17 @@ void ion_buf_free(void (*(*b))) {
     }
 }
 
-#line 173
 void ion_buf_fit(void (*(*b)), size_t new_len, size_t elem_size) {
     if ((new_len) > (ion_buf_cap(*(b)))) {
         *(b) = ion_buf__grow(*(b), new_len, elem_size);
     }
 }
 
-#line 181
 void ion_buf_push(void (*(*b)), void (*elem), size_t elem_size) {
     ion_buf_fit(b, (1) + (ion_buf_len(*(b))), elem_size);
     memcpy(((char *)(*(b))) + ((elem_size) * ((ion_buf__hdr(*(b))->len)++)), elem, elem_size);
 }
 
-#line 189
 void (*ion_buf__grow(void const ((*buf)), size_t new_len, size_t elem_size)) {
     assert((ion_buf_cap(buf)) <= ((((SIZE_MAX) - (1))) / (2)));
     ullong new_cap = ion_clamp_min((2) * (ion_buf_cap(buf)), ion_max(new_len, 16));
@@ -4709,7 +2885,6 @@ void ion_buf_printf(char (*(*buf)), char const ((*fmt)), ...) {
 }
 
 ion_Arena ion_allocator;
-#line 256
 void ion_arena_grow(ion_Arena (*arena), size_t min_size) {
     ullong size = ion_align_up(ion_clamp_min(min_size, ION_ARENA_BLOCK_SIZE), ION_ARENA_ALIGNMENT);
     arena->ptr = ion_xmalloc(size);
@@ -4738,7 +2913,6 @@ void ion_arena_free(ion_Arena (*arena)) {
     ion_buf_free((void (**))(&(arena->blocks)));
 }
 
-#line 286
 uint64_t ion_hash_uint64(uint64_t x) {
     x *= 0xff51afd7ed558ccd;
     x ^= (x) >> (32);
@@ -4767,7 +2941,6 @@ uint64_t ion_hash_bytes(void const ((*ptr)), size_t len) {
     return x;
 }
 
-#line 321
 uint64_t ion_map_get_uint64_from_uint64(ion_Map (*map), uint64_t key) {
     if ((map->len) == (0)) {
         return 0;
@@ -4790,7 +2963,6 @@ uint64_t ion_map_get_uint64_from_uint64(ion_Map (*map), uint64_t key) {
 void ion_map_grow(ion_Map (*map), size_t new_cap) {
     new_cap = ion_clamp_min(new_cap, 16);
     ion_Map new_map = {.keys = ion_xcalloc(new_cap, sizeof(uint64_t)), .vals = ion_xmalloc((new_cap) * (sizeof(uint64_t))), .cap = new_cap};
-    #line 347
     for (size_t i = 0; (i) < (map->cap); (i)++) {
         if (map->keys[i]) {
             ion_map_put_uint64_from_uint64(&(new_map), map->keys[i], map->vals[i]);
@@ -4853,7 +3025,6 @@ void ion_map_put_uint64(ion_Map (*map), void (*key), uint64_t val) {
 
 ion_Arena ion_intern_arena;
 ion_Map ion_interns;
-#line 430
 char const ((*ion_str_intern_range(char const ((*start)), char const ((*end))))) {
     size_t len = (end) - (start);
     ullong hash = ion_hash_bytes(start, len);
@@ -4997,11 +3168,9 @@ char (*ion_gen_postamble_str) =
     "#ifdef __GNUC__\n"
     "#pragma GCC diagnostic pop\n"
     "#endif\n";
-#line 119 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\gen.ion"
 void ion_genln(void) {
     ion_buf_printf(&(ion_gen_buf), "\n"
     "%.*s", (ion_gen_indent) * (4), "                                                                  ");
-    #line 121
     (ion_gen_pos.line)++;
 }
 
@@ -5010,7 +3179,6 @@ bool ion_is_incomplete_array_typespec(ion_Typespec (*typespec)) {
 }
 
 char (ion_char_to_escape[256]) = {['\0'] = '0', ['\n'] = 'n', ['\r'] = 'r', ['\t'] = 't', ['\v'] = 'v', ['\b'] = 'b', ['\a'] = 'a', ['\\'] = '\\', ['\"'] = '\"', ['\''] = '\''};
-#line 141
 void ion_gen_char(char c) {
     if (ion_char_to_escape[(uchar)(c)]) {
         ion_buf_printf(&(ion_gen_buf), "\'\\%c\'", ion_char_to_escape[(uchar)(c)]);
@@ -5041,7 +3209,6 @@ void ion_gen_str(char const ((*str)), bool multiline) {
                 if (((str[0]) == ('\n')) && (str[1])) {
                     ion_buf_printf(&(ion_gen_buf), "\"");
                     ion_genln();
-                    #line 170
                     ion_buf_printf(&(ion_gen_buf), "\"");
                 }
             } else {
@@ -5058,9 +3225,11 @@ void ion_gen_str(char const ((*str)), bool multiline) {
 }
 
 void ion_gen_sync_pos(ion_SrcPos pos) {
+    if (ion_flag_nosourcemap) {
+        return;
+    }
     if (((ion_gen_pos.line) != (pos.line)) || ((ion_gen_pos.name) != (pos.name))) {
         ion_genln();
-        #line 187
         ion_buf_printf(&(ion_gen_buf), "#line %d", pos.line);
         if ((ion_gen_pos.name) != (pos.name)) {
             ion_buf_printf(&(ion_gen_buf), " ");
@@ -5091,12 +3260,10 @@ char (*ion_type_to_cdecl(ion_Type (*type), char const ((*str)))) {
         break;
     }
     case ION_CMPL_TYPE_CONST: {
-        #line 215
         return ion_type_to_cdecl(type->base, ion_strf("const %s", ion_cdecl_paren(str, *(str))));
         break;
     }
     case ION_CMPL_TYPE_ARRAY: {
-        #line 217
         if ((type->num_elems) == (0)) {
             return ion_type_to_cdecl(type->base, ion_cdecl_paren(ion_strf("%s[]", str), *(str)));
         } else {
@@ -5105,7 +3272,6 @@ char (*ion_type_to_cdecl(ion_Type (*type), char const ((*str)))) {
         break;
     }
     case ION_CMPL_TYPE_FUNC: {
-        #line 222
         {
             char (*result) = NULL;
             ion_buf_printf(&(result), "(*%s)(", str);
@@ -5125,14 +3291,12 @@ char (*ion_type_to_cdecl(ion_Type (*type), char const ((*str)))) {
         break;
     }
     default: {
-        #line 239
         return ion_strf("%s%s%s", ion_cdecl_name(type), (*(str) ? " " : ""), str);
         break;
     }
     }
 }
 
-#line 243
 char const ((*ion_gen_expr_str(ion_Expr (*expr)))) {
     char (*temp) = ion_gen_buf;
     ion_gen_buf = NULL;
@@ -5143,7 +3307,6 @@ char const ((*ion_gen_expr_str(ion_Expr (*expr)))) {
 }
 
 ion_Map ion_gen_name_map;
-#line 254
 char const ((*ion_get_gen_name_or_default(void const ((*ptr)), char const ((*default_name))))) {
     char const ((*name)) = ion_map_get(&(ion_gen_name_map), ptr);
     if (!(name)) {
@@ -5192,17 +3355,14 @@ char (*ion_typespec_to_cdecl(ion_Typespec (*typespec), char const ((*str)))) {
         break;
     }
     case ION_TYPESPEC_PTR: {
-        #line 300
         return ion_typespec_to_cdecl(typespec->base, ion_cdecl_paren(ion_strf("*%s", str), *(str)));
         break;
     }
     case ION_TYPESPEC_CONST: {
-        #line 302
         return ion_typespec_to_cdecl(typespec->base, ion_strf("const %s", ion_cdecl_paren(str, *(str))));
         break;
     }
     case ION_TYPESPEC_ARRAY: {
-        #line 304
         if ((typespec->num_elems) == (0)) {
             return ion_typespec_to_cdecl(typespec->base, ion_cdecl_paren(ion_strf("%s[]", str), *(str)));
         } else {
@@ -5211,7 +3371,6 @@ char (*ion_typespec_to_cdecl(ion_Typespec (*typespec), char const ((*str)))) {
         break;
     }
     case ION_TYPESPEC_FUNC: {
-        #line 309
         {
             char (*result) = NULL;
             ion_buf_printf(&(result), "(*%s)(", str);
@@ -5231,7 +3390,6 @@ char (*ion_typespec_to_cdecl(ion_Typespec (*typespec), char const ((*str)))) {
         break;
     }
     default: {
-        #line 326
         assert(0);
         return NULL;
         break;
@@ -5239,7 +3397,6 @@ char (*ion_typespec_to_cdecl(ion_Typespec (*typespec), char const ((*str)))) {
     }
 }
 
-#line 331
 void ion_gen_func_decl(ion_Decl (*decl)) {
     assert((decl->kind) == (ION_DECL_FUNC));
     char (*result) = NULL;
@@ -5262,11 +3419,9 @@ void ion_gen_func_decl(ion_Decl (*decl)) {
     ion_gen_sync_pos(decl->pos);
     if (decl->function.ret_type) {
         ion_genln();
-        #line 352
         ion_buf_printf(&(ion_gen_buf), "%s", ion_typespec_to_cdecl(decl->function.ret_type, result));
     } else {
         ion_genln();
-        #line 354
         ion_buf_printf(&(ion_gen_buf), "void %s", result);
     }
 }
@@ -5288,18 +3443,15 @@ void ion_gen_forward_decls(void) {
         switch (decl->kind) {
         case ION_DECL_STRUCT:
         case ION_DECL_UNION: {
-            #line 374
             {
                 char const ((*name)) = ion_get_gen_name(sym);
                 ion_genln();
-                #line 376
                 ion_buf_printf(&(ion_gen_buf), "typedef %s %s %s;", ((decl->kind) == (ION_DECL_STRUCT) ? "struct" : "union"), name, name);
                 break;
             }
             break;
         }
         default: {
-            #line 381
             break;
             break;
         }
@@ -5307,7 +3459,6 @@ void ion_gen_forward_decls(void) {
     }
 }
 
-#line 386
 void ion_gen_aggregate_items(ion_Aggregate (*aggregate)) {
     (ion_gen_indent)++;
     for (size_t i = 0; (i) < (aggregate->num_items); (i)++) {
@@ -5316,16 +3467,13 @@ void ion_gen_aggregate_items(ion_Aggregate (*aggregate)) {
             for (size_t j = 0; (j) < (item.num_names); (j)++) {
                 ion_gen_sync_pos(item.pos);
                 ion_genln();
-                #line 393
                 ion_buf_printf(&(ion_gen_buf), "%s;", ion_typespec_to_cdecl(item.type, item.names[j]));
             }
         } else if ((item.kind) == (ION_AGGREGATE_ITEM_SUBAGGREGATE)) {
             ion_genln();
-            #line 396
             ion_buf_printf(&(ion_gen_buf), "%s {", ((item.subaggregate->kind) == (ION_AGGREGATE_STRUCT) ? "struct" : "union"));
             ion_gen_aggregate_items(item.subaggregate);
             ion_genln();
-            #line 398
             ion_buf_printf(&(ion_gen_buf), "};");
         } else {
             assert(0);
@@ -5340,11 +3488,9 @@ void ion_gen_aggregate(ion_Decl (*decl)) {
         return;
     }
     ion_genln();
-    #line 411
     ion_buf_printf(&(ion_gen_buf), "%s %s {", ((decl->kind) == (ION_DECL_STRUCT) ? "struct" : "union"), ion_get_gen_name(decl));
     ion_gen_aggregate_items(decl->aggregate);
     ion_genln();
-    #line 413
     ion_buf_printf(&(ion_gen_buf), "};");
 }
 
@@ -5384,7 +3530,6 @@ void ion_gen_expr_compound(ion_Expr (*expr)) {
 }
 
 char const ((*(ion_typeid_kind_names[ION_NUM_CMPL_TYPE_KINDS]))) = {[ION_CMPL_TYPE_NONE] = "TYPE_NONE", [ION_CMPL_TYPE_VOID] = "TYPE_VOID", [ION_CMPL_TYPE_BOOL] = "TYPE_BOOL", [ION_CMPL_TYPE_CHAR] = "TYPE_CHAR", [ION_CMPL_TYPE_UCHAR] = "TYPE_UCHAR", [ION_CMPL_TYPE_SCHAR] = "TYPE_SCHAR", [ION_CMPL_TYPE_SHORT] = "TYPE_SHORT", [ION_CMPL_TYPE_USHORT] = "TYPE_USHORT", [ION_CMPL_TYPE_INT] = "TYPE_INT", [ION_CMPL_TYPE_UINT] = "TYPE_UINT", [ION_CMPL_TYPE_LONG] = "TYPE_LONG", [ION_CMPL_TYPE_ULONG] = "TYPE_ULONG", [ION_CMPL_TYPE_LLONG] = "TYPE_LLONG", [ION_CMPL_TYPE_ULLONG] = "TYPE_ULLONG", [ION_CMPL_TYPE_FLOAT] = "TYPE_FLOAT", [ION_CMPL_TYPE_DOUBLE] = "TYPE_DOUBLE", [ION_CMPL_TYPE_CONST] = "TYPE_CONST", [ION_CMPL_TYPE_PTR] = "TYPE_PTR", [ION_CMPL_TYPE_ARRAY] = "TYPE_ARRAY", [ION_CMPL_TYPE_STRUCT] = "TYPE_STRUCT", [ION_CMPL_TYPE_UNION] = "TYPE_UNION", [ION_CMPL_TYPE_FUNC] = "TYPE_FUNC"};
-#line 476
 char const ((*ion_typeid_kind_name(ion_Type (*type)))) {
     if ((type->kind) < (ION_NUM_CMPL_TYPE_KINDS)) {
         char const ((*name)) = ion_typeid_kind_names[type->kind];
@@ -5423,7 +3568,6 @@ void ion_gen_expr(ion_Expr (*expr)) {
         break;
     }
     case ION_EXPR_INT: {
-        #line 511
         {
             char const ((*suffix_name)) = ion_token_suffix_names[expr->int_lit.suffix];
             switch (expr->int_lit.mod) {
@@ -5433,17 +3577,14 @@ void ion_gen_expr(ion_Expr (*expr)) {
                 break;
             }
             case ION_MOD_OCT: {
-                #line 518
                 ion_buf_printf(&(ion_gen_buf), "0%llo%s", expr->int_lit.val, suffix_name);
                 break;
             }
             case ION_MOD_CHAR: {
-                #line 520
                 ion_gen_char((char)(expr->int_lit.val));
                 break;
             }
             default: {
-                #line 522
                 ion_buf_printf(&(ion_gen_buf), "%llu%s", expr->int_lit.val, suffix_name);
                 break;
             }
@@ -5452,7 +3593,6 @@ void ion_gen_expr(ion_Expr (*expr)) {
         break;
     }
     case ION_EXPR_FLOAT: {
-        #line 525
         {
             int is_double = (expr->float_lit.suffix) == (ION_SUFFIX_D);
             size_t len = (expr->float_lit.end) - (expr->float_lit.start);
@@ -5461,24 +3601,20 @@ void ion_gen_expr(ion_Expr (*expr)) {
         break;
     }
     case ION_EXPR_STR: {
-        #line 531
         ion_gen_str(expr->str_lit.val, (expr->str_lit.mod) == (ION_MOD_MULTILINE));
         break;
     }
     case ION_EXPR_NAME: {
-        #line 533
         ion_buf_printf(&(ion_gen_buf), "%s", ion_get_gen_name_or_default(expr, expr->name));
         break;
     }
     case ION_EXPR_CAST: {
-        #line 535
         ion_buf_printf(&(ion_gen_buf), "(%s)(", ion_typespec_to_cdecl(expr->cast.type, ""));
         ion_gen_expr(expr->cast.expr);
         ion_buf_printf(&(ion_gen_buf), ")");
         break;
     }
     case ION_EXPR_CALL: {
-        #line 538
         {
             ion_Sym (*sym) = ion_get_resolved_sym(expr->call.expr);
             if ((sym) && ((sym->kind) == (ION_SYM_TYPE))) {
@@ -5498,7 +3634,6 @@ void ion_gen_expr(ion_Expr (*expr)) {
         break;
     }
     case ION_EXPR_INDEX: {
-        #line 555
         ion_gen_expr(expr->index.expr);
         ion_buf_printf(&(ion_gen_buf), "[");
         ion_gen_expr(expr->index.index);
@@ -5506,7 +3641,6 @@ void ion_gen_expr(ion_Expr (*expr)) {
         break;
     }
     case ION_EXPR_FIELD: {
-        #line 559
         {
             ion_Sym (*sym) = ion_get_resolved_sym(expr);
             if (sym) {
@@ -5520,19 +3654,16 @@ void ion_gen_expr(ion_Expr (*expr)) {
         break;
     }
     case ION_EXPR_COMPOUND: {
-        #line 570
         ion_gen_expr_compound(expr);
         break;
     }
     case ION_EXPR_UNARY: {
-        #line 572
         ion_buf_printf(&(ion_gen_buf), "%s(", ion_token_kind_name(expr->unary.op));
         ion_gen_expr(expr->unary.expr);
         ion_buf_printf(&(ion_gen_buf), ")");
         break;
     }
     case ION_EXPR_BINARY: {
-        #line 576
         ion_buf_printf(&(ion_gen_buf), "(");
         ion_gen_expr(expr->binary.left);
         ion_buf_printf(&(ion_gen_buf), ") %s (", ion_token_kind_name(expr->binary.op));
@@ -5541,7 +3672,6 @@ void ion_gen_expr(ion_Expr (*expr)) {
         break;
     }
     case ION_EXPR_TERNARY: {
-        #line 582
         ion_buf_printf(&(ion_gen_buf), "(");
         ion_gen_expr(expr->ternary.cond);
         ion_buf_printf(&(ion_gen_buf), " ? ");
@@ -5552,29 +3682,24 @@ void ion_gen_expr(ion_Expr (*expr)) {
         break;
     }
     case ION_EXPR_SIZEOF_EXPR: {
-        #line 590
         ion_buf_printf(&(ion_gen_buf), "sizeof(");
         ion_gen_expr(expr->sizeof_expr);
         ion_buf_printf(&(ion_gen_buf), ")");
         break;
     }
     case ION_EXPR_SIZEOF_TYPE: {
-        #line 594
         ion_buf_printf(&(ion_gen_buf), "sizeof(%s)", ion_typespec_to_cdecl(expr->sizeof_type, ""));
         break;
     }
     case ION_EXPR_ALIGNOF_EXPR: {
-        #line 596
         ion_buf_printf(&(ion_gen_buf), "alignof(%s)", ion_type_to_cdecl(ion_get_resolved_type(expr->alignof_expr), ""));
         break;
     }
     case ION_EXPR_ALIGNOF_TYPE: {
-        #line 598
         ion_buf_printf(&(ion_gen_buf), "alignof(%s)", ion_typespec_to_cdecl(expr->alignof_type, ""));
         break;
     }
     case ION_EXPR_TYPEOF_EXPR: {
-        #line 599
         {
             ion_Type (*type) = ion_get_resolved_type(expr->typeof_expr);
             assert(type->typeid);
@@ -5583,7 +3708,6 @@ void ion_gen_expr(ion_Expr (*expr)) {
         break;
     }
     case ION_EXPR_TYPEOF_TYPE: {
-        #line 604
         {
             ion_Type (*type) = ion_get_resolved_type(expr->typeof_type);
             assert(type->typeid);
@@ -5592,12 +3716,10 @@ void ion_gen_expr(ion_Expr (*expr)) {
         break;
     }
     case ION_EXPR_OFFSETOF: {
-        #line 610
         ion_buf_printf(&(ion_gen_buf), "offsetof(%s, %s)", ion_typespec_to_cdecl(expr->offsetof_field.type, ""), expr->offsetof_field.name);
         break;
     }
     case ION_EXPR_MODIFY: {
-        #line 612
         if (!(expr->modify.post)) {
             ion_buf_printf(&(ion_gen_buf), "%s", ion_token_kind_name(expr->modify.op));
         }
@@ -5608,14 +3730,12 @@ void ion_gen_expr(ion_Expr (*expr)) {
         break;
     }
     default: {
-        #line 620
         assert(0);
         break;
     }
     }
 }
 
-#line 624
 void ion_gen_stmt_block(ion_StmtList block) {
     ion_buf_printf(&(ion_gen_buf), "{");
     (ion_gen_indent)++;
@@ -5624,7 +3744,6 @@ void ion_gen_stmt_block(ion_StmtList block) {
     }
     (ion_gen_indent)--;
     ion_genln();
-    #line 631
     ion_buf_printf(&(ion_gen_buf), "}");
 }
 
@@ -5635,7 +3754,6 @@ void ion_gen_simple_stmt(ion_Stmt (*stmt)) {
         break;
     }
     case ION_STMT_INIT: {
-        #line 639
         if (stmt->init.type) {
             ion_Typespec (*init_typespec) = stmt->init.type;
             if (ion_is_incomplete_array_typespec(stmt->init.type)) {
@@ -5655,21 +3773,18 @@ void ion_gen_simple_stmt(ion_Stmt (*stmt)) {
         break;
     }
     case ION_STMT_ASSIGN: {
-        #line 656
         ion_gen_expr(stmt->assign.left);
         ion_buf_printf(&(ion_gen_buf), " %s ", ion_token_kind_name(stmt->assign.op));
         ion_gen_expr(stmt->assign.right);
         break;
     }
     default: {
-        #line 660
         assert(0);
         break;
     }
     }
 }
 
-#line 664
 bool ion_is_char_lit(ion_Expr (*expr)) {
     return ((expr->kind) == (ION_EXPR_INT)) && ((expr->int_lit.mod) == (ION_MOD_CHAR));
 }
@@ -5679,7 +3794,6 @@ void ion_gen_stmt(ion_Stmt (*stmt)) {
     switch (stmt->kind) {
     case ION_STMT_RETURN: {
         ion_genln();
-        #line 672
         ion_buf_printf(&(ion_gen_buf), "return");
         if (stmt->expr) {
             ion_buf_printf(&(ion_gen_buf), " ");
@@ -5689,30 +3803,23 @@ void ion_gen_stmt(ion_Stmt (*stmt)) {
         break;
     }
     case ION_STMT_BREAK: {
-        #line 679
         ion_genln();
-        #line 679
         ion_buf_printf(&(ion_gen_buf), "break;");
         break;
     }
     case ION_STMT_CONTINUE: {
-        #line 681
         ion_genln();
-        #line 681
         ion_buf_printf(&(ion_gen_buf), "continue;");
         break;
     }
     case ION_STMT_BLOCK: {
-        #line 683
         ion_genln();
         ion_gen_stmt_block(stmt->block);
         break;
     }
     case ION_STMT_NOTE: {
-        #line 686
         if ((stmt->note.name) == (ion_assert_name)) {
             ion_genln();
-            #line 687
             ion_buf_printf(&(ion_gen_buf), "assert(");
             assert((stmt->note.num_args) == (1));
             ion_gen_expr(stmt->note.args[0].expr);
@@ -5721,17 +3828,14 @@ void ion_gen_stmt(ion_Stmt (*stmt)) {
         break;
     }
     case ION_STMT_IF: {
-        #line 693
         if (stmt->if_stmt.init) {
             ion_genln();
-            #line 694
             ion_buf_printf(&(ion_gen_buf), "{");
             (ion_gen_indent)++;
             ion_gen_stmt(stmt->if_stmt.init);
         }
         ion_gen_sync_pos(stmt->pos);
         ion_genln();
-        #line 699
         ion_buf_printf(&(ion_gen_buf), "if (");
         if (stmt->if_stmt.cond) {
             ion_gen_expr(stmt->if_stmt.cond);
@@ -5757,26 +3861,21 @@ void ion_gen_stmt(ion_Stmt (*stmt)) {
                 (ion_gen_indent)++;
                 ion_gen_sync_pos(complete_note->pos);
                 ion_genln();
-                #line 723
                 ion_buf_printf(&(ion_gen_buf), "assert(\"@complete if/elseif chain failed to handle case\" && 0);");
                 (ion_gen_indent)--;
                 ion_genln();
-                #line 725
                 ion_buf_printf(&(ion_gen_buf), "}");
             }
         }
         if (stmt->if_stmt.init) {
             (ion_gen_indent)--;
             ion_genln();
-            #line 730
             ion_buf_printf(&(ion_gen_buf), "}");
         }
         break;
     }
     case ION_STMT_WHILE: {
-        #line 733
         ion_genln();
-        #line 733
         ion_buf_printf(&(ion_gen_buf), "while (");
         ion_gen_expr(stmt->while_stmt.cond);
         ion_buf_printf(&(ion_gen_buf), ") ");
@@ -5784,9 +3883,7 @@ void ion_gen_stmt(ion_Stmt (*stmt)) {
         break;
     }
     case ION_STMT_DO_WHILE: {
-        #line 738
         ion_genln();
-        #line 738
         ion_buf_printf(&(ion_gen_buf), "do ");
         ion_gen_stmt_block(stmt->while_stmt.block);
         ion_buf_printf(&(ion_gen_buf), " while (");
@@ -5795,9 +3892,7 @@ void ion_gen_stmt(ion_Stmt (*stmt)) {
         break;
     }
     case ION_STMT_FOR: {
-        #line 744
         ion_genln();
-        #line 744
         ion_buf_printf(&(ion_gen_buf), "for (");
         if (stmt->for_stmt.init) {
             ion_gen_simple_stmt(stmt->for_stmt.init);
@@ -5817,10 +3912,8 @@ void ion_gen_stmt(ion_Stmt (*stmt)) {
         break;
     }
     case ION_STMT_SWITCH: {
-        #line 760
         {
             ion_genln();
-            #line 761
             ion_buf_printf(&(ion_gen_buf), "switch (");
             ion_gen_expr(stmt->switch_stmt.expr);
             ion_buf_printf(&(ion_gen_buf), ") {");
@@ -5841,7 +3934,6 @@ void ion_gen_stmt(ion_Stmt (*stmt)) {
                             }
                         } else {
                             ion_genln();
-                            #line 780
                             ion_buf_printf(&(ion_gen_buf), "// ");
                             ion_gen_expr(pattern.start);
                             ion_buf_printf(&(ion_gen_buf), "...");
@@ -5853,7 +3945,6 @@ void ion_gen_stmt(ion_Stmt (*stmt)) {
                         }
                     } else {
                         ion_genln();
-                        #line 790
                         ion_buf_printf(&(ion_gen_buf), "case ");
                         ion_gen_expr(pattern.start);
                         ion_buf_printf(&(ion_gen_buf), ":");
@@ -5862,7 +3953,6 @@ void ion_gen_stmt(ion_Stmt (*stmt)) {
                 if (switch_case.is_default) {
                     has_default = true;
                     ion_genln();
-                    #line 797
                     ion_buf_printf(&(ion_gen_buf), "default:");
                 }
                 ion_buf_printf(&(ion_gen_buf), " ");
@@ -5873,51 +3963,40 @@ void ion_gen_stmt(ion_Stmt (*stmt)) {
                     ion_gen_stmt(block.stmts[j]);
                 }
                 ion_genln();
-                #line 806
                 ion_buf_printf(&(ion_gen_buf), "break;");
                 (ion_gen_indent)--;
                 ion_genln();
-                #line 808
                 ion_buf_printf(&(ion_gen_buf), "}");
             }
             if (!(has_default)) {
                 ion_Note (*note) = ion_get_stmt_note(stmt, ion_complete_name);
                 if (note) {
                     ion_genln();
-                    #line 813
                     ion_buf_printf(&(ion_gen_buf), "default:");
                     (ion_gen_indent)++;
                     ion_genln();
-                    #line 815
                     ion_buf_printf(&(ion_gen_buf), "assert(\"@complete switch failed to handle case\" && 0);");
                     ion_genln();
-                    #line 816
                     ion_buf_printf(&(ion_gen_buf), "break;");
                     (ion_gen_indent)--;
                 }
             }
             ion_genln();
-            #line 820
             ion_buf_printf(&(ion_gen_buf), "}");
         }
         break;
     }
     case ION_STMT_LABEL: {
-        #line 823
         ion_genln();
-        #line 823
         ion_buf_printf(&(ion_gen_buf), "%s: ;", stmt->label);
         break;
     }
     case ION_STMT_GOTO: {
-        #line 825
         ion_genln();
-        #line 825
         ion_buf_printf(&(ion_gen_buf), "goto %s;", stmt->label);
         break;
     }
     default: {
-        #line 827
         ion_genln();
         ion_gen_simple_stmt(stmt);
         ion_buf_printf(&(ion_gen_buf), ";");
@@ -5926,7 +4005,6 @@ void ion_gen_stmt(ion_Stmt (*stmt)) {
     }
 }
 
-#line 833
 void ion_gen_decl(ion_Sym (*sym)) {
     ion_Decl (*decl) = sym->decl;
     if ((!(decl)) || (ion_is_decl_foreign(decl))) {
@@ -5936,7 +4014,6 @@ void ion_gen_decl(ion_Sym (*sym)) {
     switch (decl->kind) {
     case ION_DECL_CONST: {
         ion_genln();
-        #line 841
         ion_buf_printf(&(ion_gen_buf), "#define %s (", ion_get_gen_name(sym));
         if (decl->const_decl.type) {
             ion_buf_printf(&(ion_gen_buf), "(%s)(", ion_typespec_to_cdecl(decl->const_decl.type, ""));
@@ -5949,9 +4026,7 @@ void ion_gen_decl(ion_Sym (*sym)) {
         break;
     }
     case ION_DECL_VAR: {
-        #line 851
         ion_genln();
-        #line 851
         ion_buf_printf(&(ion_gen_buf), "extern ");
         if ((decl->var_decl.type) && (!(ion_is_incomplete_array_typespec(decl->var_decl.type)))) {
             ion_buf_printf(&(ion_gen_buf), "%s", ion_typespec_to_cdecl(decl->var_decl.type, ion_get_gen_name(sym)));
@@ -5962,49 +4037,39 @@ void ion_gen_decl(ion_Sym (*sym)) {
         break;
     }
     case ION_DECL_FUNC: {
-        #line 859
         ion_gen_func_decl(decl);
         ion_buf_printf(&(ion_gen_buf), ";");
         break;
     }
     case ION_DECL_STRUCT:
     case ION_DECL_UNION: {
-        #line 863
         ion_gen_aggregate(decl);
         break;
     }
     case ION_DECL_TYPEDEF: {
-        #line 865
         ion_genln();
-        #line 865
         ion_buf_printf(&(ion_gen_buf), "typedef %s;", ion_typespec_to_cdecl(decl->typedef_decl.type, ion_get_gen_name(sym)));
         break;
     }
     case ION_DECL_ENUM: {
-        #line 867
         if (decl->enum_decl.type) {
             ion_genln();
-            #line 868
             ion_buf_printf(&(ion_gen_buf), "typedef %s;", ion_typespec_to_cdecl(decl->enum_decl.type, ion_get_gen_name(decl)));
         } else {
             ion_genln();
-            #line 870
             ion_buf_printf(&(ion_gen_buf), "typedef int %s;", ion_get_gen_name(decl));
         }
         break;
     }
     case ION_DECL_IMPORT: {
-        #line 874
         break;
         break;
     }
     default: {
-        #line 876
         assert(0);
         break;
     }
     }
-    #line 878
     ion_genln();
 }
 
@@ -6031,11 +4096,9 @@ void ion_gen_defs(void) {
         } else if ((decl->kind) == (ION_DECL_VAR)) {
             if ((decl->var_decl.type) && (!(ion_is_incomplete_array_typespec(decl->var_decl.type)))) {
                 ion_genln();
-                #line 903
                 ion_buf_printf(&(ion_gen_buf), "%s", ion_typespec_to_cdecl(decl->var_decl.type, ion_get_gen_name(sym)));
             } else {
                 ion_genln();
-                #line 905
                 ion_buf_printf(&(ion_gen_buf), "%s", ion_type_to_cdecl(sym->type, ion_get_gen_name(sym)));
             }
             if (decl->var_decl.expr) {
@@ -6049,7 +4112,6 @@ void ion_gen_defs(void) {
 
 ion_Map ion_gen_foreign_headers_map;
 char const ((*(*ion_gen_foreign_headers_buf)));
-#line 919
 void ion_add_foreign_header(char const ((*name))) {
     name = ion_str_intern(name);
     if (!(ion_map_get(&(ion_gen_foreign_headers_map), name))) {
@@ -6059,7 +4121,6 @@ void ion_add_foreign_header(char const ((*name))) {
 }
 
 char const ((*(*ion_gen_foreign_sources_buf)));
-#line 929
 void ion_add_foreign_source(char const ((*name))) {
     char const ((*interned)) = ion_str_intern(name);
     ion_buf_push((void (**))(&(ion_gen_foreign_sources_buf)), &(interned), sizeof(interned));
@@ -6067,7 +4128,6 @@ void ion_add_foreign_source(char const ((*name))) {
 
 void ion_gen_include(char const ((*path))) {
     ion_genln();
-    #line 935
     ion_buf_printf(&(ion_gen_buf), "#include ");
     if ((*(path)) == ('<')) {
         ion_buf_printf(&(ion_gen_buf), "%s", path);
@@ -6079,7 +4139,6 @@ void ion_gen_include(char const ((*path))) {
 void ion_gen_foreign_headers(void) {
     if (ion_gen_foreign_headers_buf) {
         ion_genln();
-        #line 945
         ion_buf_printf(&(ion_gen_buf), "// Foreign header files");
         for (size_t i = 0; (i) < (ion_buf_len(ion_gen_foreign_headers_buf)); (i)++) {
             ion_gen_include(ion_gen_foreign_headers_buf[i]);
@@ -6094,7 +4153,6 @@ void ion_gen_foreign_sources(void) {
 }
 
 char const ((*(*ion_gen_sources_buf)));
-#line 960
 void ion_put_include_path(char (path[MAX_PATH]), ion_Package (*package), char const ((*filename))) {
     if ((*(filename)) == ('<')) {
         ion_path_copy(path, filename);
@@ -6107,7 +4165,6 @@ void ion_put_include_path(char (path[MAX_PATH]), ion_Package (*package), char co
 
 char (*ion_gen_preamble_buf);
 char (*ion_gen_postamble_buf);
-#line 973
 void ion_preprocess_package(ion_Package (*package)) {
     if (!(package->external_name)) {
         char (*external_name) = NULL;
@@ -6175,7 +4232,6 @@ void ion_gen_typeinfo_fields(ion_Type (*type)) {
     for (size_t i = 0; (i) < (type->aggregate.num_fields); (i)++) {
         ion_TypeField field = type->aggregate.fields[i];
         ion_genln();
-        #line 1039
         ion_buf_printf(&(ion_gen_buf), "{");
         ion_gen_str(field.name, false);
         ion_buf_printf(&(ion_gen_buf), ", .type = ");
@@ -6185,7 +4241,6 @@ void ion_gen_typeinfo_fields(ion_Type (*type)) {
     (ion_gen_indent)--;
 }
 
-#line 1054
 void ion_gen_typeinfo(ion_Type (*type)) {
     switch (type->kind) {
     case ION_CMPL_TYPE_BOOL: {
@@ -6195,110 +4250,94 @@ void ion_gen_typeinfo(ion_Type (*type)) {
         break;
     }
     case ION_CMPL_TYPE_CHAR: {
-        #line 1061
         ion_buf_printf(&(ion_gen_buf), "&(TypeInfo){TYPE_CHAR, .size = sizeof(char), .align = sizeof(char), .name = ");
         ion_gen_str("char", false);
         ion_buf_printf(&(ion_gen_buf), "},");
         break;
     }
     case ION_CMPL_TYPE_UCHAR: {
-        #line 1065
         ion_buf_printf(&(ion_gen_buf), "&(TypeInfo){TYPE_UCHAR, .size = sizeof(uchar), .align = sizeof(uchar), .name = ");
         ion_gen_str("uchar", false);
         ion_buf_printf(&(ion_gen_buf), "},");
         break;
     }
     case ION_CMPL_TYPE_SCHAR: {
-        #line 1069
         ion_buf_printf(&(ion_gen_buf), "&(TypeInfo){TYPE_SCHAR, .size = sizeof(schar), .align = sizeof(schar), .name = ");
         ion_gen_str("schar", false);
         ion_buf_printf(&(ion_gen_buf), "},");
         break;
     }
     case ION_CMPL_TYPE_SHORT: {
-        #line 1073
         ion_buf_printf(&(ion_gen_buf), "&(TypeInfo){TYPE_SHORT, .size = sizeof(short), .align = sizeof(short), .name = ");
         ion_gen_str("short", false);
         ion_buf_printf(&(ion_gen_buf), "},");
         break;
     }
     case ION_CMPL_TYPE_USHORT: {
-        #line 1077
         ion_buf_printf(&(ion_gen_buf), "&(TypeInfo){TYPE_USHORT, .size = sizeof(ushort), .align = sizeof(ushort), .name = ");
         ion_gen_str("ushort", false);
         ion_buf_printf(&(ion_gen_buf), "},");
         break;
     }
     case ION_CMPL_TYPE_INT: {
-        #line 1081
         ion_buf_printf(&(ion_gen_buf), "&(TypeInfo){TYPE_INT, .size = sizeof(int), .align = sizeof(int), .name = ");
         ion_gen_str("int", false);
         ion_buf_printf(&(ion_gen_buf), "},");
         break;
     }
     case ION_CMPL_TYPE_UINT: {
-        #line 1085
         ion_buf_printf(&(ion_gen_buf), "&(TypeInfo){TYPE_UINT, .size = sizeof(uint), .align = sizeof(uint), .name = ");
         ion_gen_str("uint", false);
         ion_buf_printf(&(ion_gen_buf), "},");
         break;
     }
     case ION_CMPL_TYPE_LONG: {
-        #line 1089
         ion_buf_printf(&(ion_gen_buf), "&(TypeInfo){TYPE_LONG, .size = sizeof(long), .align = sizeof(long), .name = ");
         ion_gen_str("long", false);
         ion_buf_printf(&(ion_gen_buf), "},");
         break;
     }
     case ION_CMPL_TYPE_ULONG: {
-        #line 1093
         ion_buf_printf(&(ion_gen_buf), "&(TypeInfo){TYPE_ULONG, .size = sizeof(ulong), .align = sizeof(ulong), .name = ");
         ion_gen_str("ulong", false);
         ion_buf_printf(&(ion_gen_buf), "},");
         break;
     }
     case ION_CMPL_TYPE_LLONG: {
-        #line 1097
         ion_buf_printf(&(ion_gen_buf), "&(TypeInfo){TYPE_LLONG, .size = sizeof(llong), .align = sizeof(llong), .name = ");
         ion_gen_str("llong", false);
         ion_buf_printf(&(ion_gen_buf), "},");
         break;
     }
     case ION_CMPL_TYPE_ULLONG: {
-        #line 1101
         ion_buf_printf(&(ion_gen_buf), "&(TypeInfo){TYPE_ULLONG, .size = sizeof(ullong), .align = sizeof(ullong), .name = ");
         ion_gen_str("ullong", false);
         ion_buf_printf(&(ion_gen_buf), "},");
         break;
     }
     case ION_CMPL_TYPE_FLOAT: {
-        #line 1105
         ion_buf_printf(&(ion_gen_buf), "&(TypeInfo){TYPE_FLOAT, .size = sizeof(float), .align = sizeof(float), .name = ");
         ion_gen_str("float", false);
         ion_buf_printf(&(ion_gen_buf), "},");
         break;
     }
     case ION_CMPL_TYPE_DOUBLE: {
-        #line 1109
         ion_buf_printf(&(ion_gen_buf), "&(TypeInfo){TYPE_DOUBLE, .size = sizeof(double), .align = sizeof(double), .name = ");
         ion_gen_str("double", false);
         ion_buf_printf(&(ion_gen_buf), "},");
         break;
     }
     case ION_CMPL_TYPE_VOID: {
-        #line 1113
         ion_buf_printf(&(ion_gen_buf), "&(TypeInfo){TYPE_VOID, .name = \"void\", .size = 0, .align = 0},");
         break;
     }
     case ION_CMPL_TYPE_PTR: {
-        #line 1115
         ion_buf_printf(&(ion_gen_buf), "&(TypeInfo){TYPE_PTR, .size = sizeof(void *), .align = alignof(void *), .base = ");
         ion_gen_typeid(type->base);
         ion_buf_printf(&(ion_gen_buf), "},");
         break;
     }
     case ION_CMPL_TYPE_CONST: {
-        #line 1119
         ion_gen_typeinfo_header("TYPE_CONST", type);
         ion_buf_printf(&(ion_gen_buf), ", .base = ");
         ion_gen_typeid(type->base);
@@ -6306,7 +4345,6 @@ void ion_gen_typeinfo(ion_Type (*type)) {
         break;
     }
     case ION_CMPL_TYPE_ARRAY: {
-        #line 1124
         if (ion_is_incomplete_array_type(type)) {
             ion_buf_printf(&(ion_gen_buf), "NULL, // Incomplete array type");
         } else {
@@ -6319,34 +4357,28 @@ void ion_gen_typeinfo(ion_Type (*type)) {
     }
     case ION_CMPL_TYPE_STRUCT:
     case ION_CMPL_TYPE_UNION: {
-        #line 1134
         ion_gen_typeinfo_header(((type->kind) == (ION_CMPL_TYPE_STRUCT) ? "TYPE_STRUCT" : "TYPE_UNION"), type);
         ion_buf_printf(&(ion_gen_buf), ", .name = ");
         ion_gen_str(ion_get_gen_name(type->sym), false);
         ion_buf_printf(&(ion_gen_buf), ", .num_fields = %d, .fields = (TypeFieldInfo[]) {", type->aggregate.num_fields);
         ion_gen_typeinfo_fields(type);
         ion_genln();
-        #line 1139
         ion_buf_printf(&(ion_gen_buf), "}},");
         break;
     }
     case ION_CMPL_TYPE_FUNC: {
-        #line 1141
         ion_buf_printf(&(ion_gen_buf), "NULL, // Func");
         break;
     }
     case ION_CMPL_TYPE_ENUM: {
-        #line 1143
         ion_buf_printf(&(ion_gen_buf), "NULL, // Enum");
         break;
     }
     case ION_CMPL_TYPE_INCOMPLETE: {
-        #line 1145
         ion_buf_printf(&(ion_gen_buf), "NULL, // Incomplete: %s", ion_get_gen_name(type->sym));
         break;
     }
     default: {
-        #line 1147
         ion_buf_printf(&(ion_gen_buf), "NULL, // Unhandled");
         break;
     }
@@ -6355,28 +4387,22 @@ void ion_gen_typeinfo(ion_Type (*type)) {
 
 void ion_gen_typeinfos(void) {
     ion_genln();
-    #line 1154
     ion_buf_printf(&(ion_gen_buf), "#define TYPEID0(index, kind) ((ullong)(index) | ((ullong)(kind) << 24))");
     ion_genln();
-    #line 1155
     ion_buf_printf(&(ion_gen_buf), "#define TYPEID(index, kind, ...) ((ullong)(index) | ((ullong)sizeof(__VA_ARGS__) << 32) | ((ullong)(kind) << 24))");
     ion_genln();
     if (ion_flag_notypeinfo) {
         ion_genln();
-        #line 1158
         ion_buf_printf(&(ion_gen_buf), "int num_typeinfos;");
         ion_genln();
-        #line 1159
         ion_buf_printf(&(ion_gen_buf), "const TypeInfo **typeinfos;");
     } else {
         int num_typeinfos = ion_next_typeid;
         ion_genln();
-        #line 1162
         ion_buf_printf(&(ion_gen_buf), "const TypeInfo *typeinfo_table[%d] = {", num_typeinfos);
         (ion_gen_indent)++;
         for (int typeid = 0; (typeid) < (num_typeinfos); (typeid)++) {
             ion_genln();
-            #line 1165
             ion_buf_printf(&(ion_gen_buf), "[%d] = ", typeid);
             ion_Type (*type) = ion_get_type_from_typeid(typeid);
             if ((type) && (!(ion_is_excluded_typeinfo(type)))) {
@@ -6387,14 +4413,11 @@ void ion_gen_typeinfos(void) {
         }
         (ion_gen_indent)--;
         ion_genln();
-        #line 1174
         ion_buf_printf(&(ion_gen_buf), "};");
         ion_genln();
         ion_genln();
-        #line 1176
         ion_buf_printf(&(ion_gen_buf), "int num_typeinfos = %d;", num_typeinfos);
         ion_genln();
-        #line 1177
         ion_buf_printf(&(ion_gen_buf), "const TypeInfo **typeinfos = (const TypeInfo **)typeinfo_table;");
     }
 }
@@ -6409,10 +4432,8 @@ void ion_gen_preamble(void) {
     if (ion_gen_preamble_buf) {
         ion_genln();
         ion_genln();
-        #line 1190
         ion_buf_printf(&(ion_gen_buf), "// Foreign preamble");
         ion_genln();
-        #line 1191
         ion_buf_printf(&(ion_gen_buf), "%s", ion_gen_preamble_buf);
     }
 }
@@ -6422,10 +4443,8 @@ void ion_gen_postamble(void) {
     if (ion_gen_postamble_buf) {
         ion_genln();
         ion_genln();
-        #line 1199
         ion_buf_printf(&(ion_gen_buf), "// Foreign postamble");
         ion_genln();
-        #line 1200
         ion_buf_printf(&(ion_gen_buf), "%s", ion_gen_postamble_buf);
     }
 }
@@ -6437,25 +4456,20 @@ void ion_gen_all(void) {
     ion_gen_foreign_headers();
     ion_genln();
     ion_genln();
-    #line 1210
     ion_buf_printf(&(ion_gen_buf), "// Forward declarations");
     ion_gen_forward_decls();
     ion_genln();
     ion_genln();
-    #line 1213
     ion_buf_printf(&(ion_gen_buf), "// Sorted declarations");
     ion_gen_sorted_decls();
     ion_genln();
-    #line 1215
     ion_buf_printf(&(ion_gen_buf), "// Typeinfo");
     ion_gen_typeinfos();
     ion_genln();
     ion_genln();
-    #line 1218
     ion_buf_printf(&(ion_gen_buf), "// Definitions");
     ion_gen_defs();
     ion_genln();
-    #line 1220
     ion_buf_printf(&(ion_gen_buf), "// Foreign source files");
     ion_gen_foreign_sources();
     ion_genln();
@@ -6465,7 +4479,6 @@ void ion_gen_all(void) {
 char const ((*(ion_static_package_search_paths[ION_MAX_SEARCH_PATHS])));
 char const ((*(*ion_package_search_paths))) = ion_static_package_search_paths;
 int ion_num_package_search_paths;
-#line 6 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\ion.ion"
 void ion_add_package_search_path(char const ((*path))) {
     if (ion_flag_verbose) {
         printf("Adding package search path %s\n", path);
@@ -6545,6 +4558,7 @@ int ion_ion_main(int argc, char const ((*(*argv))), void (*gen_all)(void), char 
     ion_add_flag_enum("arch", &(ion_target_arch), "Target machine architecture", ion_arch_names, ION_NUM_ARCHES);
     ion_add_flag_bool("check", &(flag_check), "Semantic checking with no code generation");
     ion_add_flag_bool("lazy", &(ion_flag_lazy), "Only compile what\'s reachable from the main package");
+    ion_add_flag_bool("nosourcemap", &(ion_flag_nosourcemap), "Don\'t generate any source map information");
     ion_add_flag_bool("notypeinfo", &(ion_flag_notypeinfo), "Don\'t generate any typeinfo tables");
     ion_add_flag_bool("fullgen", &(ion_flag_fullgen), "Force full code generation even for non-reachable symbols");
     ion_add_flag_bool("verbose", &(ion_flag_verbose), "Extra diagnostic information");
@@ -6649,16 +4663,13 @@ char const ((*ion_complete_name));
 char const ((*ion_assert_name));
 char const ((*ion_declare_note_name));
 char const ((*ion_static_assert_name));
-#line 38 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\lex.ion"
 char const ((*ion_init_keyword(char const ((*keyword))))) {
     keyword = ion_str_intern(keyword);
-    #line 41
     ion_buf_push((void (**))(&(ion_keywords)), (void *)(&(keyword)), sizeof(keyword));
     return keyword;
 }
 
 bool ion_keywords_inited = false;
-#line 47
 void ion_init_keywords(void) {
     if (ion_keywords_inited) {
         return;
@@ -6691,25 +4702,21 @@ void ion_init_keywords(void) {
     assert((ion_intern_arena.end) == (arena_end));
     ion_first_keyword = ion_typedef_keyword;
     ion_last_keyword = ion_default_keyword;
-    #line 80
     ion_always_name = ion_str_intern("always");
     ion_foreign_name = ion_str_intern("foreign");
     ion_complete_name = ion_str_intern("complete");
     ion_assert_name = ion_str_intern("assert");
     ion_declare_note_name = ion_str_intern("declare_note");
     ion_static_assert_name = ion_str_intern("static_assert");
-    #line 87
     ion_keywords_inited = true;
 }
 
-#line 92
 bool ion_is_keyword_name(char const ((*name))) {
     return ((ion_first_keyword) <= (name)) && ((name) <= (ion_last_keyword));
 }
 
 char const ((*(ion_token_suffix_names[7]))) = {[ION_SUFFIX_NONE] = "", [ION_SUFFIX_D] = "d", [ION_SUFFIX_U] = "u", [ION_SUFFIX_L] = "l", [ION_SUFFIX_UL] = "ul", [ION_SUFFIX_LL] = "ll", [ION_SUFFIX_ULL] = "ull"};
 char const ((*(ion_token_kind_names[54]))) = {[ION_TOKEN_EOF] = "EOF", [ION_TOKEN_COLON] = ":", [ION_TOKEN_LPAREN] = "(", [ION_TOKEN_RPAREN] = ")", [ION_TOKEN_LBRACE] = "{", [ION_TOKEN_RBRACE] = "}", [ION_TOKEN_LBRACKET] = "[", [ION_TOKEN_RBRACKET] = "]", [ION_TOKEN_COMMA] = ",", [ION_TOKEN_DOT] = ".", [ION_TOKEN_AT] = "@", [ION_TOKEN_POUND] = "#", [ION_TOKEN_ELLIPSIS] = "...", [ION_TOKEN_QUESTION] = "?", [ION_TOKEN_SEMICOLON] = ";", [ION_TOKEN_KEYWORD] = "keyword", [ION_TOKEN_INT] = "int", [ION_TOKEN_FLOAT] = "float", [ION_TOKEN_STR] = "string", [ION_TOKEN_NAME] = "name", [ION_TOKEN_NEG] = "~", [ION_TOKEN_NOT] = "!", [ION_TOKEN_MUL] = "*", [ION_TOKEN_DIV] = "/", [ION_TOKEN_MOD] = "%", [ION_TOKEN_AND] = "&", [ION_TOKEN_LSHIFT] = "<<", [ION_TOKEN_RSHIFT] = ">>", [ION_TOKEN_ADD] = "+", [ION_TOKEN_SUB] = "-", [ION_TOKEN_OR] = "|", [ION_TOKEN_XOR] = "^", [ION_TOKEN_EQ] = "==", [ION_TOKEN_NOTEQ] = "!=", [ION_TOKEN_LT] = "<", [ION_TOKEN_GT] = ">", [ION_TOKEN_LTEQ] = "<=", [ION_TOKEN_GTEQ] = ">=", [ION_TOKEN_AND_AND] = "&&", [ION_TOKEN_OR_OR] = "||", [ION_TOKEN_ASSIGN] = "=", [ION_TOKEN_ADD_ASSIGN] = "+=", [ION_TOKEN_SUB_ASSIGN] = "-=", [ION_TOKEN_OR_ASSIGN] = "|=", [ION_TOKEN_AND_ASSIGN] = "&=", [ION_TOKEN_XOR_ASSIGN] = "^=", [ION_TOKEN_MUL_ASSIGN] = "*=", [ION_TOKEN_DIV_ASSIGN] = "/=", [ION_TOKEN_MOD_ASSIGN] = "%=", [ION_TOKEN_LSHIFT_ASSIGN] = "<<=", [ION_TOKEN_RSHIFT_ASSIGN] = ">>=", [ION_TOKEN_INC] = "++", [ION_TOKEN_DEC] = "--", [ION_TOKEN_COLON_ASSIGN] = ":="};
-#line 252
 char const ((*ion_token_kind_name(ion_TokenKind kind))) {
     if ((kind) < ((sizeof(ion_token_kind_names)) / (sizeof(*(ion_token_kind_names))))) {
         return ion_token_kind_names[kind];
@@ -6723,7 +4730,6 @@ ion_SrcPos ion_pos_builtin = {.name = "<builtin>"};
 ion_Token ion_token;
 char const ((*ion_stream));
 char const ((*ion_line_start));
-#line 299
 void ion_vnotice(char const ((*level)), ion_SrcPos pos, char const ((*fmt)), va_list args) {
     if ((pos.name) == (NULL)) {
         pos = ion_pos_builtin;
@@ -6759,7 +4765,6 @@ void ion_fatal_error(ion_SrcPos pos, char const ((*fmt)), ...) {
     exit(1);
 }
 
-#line 339
 char const ((*ion_token_info(void))) {
     if (((ion_token.kind) == (ION_TOKEN_NAME)) || ((ion_token.kind) == (ION_TOKEN_KEYWORD))) {
         return ion_token.name;
@@ -6769,7 +4774,6 @@ char const ((*ion_token_info(void))) {
 }
 
 uint8_t (ion_char_to_digit[256]) = {['0'] = 0, ['1'] = 1, ['2'] = 2, ['3'] = 3, ['4'] = 4, ['5'] = 5, ['6'] = 6, ['7'] = 7, ['8'] = 8, ['9'] = 9, ['a'] = 10, ['A'] = 10, ['b'] = 11, ['B'] = 11, ['c'] = 12, ['C'] = 12, ['d'] = 13, ['D'] = 13, ['e'] = 14, ['E'] = 14, ['f'] = 15, ['F'] = 15};
-#line 366
 void ion_scan_int(void) {
     int base = 10;
     char const ((*start_digits)) = ion_stream;
@@ -6842,7 +4846,6 @@ void ion_scan_int(void) {
     }
 }
 
-#line 441
 void ion_scan_float(void) {
     char const ((*start)) = ion_stream;
     while (isdigit(*(ion_stream))) {
@@ -6879,7 +4882,6 @@ void ion_scan_float(void) {
 }
 
 char (ion_escape_to_char[256]) = {['0'] = '\0', ['\''] = '\'', ['\"'] = '\"', ['\\'] = '\\', ['n'] = '\n', ['r'] = '\r', ['t'] = '\t', ['v'] = '\v', ['b'] = '\b', ['a'] = '\a'};
-#line 489
 int ion_scan_hex_escape(void) {
     assert((*(ion_stream)) == ('x'));
     (ion_stream)++;
@@ -6947,7 +4949,6 @@ void ion_scan_str(void) {
                 break;
             }
             if ((*(ion_stream)) != ('\r')) {
-                #line 557
                 ion_buf_push((void (**))(&(str)), (void *)(ion_stream), 1);
             }
             if ((*(ion_stream)) == ('\n')) {
@@ -6987,14 +4988,12 @@ void ion_scan_str(void) {
             ion_error(ion_token.pos, "Unexpected end of file within string literal");
         }
     }
-    #line 597
     int nul = '\0';
     ion_buf_push((void (**))(&(str)), &(nul), 1);
     ion_token.kind = ION_TOKEN_STR;
     ion_token.str_val = str;
 }
 
-#line 632
 void ion_next_token(void) {
     repeat: ;
     ion_token.start = ion_stream;
@@ -7006,7 +5005,6 @@ void ion_next_token(void) {
     case '\r':
     case '\t':
     case '\v': {
-        #line 639
         while (isspace(*(ion_stream))) {
             if ((*((ion_stream)++)) == ('\n')) {
                 ion_line_start = ion_stream;
@@ -7017,17 +5015,14 @@ void ion_next_token(void) {
         break;
     }
     case '\'': {
-        #line 647
         ion_scan_char();
         break;
     }
     case '\"': {
-        #line 649
         ion_scan_str();
         break;
     }
     case '.': {
-        #line 651
         if (isdigit(ion_stream[1])) {
             ion_scan_float();
         } else if (((ion_stream[1]) == ('.')) && ((ion_stream[2]) == ('.'))) {
@@ -7049,7 +5044,6 @@ void ion_next_token(void) {
     case '7':
     case '8':
     case '9': {
-        #line 660
         {
             while (isdigit(*(ion_stream))) {
                 (ion_stream)++;
@@ -7117,7 +5111,6 @@ void ion_next_token(void) {
     case 'Y':
     case 'Z':
     case '_': {
-        #line 679
         while ((isalnum(*(ion_stream))) || ((*(ion_stream)) == ('_'))) {
             (ion_stream)++;
         }
@@ -7126,7 +5119,6 @@ void ion_next_token(void) {
         break;
     }
     case '<': {
-        #line 685
         ion_token.kind = ION_TOKEN_LT;
         (ion_stream)++;
         if ((*(ion_stream)) == ('<')) {
@@ -7143,7 +5135,6 @@ void ion_next_token(void) {
         break;
     }
     case '>': {
-        #line 699
         ion_token.kind = ION_TOKEN_GT;
         (ion_stream)++;
         if ((*(ion_stream)) == ('>')) {
@@ -7160,7 +5151,6 @@ void ion_next_token(void) {
         break;
     }
     case '/': {
-        #line 713
         ion_token.kind = ION_TOKEN_DIV;
         (ion_stream)++;
         if ((*(ion_stream)) == ('=')) {
@@ -7194,85 +5184,71 @@ void ion_next_token(void) {
         break;
     }
     case '\0': {
-        #line 747
         ion_token.kind = ION_TOKEN_EOF;
         (ion_stream)++;
         break;
     }
     case '(': {
-        #line 750
         ion_token.kind = ION_TOKEN_LPAREN;
         (ion_stream)++;
         break;
     }
     case ')': {
-        #line 753
         ion_token.kind = ION_TOKEN_RPAREN;
         (ion_stream)++;
         break;
     }
     case '{': {
-        #line 756
         ion_token.kind = ION_TOKEN_LBRACE;
         (ion_stream)++;
         break;
     }
     case '}': {
-        #line 759
         ion_token.kind = ION_TOKEN_RBRACE;
         (ion_stream)++;
         break;
     }
     case '[': {
-        #line 762
         ion_token.kind = ION_TOKEN_LBRACKET;
         (ion_stream)++;
         break;
     }
     case ']': {
-        #line 765
         ion_token.kind = ION_TOKEN_RBRACKET;
         (ion_stream)++;
         break;
     }
     case ',': {
-        #line 768
         ion_token.kind = ION_TOKEN_COMMA;
         (ion_stream)++;
         break;
     }
     case '@': {
-        #line 771
         ion_token.kind = ION_TOKEN_AT;
         (ion_stream)++;
         break;
     }
     case '#': {
-        #line 774
         ion_token.kind = ION_TOKEN_POUND;
         (ion_stream)++;
         break;
     }
     case '?': {
-        #line 777
         ion_token.kind = ION_TOKEN_QUESTION;
         (ion_stream)++;
         break;
     }
     case ';': {
-        #line 780
         ion_token.kind = ION_TOKEN_SEMICOLON;
         (ion_stream)++;
         break;
     }
     case '~': {
-        #line 783
         ion_token.kind = ION_TOKEN_NEG;
         (ion_stream)++;
         break;
     }
     case '!': {
-        #line 787
         ion_token.kind = ION_TOKEN_NOT;
         (ion_stream)++;
         if ((*(ion_stream)) == ('=')) {
@@ -7282,7 +5258,6 @@ void ion_next_token(void) {
         break;
     }
     case ':': {
-        #line 794
         ion_token.kind = ION_TOKEN_COLON;
         (ion_stream)++;
         if ((*(ion_stream)) == ('=')) {
@@ -7292,7 +5267,6 @@ void ion_next_token(void) {
         break;
     }
     case '=': {
-        #line 801
         ion_token.kind = ION_TOKEN_ASSIGN;
         (ion_stream)++;
         if ((*(ion_stream)) == ('=')) {
@@ -7302,7 +5276,6 @@ void ion_next_token(void) {
         break;
     }
     case '^': {
-        #line 808
         ion_token.kind = ION_TOKEN_XOR;
         (ion_stream)++;
         if ((*(ion_stream)) == ('=')) {
@@ -7312,7 +5285,6 @@ void ion_next_token(void) {
         break;
     }
     case '*': {
-        #line 815
         ion_token.kind = ION_TOKEN_MUL;
         (ion_stream)++;
         if ((*(ion_stream)) == ('=')) {
@@ -7322,7 +5294,6 @@ void ion_next_token(void) {
         break;
     }
     case '%': {
-        #line 822
         ion_token.kind = ION_TOKEN_MOD;
         (ion_stream)++;
         if ((*(ion_stream)) == ('=')) {
@@ -7332,7 +5303,6 @@ void ion_next_token(void) {
         break;
     }
     case '+': {
-        #line 830
         ion_token.kind = ION_TOKEN_ADD;
         (ion_stream)++;
         if ((*(ion_stream)) == ('=')) {
@@ -7345,7 +5315,6 @@ void ion_next_token(void) {
         break;
     }
     case '-': {
-        #line 840
         ion_token.kind = ION_TOKEN_SUB;
         (ion_stream)++;
         if ((*(ion_stream)) == ('=')) {
@@ -7358,7 +5327,6 @@ void ion_next_token(void) {
         break;
     }
     case '&': {
-        #line 850
         ion_token.kind = ION_TOKEN_AND;
         (ion_stream)++;
         if ((*(ion_stream)) == ('=')) {
@@ -7371,7 +5339,6 @@ void ion_next_token(void) {
         break;
     }
     case '|': {
-        #line 860
         ion_token.kind = ION_TOKEN_OR;
         (ion_stream)++;
         if ((*(ion_stream)) == ('=')) {
@@ -7384,18 +5351,15 @@ void ion_next_token(void) {
         break;
     }
     default: {
-        #line 870
         ion_error(ion_token.pos, "Invalid \'%c\' token, skipping", *(ion_stream));
         (ion_stream)++;
         goto repeat;
         break;
     }
     }
-    #line 874
     ion_token.end = ion_stream;
 }
 
-#line 881
 void ion_init_stream(char const ((*name)), char const ((*buf))) {
     ion_stream = buf;
     ion_line_start = ion_stream;
@@ -7450,9 +5414,9 @@ bool ion_expect_token(ion_TokenKind kind) {
 
 bool ion_flag_verbose;
 bool ion_flag_lazy;
+bool ion_flag_nosourcemap;
 bool ion_flag_notypeinfo;
 bool ion_flag_fullgen;
-#line 4 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\os.ion"
 void ion_path_normalize(char (*path)) {
     char (*ptr) = {0};
     for (ptr = path; *(ptr); (ptr)++) {
@@ -7501,7 +5465,6 @@ char (*ion_path_ext(char (path[MAX_PATH]))) {
     return path;
 }
 
-#line 64
 bool ion_dir_excluded(ion_DirListIter (*iter)) {
     return (iter->valid) && ((((strcmp(iter->name, ".")) == (0)) || ((strcmp(iter->name, "..")) == (0))));
 }
@@ -7529,7 +5492,6 @@ char const ((*(*ion_dir_list_buf(char const ((*filespec)))))) {
 }
 
 ion_FlagDef (*ion_flag_defs);
-#line 116
 void ion_add_flag_bool(char const ((*name)), bool (*ptr), char const ((*help))) {
     ion_FlagDef def = {.kind = ION_FLAG_BOOL, .name = name, .help = help, .ptr = {.b = ptr}};
     ion_buf_push((void (**))(&(ion_flag_defs)), &(def), sizeof(def));
@@ -7569,7 +5531,6 @@ void ion_print_flags_usage(void) {
             break;
         }
         case ION_FLAG_ENUM: {
-            #line 152
             {
                 char (*end) = (format) + (sizeof(format));
                 char (*ptr) = format;
@@ -7586,12 +5547,10 @@ void ion_print_flags_usage(void) {
         }
         case ION_FLAG_BOOL:
         default: {
-            #line 166
             snprintf(format, sizeof(format), "%s", flag.name);
             break;
         }
         }
-        #line 168
         printf(" -%-32s %s%s\n", format, (flag.help ? flag.help : (char const (*))("")), note);
     }
 }
@@ -7619,7 +5578,6 @@ char const ((*ion_parse_flags(int (*argc_ptr), char const ((*(*(*argv_ptr)))))))
                 break;
             }
             case ION_FLAG_STR: {
-                #line 193
                 if (((i) + (1)) < (argc)) {
                     (i)++;
                     *(flag->ptr.s) = argv[i];
@@ -7629,7 +5587,6 @@ char const ((*ion_parse_flags(int (*argc_ptr), char const ((*(*(*argv_ptr)))))))
                 break;
             }
             case ION_FLAG_ENUM: {
-                #line 199
                 {
                     char const ((*option)) = {0};
                     if (((i) + (1)) < (argc)) {
@@ -7654,13 +5611,11 @@ char const ((*ion_parse_flags(int (*argc_ptr), char const ((*(*(*argv_ptr)))))))
                 break;
             }
             default: {
-                #line 221
                 printf("Unhandled flag kind\n");
                 break;
             }
             }
         } else {
-            #line 224
             break;
         }
     }
@@ -7669,7 +5624,6 @@ char const ((*ion_parse_flags(int (*argc_ptr), char const ((*(*(*argv_ptr)))))))
     return ion_path_file(_strdup(argv[0]));
 }
 
-#line 35 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\os_win32.ion"
 void ion_path_absolute(char (path[MAX_PATH])) {
     char (rel_path[MAX_PATH]) = {0};
     ion_path_copy(rel_path, path);
@@ -7725,7 +5679,6 @@ void ion_dir_list(ion_DirListIter (*iter), char const ((*path))) {
     }
 }
 
-#line 1 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\parse.ion"
 ion_Typespec (*ion_parse_type_func_param(void)) {
     ion_Typespec (*type) = ion_parse_type();
     if (ion_match_token(ION_TOKEN_COLON)) {
@@ -7971,7 +5924,6 @@ bool ion_is_unary_op(void) {
     return (((((((ion_is_token(ION_TOKEN_ADD)) || (ion_is_token(ION_TOKEN_SUB))) || (ion_is_token(ION_TOKEN_MUL))) || (ion_is_token(ION_TOKEN_AND))) || (ion_is_token(ION_TOKEN_NEG))) || (ion_is_token(ION_TOKEN_NOT))) || (ion_is_token(ION_TOKEN_INC))) || (ion_is_token(ION_TOKEN_DEC));
 }
 
-#line 254
 ion_Expr (*ion_parse_expr_unary(void)) {
     if (ion_is_unary_op()) {
         ion_SrcPos pos = ion_token.pos;
@@ -8342,10 +6294,8 @@ ion_AggregateItem ion_parse_decl_aggregate_item(void) {
     if (ion_match_keyword(ion_struct_keyword)) {
         return (ion_AggregateItem){.pos = pos, .kind = ION_AGGREGATE_ITEM_SUBAGGREGATE, .subaggregate = ion_parse_aggregate(ION_AGGREGATE_STRUCT)};
     } else if (ion_match_keyword(ion_union_keyword)) {
-        #line 628
         return (ion_AggregateItem){.pos = pos, .kind = ION_AGGREGATE_ITEM_SUBAGGREGATE, .subaggregate = ion_parse_aggregate(ION_AGGREGATE_UNION)};
     } else {
-        #line 634
         char const ((*(*names))) = NULL;
         char const ((*name)) = ion_parse_name();
         ion_buf_push((void (**))(&(names)), &(name), sizeof(name));
@@ -8360,7 +6310,6 @@ ion_AggregateItem ion_parse_decl_aggregate_item(void) {
     }
 }
 
-#line 654
 ion_Aggregate (*ion_parse_aggregate(ion_AggregateKind kind)) {
     ion_SrcPos pos = ion_token.pos;
     ion_expect_token(ION_TOKEN_LBRACE);
@@ -8615,7 +6564,6 @@ ion_Package (*ion_builtin_package);
 ion_Map ion_package_map;
 ion_Package (*(*ion_package_list));
 uint8_t ion_reachable_phase = ION_REACHABLE_NATURAL;
-#line 61 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\resolve.ion"
 ion_Sym (*ion_get_package_sym(ion_Package (*package), char const ((*name)))) {
     return ion_map_get(&(package->syms_map), name);
 }
@@ -8643,7 +6591,6 @@ ion_Sym (*(*ion_reachable_syms));
 ion_Sym (*(*ion_sorted_syms));
 ion_Sym (ion_local_syms[ION_MAX_LOCAL_SYMS]);
 ion_Sym (*ion_local_syms_end) = ion_local_syms;
-#line 89
 bool ion_is_local_sym(ion_Sym (*sym)) {
     return ((ion_local_syms) <= (sym)) && ((sym) < (ion_local_syms_end));
 }
@@ -8689,27 +6636,22 @@ ion_Sym (*ion_sym_decl(ion_Decl (*decl))) {
         break;
     }
     case ION_DECL_VAR: {
-        #line 132
         kind = ION_SYM_VAR;
         break;
     }
     case ION_DECL_CONST: {
-        #line 134
         kind = ION_SYM_CONST;
         break;
     }
     case ION_DECL_FUNC: {
-        #line 136
         kind = ION_SYM_FUNC;
         break;
     }
     default: {
-        #line 138
         assert(0);
         break;
     }
     }
-    #line 140
     ion_Sym (*sym) = ion_sym_new(kind, decl->name, decl);
     ion_set_resolved_sym(decl, sym);
     ion_process_decl_notes(decl, sym);
@@ -8739,7 +6681,6 @@ bool ion_sym_push_var(char const ((*name)), ion_Type (*type)) {
         ion_fatal("Too many local symbols");
     }
     *((ion_local_syms_end)++) = (ion_Sym){.name = name, .kind = ION_SYM_VAR, .state = ION_SYM_RESOLVED, .type = type};
-    #line 174
     return true;
 }
 
@@ -8823,25 +6764,21 @@ void ion_put_type_name(char (*(*buf)), ion_Type (*type)) {
             break;
         }
         case ION_CMPL_TYPE_CONST: {
-            #line 255
             ion_put_type_name(buf, type->base);
             ion_buf_printf(buf, " const");
             break;
         }
         case ION_CMPL_TYPE_PTR: {
-            #line 258
             ion_put_type_name(buf, type->base);
             ion_buf_printf(buf, "*");
             break;
         }
         case ION_CMPL_TYPE_ARRAY: {
-            #line 261
             ion_put_type_name(buf, type->base);
             ion_buf_printf(buf, "[%zu]", type->num_elems);
             break;
         }
         case ION_CMPL_TYPE_FUNC: {
-            #line 264
             ion_buf_printf(buf, "func(");
             for (size_t i = 0; (i) < (type->function.num_params); (i)++) {
                 if ((i) != (0)) {
@@ -8860,7 +6797,6 @@ void ion_put_type_name(char (*(*buf)), ion_Type (*type)) {
             break;
         }
         default: {
-            #line 280
             assert(0);
             break;
         }
@@ -8868,7 +6804,6 @@ void ion_put_type_name(char (*(*buf)), ion_Type (*type)) {
     }
 }
 
-#line 285
 char (*ion_get_type_name(ion_Type (*type))) {
     char (*buf) = NULL;
     ion_put_type_name(&(buf), type);
@@ -8876,22 +6811,18 @@ char (*ion_get_type_name(ion_Type (*type))) {
 }
 
 ion_Operand ion_operand_null;
-#line 300
 ion_Operand ion_operand_rvalue(ion_Type (*type)) {
     return (ion_Operand){.type = ion_unqualify_type(type)};
 }
 
-#line 306
 ion_Operand ion_operand_lvalue(ion_Type (*type)) {
     return (ion_Operand){.type = type, .is_lvalue = true};
 }
 
-#line 313
 ion_Operand ion_operand_const(ion_Type (*type), ion_Val val) {
     return (ion_Operand){.type = ion_unqualify_type(type), .is_const = true, .val = val};
 }
 
-#line 321
 ion_Type (*ion_type_decay(ion_Type (*type))) {
     type = ion_unqualify_type(type);
     if ((type->kind) == (ION_CMPL_TYPE_ARRAY)) {
@@ -8906,7 +6837,6 @@ ion_Operand ion_operand_decay(ion_Operand operand) {
     return operand;
 }
 
-#line 337
 bool ion_is_convertible(ion_Operand (*operand), ion_Type (*dest)) {
     dest = ion_unqualify_type(dest);
     ion_Type (*src) = ion_unqualify_type(operand->type);
@@ -8949,7 +6879,6 @@ bool ion_is_castable(ion_Operand (*operand), ion_Type (*dest)) {
     }
 }
 
-#line 382
 bool ion_convert_operand(ion_Operand (*operand), ion_Type (*type)) {
     if (ion_is_convertible(operand, type)) {
         cast_operand(operand, type);
@@ -8960,7 +6889,6 @@ bool ion_convert_operand(ion_Operand (*operand), ion_Type (*type)) {
     return false;
 }
 
-#line 394
 bool ion_is_null_ptr(ion_Operand operand) {
     if ((operand.is_const) && (((ion_is_ptr_type(operand.type)) || (ion_is_integer_type(operand.type))))) {
         cast_operand(&(operand), ion_type_ullong);
@@ -8988,7 +6916,6 @@ void ion_promote_operand(ion_Operand (*operand)) {
     }
 }
 
-#line 418
 void ion_unify_arithmetic_operands(ion_Operand (*left), ion_Operand (*right)) {
     if ((left->type) == (ion_type_double)) {
         cast_operand(right, ion_type_double);
@@ -9029,7 +6956,6 @@ void ion_unify_arithmetic_operands(ion_Operand (*left), ion_Operand (*right)) {
 }
 
 ion_Map ion_resolved_val_map;
-#line 459
 ion_Val ion_get_resolved_val(void (*ptr)) {
     uint64_t u64 = ion_map_get_uint64(&(ion_resolved_val_map), ptr);
     ion_Val val = {0};
@@ -9046,7 +6972,6 @@ void ion_set_resolved_val(void (*ptr), ion_Val val) {
 }
 
 ion_Map ion_resolved_type_map;
-#line 476
 ion_Type (*ion_get_resolved_type(void (*ptr))) {
     return ion_map_get(&(ion_resolved_type_map), ptr);
 }
@@ -9056,7 +6981,6 @@ void ion_set_resolved_type(void (*ptr), ion_Type (*type)) {
 }
 
 ion_Map ion_resolved_sym_map;
-#line 486
 ion_Sym (*ion_get_resolved_sym(void const ((*ptr)))) {
     return ion_map_get(&(ion_resolved_sym_map), ptr);
 }
@@ -9068,7 +6992,6 @@ void ion_set_resolved_sym(void const ((*ptr)), ion_Sym (*sym)) {
 }
 
 ion_Map ion_resolved_expected_type_map;
-#line 498
 ion_Type (*ion_get_resolved_expected_type(ion_Expr (*expr))) {
     return ion_map_get(&(ion_resolved_expected_type_map), expr);
 }
@@ -9098,7 +7021,6 @@ ion_Type (*ion_resolve_typespec(ion_Typespec (*typespec))) {
     ion_Type (*result) = NULL;
     switch (typespec->kind) {
     case ION_TYPESPEC_NAME: {
-        #line 526
         {
             ion_Sym (*sym) = ion_resolve_name(typespec->name);
             if (!(sym)) {
@@ -9114,17 +7036,14 @@ ion_Type (*ion_resolve_typespec(ion_Typespec (*typespec))) {
         break;
     }
     case ION_TYPESPEC_CONST: {
-        #line 539
         result = ion_type_const(ion_resolve_typespec(typespec->base));
         break;
     }
     case ION_TYPESPEC_PTR: {
-        #line 541
         result = ion_type_ptr(ion_resolve_typespec(typespec->base));
         break;
     }
     case ION_TYPESPEC_ARRAY: {
-        #line 542
         {
             int size = 0;
             if (typespec->num_elems) {
@@ -9143,7 +7062,6 @@ ion_Type (*ion_resolve_typespec(ion_Typespec (*typespec))) {
         break;
     }
     case ION_TYPESPEC_FUNC: {
-        #line 557
         {
             ion_Type (*(*args)) = NULL;
             for (size_t i = 0; (i) < (typespec->function.num_args); (i)++) {
@@ -9165,13 +7083,11 @@ ion_Type (*ion_resolve_typespec(ion_Typespec (*typespec))) {
         break;
     }
     default: {
-        #line 576
         assert(0);
         return NULL;
         break;
     }
     }
-    #line 579
     ion_set_resolved_type(typespec, result);
     return result;
 }
@@ -9241,7 +7157,6 @@ ion_Type (*ion_resolve_typed_init(ion_SrcPos pos, ion_Type (*type), ion_Expr (*e
     ion_Operand operand = ion_resolve_expected_expr(expr, expected_type);
     if (((ion_is_incomplete_array_type(type)) && (ion_is_array_type(operand.type))) && ((type->base) == (operand.type->base))) {
     } else {
-        #line 649
         if ((type) && (ion_is_ptr_type(type))) {
             operand = ion_operand_decay(operand);
         }
@@ -9325,7 +7240,6 @@ ion_Type (*ion_resolve_decl_func(ion_Decl (*decl))) {
 
 ion_Label (ion_labels[ION_MAX_LABELS]);
 ion_Label (*ion_labels_end) = ion_labels;
-#line 747
 ion_Label (*ion_get_label(ion_SrcPos pos, char const ((*name)))) {
     ion_Label (*label) = {0};
     for (label = ion_labels; (label) != (ion_labels_end); (label)++) {
@@ -9455,7 +7369,6 @@ bool ion_resolve_stmt(ion_Stmt (*stmt), ion_Type (*ret_type), ion_StmtCtx ctx) {
         break;
     }
     case ION_STMT_BREAK: {
-        #line 874
         if (!(ctx.is_break_legal)) {
             ion_fatal_error(stmt->pos, "Illegal break");
         }
@@ -9463,7 +7376,6 @@ bool ion_resolve_stmt(ion_Stmt (*stmt), ion_Type (*ret_type), ion_StmtCtx ctx) {
         break;
     }
     case ION_STMT_CONTINUE: {
-        #line 879
         if (!(ctx.is_continue_legal)) {
             ion_fatal_error(stmt->pos, "Illegal continue");
         }
@@ -9471,12 +7383,10 @@ bool ion_resolve_stmt(ion_Stmt (*stmt), ion_Type (*ret_type), ion_StmtCtx ctx) {
         break;
     }
     case ION_STMT_BLOCK: {
-        #line 884
         return ion_resolve_stmt_block(stmt->block, ret_type, ctx);
         break;
     }
     case ION_STMT_NOTE: {
-        #line 886
         if ((stmt->note.name) == (ion_assert_name)) {
             if ((stmt->note.num_args) != (1)) {
                 ion_fatal_error(stmt->pos, "#assert takes 1 argument");
@@ -9491,7 +7401,6 @@ bool ion_resolve_stmt(ion_Stmt (*stmt), ion_Type (*ret_type), ion_StmtCtx ctx) {
         break;
     }
     case ION_STMT_IF: {
-        #line 897
         {
             ion_Sym (*scope) = ion_sym_enter();
             if (stmt->if_stmt.init) {
@@ -9520,7 +7429,6 @@ bool ion_resolve_stmt(ion_Stmt (*stmt), ion_Type (*ret_type), ion_StmtCtx ctx) {
     }
     case ION_STMT_WHILE:
     case ION_STMT_DO_WHILE: {
-        #line 923
         ion_resolve_cond_expr(stmt->while_stmt.cond);
         ctx.is_break_legal = true;
         ctx.is_continue_legal = true;
@@ -9529,7 +7437,6 @@ bool ion_resolve_stmt(ion_Stmt (*stmt), ion_Type (*ret_type), ion_StmtCtx ctx) {
         break;
     }
     case ION_STMT_FOR: {
-        #line 928
         {
             ion_Sym (*scope) = ion_sym_enter();
             if (stmt->for_stmt.init) {
@@ -9550,7 +7457,6 @@ bool ion_resolve_stmt(ion_Stmt (*stmt), ion_Type (*ret_type), ion_StmtCtx ctx) {
         break;
     }
     case ION_STMT_SWITCH: {
-        #line 945
         {
             ion_Operand operand = ion_resolve_expr_rvalue(stmt->switch_stmt.expr);
             if (!(ion_is_integer_type(operand.type))) {
@@ -9605,37 +7511,31 @@ bool ion_resolve_stmt(ion_Stmt (*stmt), ion_Type (*ret_type), ion_StmtCtx ctx) {
         break;
     }
     case ION_STMT_ASSIGN: {
-        #line 997
         ion_resolve_stmt_assign(stmt);
         return false;
         break;
     }
     case ION_STMT_INIT: {
-        #line 1000
         ion_resolve_stmt_init(stmt);
         return false;
         break;
     }
     case ION_STMT_EXPR: {
-        #line 1003
         ion_resolve_expr(stmt->expr);
         return false;
         break;
     }
     case ION_STMT_LABEL: {
-        #line 1006
         ion_define_label(stmt->pos, stmt->label);
         return false;
         break;
     }
     case ION_STMT_GOTO: {
-        #line 1009
         ion_reference_label(stmt->pos, stmt->label);
         return false;
         break;
     }
     default: {
-        #line 1012
         assert(0);
         return false;
         break;
@@ -9643,7 +7543,6 @@ bool ion_resolve_stmt(ion_Stmt (*stmt), ion_Type (*ret_type), ion_StmtCtx ctx) {
     }
 }
 
-#line 1017
 void ion_resolve_func_body(ion_Sym (*sym)) {
     ion_Decl (*decl) = sym->decl;
     assert((decl->kind) == (ION_DECL_FUNC));
@@ -9704,32 +7603,26 @@ void ion_resolve_sym(ion_Sym (*sym)) {
         break;
     }
     case ION_SYM_VAR: {
-        #line 1075
         sym->type = ion_resolve_decl_var(decl);
         break;
     }
     case ION_SYM_CONST: {
-        #line 1077
         sym->type = ion_resolve_decl_const(decl, &(sym->val));
         break;
     }
     case ION_SYM_FUNC: {
-        #line 1079
         sym->type = ion_resolve_decl_func(decl);
         break;
     }
     case ION_SYM_PACKAGE: {
-        #line 1082
         break;
         break;
     }
     default: {
-        #line 1084
         assert(0);
         break;
     }
     }
-    #line 1086
     ion_leave_package(old_package);
     sym->state = ION_SYM_RESOLVED;
     if ((decl->is_incomplete) || ((((decl->kind) != (ION_DECL_STRUCT)) && ((decl->kind) != (ION_DECL_UNION))))) {
@@ -9821,27 +7714,22 @@ llong ion_eval_unary_op_ll(ion_TokenKind op, llong val) {
         break;
     }
     case ION_TOKEN_SUB: {
-        #line 1175
         return -(val);
         break;
     }
     case ION_TOKEN_NEG: {
-        #line 1177
         return ~(val);
         break;
     }
     case ION_TOKEN_NOT: {
-        #line 1179
         return !(val);
         break;
     }
     default: {
-        #line 1181
         assert(0);
         break;
     }
     }
-    #line 1183
     return 0;
 }
 
@@ -9852,27 +7740,22 @@ ullong ion_eval_unary_op_ull(ion_TokenKind op, ullong val) {
         break;
     }
     case ION_TOKEN_SUB: {
-        #line 1191
         return (0ull) - (val);
         break;
     }
     case ION_TOKEN_NEG: {
-        #line 1193
         return ~(val);
         break;
     }
     case ION_TOKEN_NOT: {
-        #line 1195
         return !(val);
         break;
     }
     default: {
-        #line 1197
         assert(0);
         break;
     }
     }
-    #line 1199
     return 0;
 }
 
@@ -9883,87 +7766,70 @@ llong ion_eval_binary_op_ll(ion_TokenKind op, llong left, llong right) {
         break;
     }
     case ION_TOKEN_DIV: {
-        #line 1207
         return ((right) != (0) ? (left) / (right) : 0);
         break;
     }
     case ION_TOKEN_MOD: {
-        #line 1209
         return ((right) != (0) ? (left) % (right) : 0);
         break;
     }
     case ION_TOKEN_AND: {
-        #line 1211
         return (left) & (right);
         break;
     }
     case ION_TOKEN_LSHIFT: {
-        #line 1213
         return (left) << (right);
         break;
     }
     case ION_TOKEN_RSHIFT: {
-        #line 1215
         return (left) >> (right);
         break;
     }
     case ION_TOKEN_ADD: {
-        #line 1217
         return (left) + (right);
         break;
     }
     case ION_TOKEN_SUB: {
-        #line 1219
         return (left) - (right);
         break;
     }
     case ION_TOKEN_OR: {
-        #line 1221
         return (left) | (right);
         break;
     }
     case ION_TOKEN_XOR: {
-        #line 1223
         return (left) ^ (right);
         break;
     }
     case ION_TOKEN_EQ: {
-        #line 1225
         return (left) == (right);
         break;
     }
     case ION_TOKEN_NOTEQ: {
-        #line 1227
         return (left) != (right);
         break;
     }
     case ION_TOKEN_LT: {
-        #line 1229
         return (left) < (right);
         break;
     }
     case ION_TOKEN_LTEQ: {
-        #line 1231
         return (left) <= (right);
         break;
     }
     case ION_TOKEN_GT: {
-        #line 1233
         return (left) > (right);
         break;
     }
     case ION_TOKEN_GTEQ: {
-        #line 1235
         return (left) >= (right);
         break;
     }
     default: {
-        #line 1237
         assert(0);
         break;
     }
     }
-    #line 1239
     return 0;
 }
 
@@ -9974,87 +7840,70 @@ ullong ion_eval_binary_op_ull(ion_TokenKind op, ullong left, ullong right) {
         break;
     }
     case ION_TOKEN_DIV: {
-        #line 1247
         return ((right) != (0) ? (left) / (right) : 0);
         break;
     }
     case ION_TOKEN_MOD: {
-        #line 1249
         return ((right) != (0) ? (left) % (right) : 0);
         break;
     }
     case ION_TOKEN_AND: {
-        #line 1251
         return (left) & (right);
         break;
     }
     case ION_TOKEN_LSHIFT: {
-        #line 1253
         return (left) << (right);
         break;
     }
     case ION_TOKEN_RSHIFT: {
-        #line 1255
         return (left) >> (right);
         break;
     }
     case ION_TOKEN_ADD: {
-        #line 1257
         return (left) + (right);
         break;
     }
     case ION_TOKEN_SUB: {
-        #line 1259
         return (left) - (right);
         break;
     }
     case ION_TOKEN_OR: {
-        #line 1261
         return (left) | (right);
         break;
     }
     case ION_TOKEN_XOR: {
-        #line 1263
         return (left) ^ (right);
         break;
     }
     case ION_TOKEN_EQ: {
-        #line 1265
         return (left) == (right);
         break;
     }
     case ION_TOKEN_NOTEQ: {
-        #line 1267
         return (left) != (right);
         break;
     }
     case ION_TOKEN_LT: {
-        #line 1269
         return (left) < (right);
         break;
     }
     case ION_TOKEN_LTEQ: {
-        #line 1271
         return (left) <= (right);
         break;
     }
     case ION_TOKEN_GT: {
-        #line 1273
         return (left) > (right);
         break;
     }
     case ION_TOKEN_GTEQ: {
-        #line 1275
         return (left) >= (right);
         break;
     }
     default: {
-        #line 1277
         assert(0);
         break;
     }
     }
-    #line 1279
     return 0;
 }
 
@@ -10144,7 +7993,6 @@ ion_Operand ion_resolve_expr_unary(ion_Expr (*expr)) {
     }
     case ION_TOKEN_ADD:
     case ION_TOKEN_SUB: {
-        #line 1366
         if (!(ion_is_arithmetic_type(type))) {
             ion_fatal_error(expr->pos, "Can only use unary %s with arithmetic types", ion_token_kind_name(expr->unary.op));
         }
@@ -10152,7 +8000,6 @@ ion_Operand ion_resolve_expr_unary(ion_Expr (*expr)) {
         break;
     }
     case ION_TOKEN_NEG: {
-        #line 1371
         if (!(ion_is_integer_type(type))) {
             ion_fatal_error(expr->pos, "Can only use ~ with integer types");
         }
@@ -10160,7 +8007,6 @@ ion_Operand ion_resolve_expr_unary(ion_Expr (*expr)) {
         break;
     }
     case ION_TOKEN_NOT: {
-        #line 1376
         if (!(ion_is_scalar_type(type))) {
             ion_fatal_error(expr->pos, " Can only use ! with scalar types");
         }
@@ -10168,12 +8014,10 @@ ion_Operand ion_resolve_expr_unary(ion_Expr (*expr)) {
         break;
     }
     default: {
-        #line 1381
         assert(0);
         break;
     }
     }
-    #line 1383
     return (ion_Operand){0};
 }
 
@@ -10204,7 +8048,6 @@ ion_Operand ion_resolve_expr_binary_op(ion_TokenKind op, char const ((*op_name))
         break;
     }
     case ION_TOKEN_MOD: {
-        #line 1411
         if (!(ion_is_integer_type(left.type))) {
             ion_fatal_error(pos, "Left operand of %% must have integer type");
         }
@@ -10215,7 +8058,6 @@ ion_Operand ion_resolve_expr_binary_op(ion_TokenKind op, char const ((*op_name))
         break;
     }
     case ION_TOKEN_ADD: {
-        #line 1419
         if ((ion_is_arithmetic_type(left.type)) && (ion_is_arithmetic_type(right.type))) {
             return ion_resolve_binary_arithmetic_op(op, left, right);
         } else if ((ion_is_ptr_type(left.type)) && (ion_is_integer_type(right.type))) {
@@ -10236,7 +8078,6 @@ ion_Operand ion_resolve_expr_binary_op(ion_TokenKind op, char const ((*op_name))
         break;
     }
     case ION_TOKEN_SUB: {
-        #line 1437
         if ((ion_is_arithmetic_type(left.type)) && (ion_is_arithmetic_type(right.type))) {
             return ion_resolve_binary_arithmetic_op(op, left, right);
         } else if ((ion_is_ptr_type(left.type)) && (ion_is_integer_type(right.type))) {
@@ -10253,7 +8094,6 @@ ion_Operand ion_resolve_expr_binary_op(ion_TokenKind op, char const ((*op_name))
     }
     case ION_TOKEN_LSHIFT:
     case ION_TOKEN_RSHIFT: {
-        #line 1451
         if ((ion_is_integer_type(left.type)) && (ion_is_integer_type(right.type))) {
             ion_promote_operand(&(left));
             ion_promote_operand(&(right));
@@ -10276,7 +8116,6 @@ ion_Operand ion_resolve_expr_binary_op(ion_TokenKind op, char const ((*op_name))
     }
     case ION_TOKEN_EQ:
     case ION_TOKEN_NOTEQ: {
-        #line 1471
         if ((ion_is_arithmetic_type(left.type)) && (ion_is_arithmetic_type(right.type))) {
             ion_Operand result = ion_resolve_binary_arithmetic_op(op, left, right);
             cast_operand(&(result), ion_type_int);
@@ -10299,7 +8138,6 @@ ion_Operand ion_resolve_expr_binary_op(ion_TokenKind op, char const ((*op_name))
     case ION_TOKEN_LTEQ:
     case ION_TOKEN_GT:
     case ION_TOKEN_GTEQ: {
-        #line 1491
         if ((ion_is_arithmetic_type(left.type)) && (ion_is_arithmetic_type(right.type))) {
             ion_Operand result = ion_resolve_binary_arithmetic_op(op, left, right);
             cast_operand(&(result), ion_type_int);
@@ -10319,7 +8157,6 @@ ion_Operand ion_resolve_expr_binary_op(ion_TokenKind op, char const ((*op_name))
     case ION_TOKEN_AND:
     case ION_TOKEN_XOR:
     case ION_TOKEN_OR: {
-        #line 1508
         if ((ion_is_integer_type(left.type)) && (ion_is_integer_type(right.type))) {
             return ion_resolve_binary_arithmetic_op(op, left, right);
         } else {
@@ -10329,7 +8166,6 @@ ion_Operand ion_resolve_expr_binary_op(ion_TokenKind op, char const ((*op_name))
     }
     case ION_TOKEN_AND_AND:
     case ION_TOKEN_OR_OR: {
-        #line 1515
         if ((ion_is_scalar_type(left.type)) && (ion_is_scalar_type(right.type))) {
             if ((left.is_const) && (right.is_const)) {
                 cast_operand(&(left), ion_type_bool);
@@ -10351,12 +8187,10 @@ ion_Operand ion_resolve_expr_binary_op(ion_TokenKind op, char const ((*op_name))
         break;
     }
     default: {
-        #line 1534
         assert(0);
         break;
     }
     }
-    #line 1536
     return (ion_Operand){0};
 }
 
@@ -10405,7 +8239,6 @@ ion_Operand ion_resolve_expr_compound(ion_Expr (*expr), ion_Type (*expected_type
             (index)++;
         }
     } else if ((type->kind) == (ION_CMPL_TYPE_ARRAY)) {
-        #line 1585
         size_t index = 0;
         size_t max_index = 0;
         for (size_t i = 0; (i) < (expr->compound.num_fields); (i)++) {
@@ -10520,7 +8353,6 @@ ion_Operand ion_resolve_expr_ternary(ion_Expr (*expr), ion_Type (*expected_type)
     } else {
         ion_fatal_error(expr->pos, "Left and right operands of ternary expression must have arithmetic types or identical types");
     }
-    #line 1701
     return (ion_Operand){0};
 }
 
@@ -10572,7 +8404,6 @@ ion_Operand ion_resolve_expr_int(ion_Expr (*expr)) {
             break;
         }
         case ION_SUFFIX_U: {
-            #line 1750
             type = ion_type_uint;
             if ((val) > (uint_max)) {
                 type = ion_type_ulong;
@@ -10583,7 +8414,6 @@ ion_Operand ion_resolve_expr_int(ion_Expr (*expr)) {
             break;
         }
         case ION_SUFFIX_L: {
-            #line 1758
             type = ion_type_long;
             if ((val) > (long_max)) {
                 type = ion_type_llong;
@@ -10592,7 +8422,6 @@ ion_Operand ion_resolve_expr_int(ion_Expr (*expr)) {
             break;
         }
         case ION_SUFFIX_UL: {
-            #line 1764
             type = ion_type_ulong;
             if ((val) > (ulong_max)) {
                 type = ion_type_ullong;
@@ -10600,23 +8429,19 @@ ion_Operand ion_resolve_expr_int(ion_Expr (*expr)) {
             break;
         }
         case ION_SUFFIX_LL: {
-            #line 1769
             type = ion_type_llong;
             overflow = (val) > (llong_max);
             break;
         }
         case ION_SUFFIX_ULL: {
-            #line 1772
             type = ion_type_ullong;
             break;
         }
         default: {
-            #line 1774
             assert(0);
             break;
         }
         }
-        #line 1776
         if (overflow) {
             ion_fatal_error(expr->pos, "Integer literal overflow");
         }
@@ -10642,7 +8467,6 @@ ion_Operand ion_resolve_expr_int(ion_Expr (*expr)) {
             break;
         }
         case ION_SUFFIX_U: {
-            #line 1799
             type = ion_type_uint;
             if ((val) > (uint_max)) {
                 type = ion_type_ulong;
@@ -10653,7 +8477,6 @@ ion_Operand ion_resolve_expr_int(ion_Expr (*expr)) {
             break;
         }
         case ION_SUFFIX_L: {
-            #line 1807
             type = ion_type_long;
             if ((val) > (long_max)) {
                 type = ion_type_ulong;
@@ -10667,7 +8490,6 @@ ion_Operand ion_resolve_expr_int(ion_Expr (*expr)) {
             break;
         }
         case ION_SUFFIX_UL: {
-            #line 1818
             type = ion_type_ulong;
             if ((val) > (ulong_max)) {
                 type = ion_type_ullong;
@@ -10675,7 +8497,6 @@ ion_Operand ion_resolve_expr_int(ion_Expr (*expr)) {
             break;
         }
         case ION_SUFFIX_LL: {
-            #line 1823
             type = ion_type_llong;
             if ((val) > (llong_max)) {
                 type = ion_type_ullong;
@@ -10683,18 +8504,15 @@ ion_Operand ion_resolve_expr_int(ion_Expr (*expr)) {
             break;
         }
         case ION_SUFFIX_ULL: {
-            #line 1828
             type = ion_type_ullong;
             break;
         }
         default: {
-            #line 1830
             assert(0);
             break;
         }
         }
     }
-    #line 1833
     cast_operand(&(operand), type);
     return operand;
 }
@@ -10723,53 +8541,43 @@ ion_Operand ion_resolve_expected_expr(ion_Expr (*expr), ion_Type (*expected_type
         break;
     }
     case ION_EXPR_INT: {
-        #line 1859
         result = ion_resolve_expr_int(expr);
         break;
     }
     case ION_EXPR_FLOAT: {
-        #line 1861
         result = ion_operand_const(((expr->float_lit.suffix) == (ION_SUFFIX_D) ? ion_type_double : ion_type_float), (ion_Val){0});
         break;
     }
     case ION_EXPR_STR: {
-        #line 1863
         result = ion_operand_rvalue(ion_type_array(ion_type_char, (strlen(expr->str_lit.val)) + (1)));
         break;
     }
     case ION_EXPR_NAME: {
-        #line 1865
         result = ion_resolve_expr_name(expr);
         ion_set_resolved_sym(expr, ion_resolve_name(expr->name));
         break;
     }
     case ION_EXPR_CAST: {
-        #line 1868
         result = ion_resolve_expr_cast(expr);
         break;
     }
     case ION_EXPR_CALL: {
-        #line 1870
         result = ion_resolve_expr_call(expr);
         break;
     }
     case ION_EXPR_INDEX: {
-        #line 1872
         result = ion_resolve_expr_index(expr);
         break;
     }
     case ION_EXPR_FIELD: {
-        #line 1874
         result = ion_resolve_expr_field(expr);
         break;
     }
     case ION_EXPR_COMPOUND: {
-        #line 1876
         result = ion_resolve_expr_compound(expr, expected_type);
         break;
     }
     case ION_EXPR_UNARY: {
-        #line 1878
         if ((expr->unary.op) == (ION_TOKEN_AND)) {
             ion_Operand operand = {0};
             if ((expected_type) && (ion_is_ptr_type(expected_type))) {
@@ -10787,17 +8595,14 @@ ion_Operand ion_resolve_expected_expr(ion_Expr (*expr), ion_Type (*expected_type
         break;
     }
     case ION_EXPR_BINARY: {
-        #line 1893
         result = ion_resolve_expr_binary(expr);
         break;
     }
     case ION_EXPR_TERNARY: {
-        #line 1895
         result = ion_resolve_expr_ternary(expr, expected_type);
         break;
     }
     case ION_EXPR_SIZEOF_EXPR: {
-        #line 1896
         {
             if ((expr->sizeof_expr->kind) == (ION_EXPR_NAME)) {
                 ion_Sym (*sym) = ion_resolve_name(expr->sizeof_expr->name);
@@ -10816,7 +8621,6 @@ ion_Operand ion_resolve_expected_expr(ion_Expr (*expr), ion_Type (*expected_type
         break;
     }
     case ION_EXPR_SIZEOF_TYPE: {
-        #line 1911
         {
             ion_Type (*type) = ion_resolve_typespec(expr->sizeof_type);
             ion_complete_type(type);
@@ -10825,7 +8629,6 @@ ion_Operand ion_resolve_expected_expr(ion_Expr (*expr), ion_Type (*expected_type
         break;
     }
     case ION_EXPR_ALIGNOF_EXPR: {
-        #line 1916
         {
             if ((expr->sizeof_expr->kind) == (ION_EXPR_NAME)) {
                 ion_Sym (*sym) = ion_resolve_name(expr->alignof_expr->name);
@@ -10844,7 +8647,6 @@ ion_Operand ion_resolve_expected_expr(ion_Expr (*expr), ion_Type (*expected_type
         break;
     }
     case ION_EXPR_ALIGNOF_TYPE: {
-        #line 1931
         {
             ion_Type (*type) = ion_resolve_typespec(expr->alignof_type);
             ion_complete_type(type);
@@ -10853,7 +8655,6 @@ ion_Operand ion_resolve_expected_expr(ion_Expr (*expr), ion_Type (*expected_type
         break;
     }
     case ION_EXPR_TYPEOF_TYPE: {
-        #line 1936
         {
             ion_Type (*type) = ion_resolve_typespec(expr->typeof_type);
             result = ion_operand_const(ion_type_ullong, (ion_Val){.ull = type->typeid});
@@ -10861,7 +8662,6 @@ ion_Operand ion_resolve_expected_expr(ion_Expr (*expr), ion_Type (*expected_type
         break;
     }
     case ION_EXPR_TYPEOF_EXPR: {
-        #line 1940
         {
             if ((expr->typeof_expr->kind) == (ION_EXPR_NAME)) {
                 ion_Sym (*sym) = ion_resolve_name(expr->typeof_expr->name);
@@ -10878,7 +8678,6 @@ ion_Operand ion_resolve_expected_expr(ion_Expr (*expr), ion_Type (*expected_type
         break;
     }
     case ION_EXPR_OFFSETOF: {
-        #line 1953
         {
             ion_Type (*type) = ion_resolve_typespec(expr->offsetof_field.type);
             ion_complete_type(type);
@@ -10894,18 +8693,15 @@ ion_Operand ion_resolve_expected_expr(ion_Expr (*expr), ion_Type (*expected_type
         break;
     }
     case ION_EXPR_MODIFY: {
-        #line 1966
         result = ion_resolve_expr_modify(expr);
         break;
     }
     default: {
-        #line 1968
         assert(0);
         result = ion_operand_null;
         break;
     }
     }
-    #line 1971
     ion_set_resolved_type(expr, result.type);
     return result;
 }
@@ -10919,7 +8715,6 @@ ion_Operand ion_resolve_const_expr(ion_Expr (*expr)) {
 }
 
 ion_Map ion_decl_note_names;
-#line 1985
 void ion_init_builtin_syms(void) {
     assert(ion_current_package);
     ion_sym_global_type("void", ion_type_void);
@@ -10956,14 +8751,12 @@ void ion_add_package_decls(ion_Package (*package)) {
                 }
                 ion_map_put(&(ion_decl_note_names), arg->name, (void *)(1));
             } else if ((decl->note.name) == (ion_static_assert_name)) {
-                #line 2022
                 if (!(ion_flag_lazy)) {
                     ion_resolve_static_assert(decl->note);
                 }
             }
         } else if ((decl->kind) == (ION_DECL_IMPORT)) {
         } else {
-            #line 2029
             ion_sym_global_decl(decl);
         }
     }
@@ -11016,7 +8809,6 @@ ion_Package (*ion_import_package(char const ((*package_path)))) {
 }
 
 void ion_import_all_package_symbols(ion_Package (*package)) {
-    #line 2082
     char const ((*main_name)) = ion_str_intern("main");
     for (size_t i = 0; (i) < (ion_buf_len(package->syms)); (i)++) {
         if (((package->syms[i]->home_package) == (package)) && ((package->syms[i]->name) != (main_name))) {
@@ -11160,7 +8952,6 @@ char const ((*(ion_os_names[ION_NUM_OSES]))) = {[ION_OS_WIN32] = "win32", [ION_O
 char const ((*(ion_arch_names[ION_NUM_ARCHES]))) = {[ION_ARCH_X64] = "x64", [ION_ARCH_X86] = "x86"};
 int ion_target_os;
 int ion_target_arch;
-#line 28 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\targets.ion"
 int ion_get_os(char const ((*name))) {
     for (int i = 0; (i) < (ION_NUM_OSES); (i)++) {
         if ((strcmp(ion_os_names[i], name)) == (0)) {
@@ -11198,7 +8989,6 @@ ion_TypeMetrics (ion_win32_x86_metrics[ION_NUM_CMPL_TYPE_KINDS]) = {[ION_CMPL_TY
 ion_TypeMetrics (ion_win32_x64_metrics[ION_NUM_CMPL_TYPE_KINDS]) = {[ION_CMPL_TYPE_PTR] = {.size = 8, .align = 8}, [ION_CMPL_TYPE_LONG] = {.size = 4, .align = 4, .max = 0x7fffffff, .sign = true}, [ION_CMPL_TYPE_ULONG] = {.size = 4, .align = 4, .max = 0x7fffffff, .sign = true}};
 ion_TypeMetrics (ion_ilp32_metrics[ION_NUM_CMPL_TYPE_KINDS]) = {[ION_CMPL_TYPE_PTR] = {.size = 4, .align = 4}, [ION_CMPL_TYPE_LONG] = {.size = 4, .align = 4, .max = 0x7fffffff, .sign = true}, [ION_CMPL_TYPE_ULONG] = {.size = 4, .align = 4, .max = 0x7fffffff, .sign = true}};
 ion_TypeMetrics (ion_lp64_metrics[ION_NUM_CMPL_TYPE_KINDS]) = {[ION_CMPL_TYPE_PTR] = {.size = 8, .align = 8}, [ION_CMPL_TYPE_LONG] = {.size = 8, .align = 8, .max = 0x7fffffffffffffff, .sign = true}, [ION_CMPL_TYPE_ULONG] = {.size = 8, .align = 8, .max = 0xffffffffffffffff, .sign = true}};
-#line 89
 void ion_init_target(void) {
     ion_type_metrics = NULL;
     switch (ion_target_os) {
@@ -11209,7 +8999,6 @@ void ion_init_target(void) {
             break;
         }
         case ION_ARCH_X64: {
-            #line 97
             ion_type_metrics = ion_win32_x64_metrics;
             break;
         }
@@ -11220,14 +9009,12 @@ void ion_init_target(void) {
         break;
     }
     case ION_OS_LINUX: {
-        #line 101
         switch (ion_target_arch) {
         case ION_ARCH_X86: {
             ion_type_metrics = ion_ilp32_metrics;
             break;
         }
         case ION_ARCH_X64: {
-            #line 105
             ion_type_metrics = ion_lp64_metrics;
             break;
         }
@@ -11238,7 +9025,6 @@ void ion_init_target(void) {
         break;
     }
     case ION_OS_OSX: {
-        #line 109
         switch (ion_target_arch) {
         case ION_ARCH_X64: {
             ion_type_metrics = ion_lp64_metrics;
@@ -11254,7 +9040,6 @@ void ion_init_target(void) {
         break;
     }
     }
-    #line 116
     if (!(ion_type_metrics)) {
         printf("Unsupported os/arch combination: %s/%s\n", ion_os_names[ion_target_os], ion_arch_names[ion_target_arch]);
         exit(1);
@@ -11274,7 +9059,6 @@ void ion_init_target(void) {
 
 bool ion_is_excluded_target_filename(char const ((*name))) {
     char const ((*end)) = (name) + (strlen(name));
-    #line 136
     char const ((*ptr1)) = end;
     while (((ptr1) != (name)) && ((ptr1[-(1)]) != ('_'))) {
         (ptr1)--;
@@ -11287,7 +9071,6 @@ bool ion_is_excluded_target_filename(char const ((*name))) {
         str1[(end) - (ptr1)] = 0;
         (ptr1)--;
     }
-    #line 149
     char const ((*ptr2)) = ptr1;
     while (((ptr2) != (name)) && ((ptr2[-(1)]) != ('_'))) {
         (ptr2)--;
@@ -11299,7 +9082,6 @@ bool ion_is_excluded_target_filename(char const ((*name))) {
         memcpy(str2, ptr2, (ptr1) - (ptr2));
         str2[(ptr1) - (ptr2)] = 0;
     }
-    #line 161
     int os1 = ion_get_os(str1);
     int arch1 = ion_get_arch(str1);
     int os2 = ion_get_os(str2);
@@ -11338,7 +9120,6 @@ ion_Type (*ion_type_uintptr);
 ion_Type (*ion_type_usize);
 ion_Type (*ion_type_ssize);
 ion_Map ion_typeid_map;
-#line 96 "C:\\Users\\Tom\\Documents\\projects\\ion\\ion\\type.ion"
 ion_Type (*ion_get_type_from_typeid(int typeid)) {
     if ((typeid) == (0)) {
         return NULL;
@@ -11413,12 +9194,10 @@ bool ion_is_signed_type(ion_Type (*type)) {
     case ION_CMPL_TYPE_INT:
     case ION_CMPL_TYPE_LONG:
     case ION_CMPL_TYPE_LLONG: {
-        #line 168
         return true;
         break;
     }
     default: {
-        #line 170
         return false;
         break;
     }
@@ -11427,7 +9206,6 @@ bool ion_is_signed_type(ion_Type (*type)) {
 
 char const ((*(ion_type_names[ION_NUM_CMPL_TYPE_KINDS]))) = {[ION_CMPL_TYPE_VOID] = "void", [ION_CMPL_TYPE_BOOL] = "bool", [ION_CMPL_TYPE_CHAR] = "char", [ION_CMPL_TYPE_SCHAR] = "schar", [ION_CMPL_TYPE_UCHAR] = "uchar", [ION_CMPL_TYPE_SHORT] = "short", [ION_CMPL_TYPE_USHORT] = "ushort", [ION_CMPL_TYPE_INT] = "int", [ION_CMPL_TYPE_UINT] = "uint", [ION_CMPL_TYPE_LONG] = "long", [ION_CMPL_TYPE_ULONG] = "ulong", [ION_CMPL_TYPE_LLONG] = "llong", [ION_CMPL_TYPE_ULLONG] = "ullong", [ION_CMPL_TYPE_FLOAT] = "float", [ION_CMPL_TYPE_DOUBLE] = "double"};
 int (ion_type_ranks[ION_NUM_CMPL_TYPE_KINDS]) = {[ION_CMPL_TYPE_BOOL] = 1, [ION_CMPL_TYPE_CHAR] = 2, [ION_CMPL_TYPE_SCHAR] = 2, [ION_CMPL_TYPE_UCHAR] = 2, [ION_CMPL_TYPE_SHORT] = 3, [ION_CMPL_TYPE_USHORT] = 3, [ION_CMPL_TYPE_INT] = 4, [ION_CMPL_TYPE_UINT] = 4, [ION_CMPL_TYPE_LONG] = 5, [ION_CMPL_TYPE_ULONG] = 5, [ION_CMPL_TYPE_LLONG] = 6, [ION_CMPL_TYPE_ULLONG] = 6};
-#line 207
 int ion_type_rank(ion_Type (*type)) {
     int rank = ion_type_ranks[type->kind];
     assert((rank) != (0));
@@ -11443,36 +9221,30 @@ ion_Type (*ion_unsigned_type(ion_Type (*type))) {
     case ION_CMPL_TYPE_CHAR:
     case ION_CMPL_TYPE_SCHAR:
     case ION_CMPL_TYPE_UCHAR: {
-        #line 220
         return ion_type_uchar;
         break;
     }
     case ION_CMPL_TYPE_SHORT:
     case ION_CMPL_TYPE_USHORT: {
-        #line 223
         return ion_type_ushort;
         break;
     }
     case ION_CMPL_TYPE_INT:
     case ION_CMPL_TYPE_UINT: {
-        #line 226
         return ion_type_uint;
         break;
     }
     case ION_CMPL_TYPE_LONG:
     case ION_CMPL_TYPE_ULONG: {
-        #line 229
         return ion_type_ulong;
         break;
     }
     case ION_CMPL_TYPE_LLONG:
     case ION_CMPL_TYPE_ULLONG: {
-        #line 232
         return ion_type_ullong;
         break;
     }
     default: {
-        #line 234
         assert(0);
         return NULL;
         break;
@@ -11480,7 +9252,6 @@ ion_Type (*ion_unsigned_type(ion_Type (*type))) {
     }
 }
 
-#line 239
 size_t ion_type_sizeof(ion_Type (*type)) {
     assert((type->kind) > (ION_CMPL_TYPE_COMPLETING));
     return type->size;
@@ -11492,7 +9263,6 @@ size_t ion_type_alignof(ion_Type (*type)) {
 }
 
 ion_Map ion_cached_ptr_types;
-#line 251
 ion_Type (*ion_type_ptr(ion_Type (*base))) {
     ion_Type (*type) = ion_map_get(&(ion_cached_ptr_types), base);
     if (!(type)) {
@@ -11506,7 +9276,6 @@ ion_Type (*ion_type_ptr(ion_Type (*base))) {
 }
 
 ion_Map ion_cached_const_types;
-#line 265
 ion_Type (*ion_type_const(ion_Type (*base))) {
     if ((base->kind) == (ION_CMPL_TYPE_CONST)) {
         return base;
@@ -11533,7 +9302,6 @@ ion_Type (*ion_unqualify_type(ion_Type (*type))) {
 }
 
 ion_Map ion_cached_array_types;
-#line 297
 ion_Type (*ion_type_array(ion_Type (*base), size_t num_elems)) {
     ullong hash = ion_hash_mix(ion_hash_ptr(base), ion_hash_uint64(num_elems));
     uint64_t key = (hash ? hash : 1);
@@ -11559,7 +9327,6 @@ ion_Type (*ion_type_array(ion_Type (*base), size_t num_elems)) {
 }
 
 ion_Map ion_cached_func_types;
-#line 328
 ion_Type (*ion_type_func(ion_Type (*(*params)), size_t num_params, ion_Type (*ret), bool has_varargs)) {
     ullong params_size = (num_params) * (sizeof(*(params)));
     ullong hash = ion_hash_mix(ion_hash_bytes(params, params_size), ion_hash_ptr(ret));
