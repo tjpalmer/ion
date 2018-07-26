@@ -18,7 +18,11 @@ func mul2(a: float, b: vec2): vec2 {
     return {a * b.x, a * b.y};
 }
 
-func addmul2(a: vec2, b: float, c: vec2): vec2 {
+func addmul2(
+    a: vec2,
+    b: float,
+    c: vec2,
+): vec2 {
     return add2(a, mul2(b, c));
 }
 

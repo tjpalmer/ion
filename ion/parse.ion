@@ -14,22 +14,21 @@ func parse_type_func(): Typespec* {
     args: Typespec** = NULL;
     has_varargs: bool = false;
     expect_token(TOKEN_LPAREN);
-    if (!is_token(TOKEN_RPAREN)) {
-        param := parse_type_func_param();
-        buf_push((:void**)&args, &param, sizeof(param));
-        while (match_token(TOKEN_COMMA)) {
-            if (match_token(TOKEN_ELLIPSIS)) {
-                if (has_varargs) {
-                    error(token.pos, "Multiple ellipsis instances in function type");
-                }
-                has_varargs = true;
-            } else {
-                if (has_varargs) {
-                    error(token.pos, "Ellipsis must be last parameter in function type");
-                }
-                param = parse_type_func_param();
-                buf_push((:void**)&args, &param, sizeof(param));
+    while (!is_token(TOKEN_RPAREN)) {
+        if (match_token(TOKEN_ELLIPSIS)) {
+            if (has_varargs) {
+                error(token.pos, "Multiple ellipsis instances in function type");
             }
+            has_varargs = true;
+        } else {
+            if (has_varargs) {
+                error(token.pos, "Ellipsis must be last parameter in function type");
+            }
+            param := parse_type_func_param();
+            buf_push((:void**)&args, &param, sizeof(param));
+        }
+        if (!match_token(TOKEN_COMMA)) {
+            break;
         }
     }
     expect_token(TOKEN_RPAREN);
@@ -729,22 +728,21 @@ func parse_decl_func(pos: SrcPos): Decl* {
     expect_token(TOKEN_LPAREN);
     params: FuncParam* = NULL;
     has_varargs: bool = false;
-    if (!is_token(TOKEN_RPAREN)) {
-        param := parse_decl_func_param();
-        buf_push((:void**)&params, &param, sizeof(param));
-        while (match_token(TOKEN_COMMA)) {
-            if (match_token(TOKEN_ELLIPSIS)) {
-                if (has_varargs) {
-                    error(token.pos, "Multiple ellipsis in function declaration");
-                }
-                has_varargs = true;
-            } else {
-                if (has_varargs) {
-                    error(token.pos, "Ellipsis must be last parameter in function declaration");
-                }
-                param = parse_decl_func_param();
-                buf_push((:void**)&params, &param, sizeof(param));
+    while (!is_token(TOKEN_RPAREN)) {
+        if (match_token(TOKEN_ELLIPSIS)) {
+            if (has_varargs) {
+                error(token.pos, "Multiple ellipsis in function declaration");
             }
+            has_varargs = true;
+        } else {
+            if (has_varargs) {
+                error(token.pos, "Ellipsis must be last parameter in function declaration");
+            }
+            param := parse_decl_func_param();
+            buf_push((:void**)&params, &param, sizeof(param));
+        }
+        if (!match_token(TOKEN_COMMA)) {
+            break;
         }
     }
     expect_token(TOKEN_RPAREN);

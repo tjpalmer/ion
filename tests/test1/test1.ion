@@ -32,7 +32,7 @@ var uc: uchar = 1;
 var sc: schar = 1;
 
 typedef F1 = func();
-typedef F2 = func(f: func(int, int): int): int;
+typedef F2 = func(f: func(int, int,): int): int;
 typedef F3 = func(f: func());
 
 const N = (:char)42 + 8 != 0;
