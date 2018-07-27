@@ -5681,22 +5681,21 @@ ion_Typespec (*ion_parse_type_func(void)) {
     ion_Typespec (*(*args)) = NULL;
     bool has_varargs = false;
     ion_expect_token(ION_TOKEN_LPAREN);
-    if (!(ion_is_token(ION_TOKEN_RPAREN))) {
-        ion_Typespec (*param) = ion_parse_type_func_param();
-        ion_buf_push((void (**))(&(args)), &(param), sizeof(param));
-        while (ion_match_token(ION_TOKEN_COMMA)) {
-            if (ion_match_token(ION_TOKEN_ELLIPSIS)) {
-                if (has_varargs) {
-                    ion_error(ion_token.pos, "Multiple ellipsis instances in function type");
-                }
-                has_varargs = true;
-            } else {
-                if (has_varargs) {
-                    ion_error(ion_token.pos, "Ellipsis must be last parameter in function type");
-                }
-                param = ion_parse_type_func_param();
-                ion_buf_push((void (**))(&(args)), &(param), sizeof(param));
+    while (!(ion_is_token(ION_TOKEN_RPAREN))) {
+        if (ion_match_token(ION_TOKEN_ELLIPSIS)) {
+            if (has_varargs) {
+                ion_error(ion_token.pos, "Multiple ellipsis instances in function type");
             }
+            has_varargs = true;
+        } else {
+            if (has_varargs) {
+                ion_error(ion_token.pos, "Ellipsis must be last parameter in function type");
+            }
+            ion_Typespec (*param) = ion_parse_type_func_param();
+            ion_buf_push((void (**))(&(args)), &(param), sizeof(param));
+        }
+        if (!(ion_match_token(ION_TOKEN_COMMA))) {
+            break;
         }
     }
     ion_expect_token(ION_TOKEN_RPAREN);
@@ -6374,22 +6373,21 @@ ion_Decl (*ion_parse_decl_func(ion_SrcPos pos)) {
     ion_expect_token(ION_TOKEN_LPAREN);
     ion_FuncParam (*params) = NULL;
     bool has_varargs = false;
-    if (!(ion_is_token(ION_TOKEN_RPAREN))) {
-        ion_FuncParam param = ion_parse_decl_func_param();
-        ion_buf_push((void (**))(&(params)), &(param), sizeof(param));
-        while (ion_match_token(ION_TOKEN_COMMA)) {
-            if (ion_match_token(ION_TOKEN_ELLIPSIS)) {
-                if (has_varargs) {
-                    ion_error(ion_token.pos, "Multiple ellipsis in function declaration");
-                }
-                has_varargs = true;
-            } else {
-                if (has_varargs) {
-                    ion_error(ion_token.pos, "Ellipsis must be last parameter in function declaration");
-                }
-                param = ion_parse_decl_func_param();
-                ion_buf_push((void (**))(&(params)), &(param), sizeof(param));
+    while (!(ion_is_token(ION_TOKEN_RPAREN))) {
+        if (ion_match_token(ION_TOKEN_ELLIPSIS)) {
+            if (has_varargs) {
+                ion_error(ion_token.pos, "Multiple ellipsis in function declaration");
             }
+            has_varargs = true;
+        } else {
+            if (has_varargs) {
+                ion_error(ion_token.pos, "Ellipsis must be last parameter in function declaration");
+            }
+            ion_FuncParam param = ion_parse_decl_func_param();
+            ion_buf_push((void (**))(&(params)), &(param), sizeof(param));
+        }
+        if (!(ion_match_token(ION_TOKEN_COMMA))) {
+            break;
         }
     }
     ion_expect_token(ION_TOKEN_RPAREN);
